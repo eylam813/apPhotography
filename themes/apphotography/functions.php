@@ -195,7 +195,7 @@ function apphotography_scripts() {
 	wp_enqueue_style('apphotography-apphotographyStyles',get_template_directory_uri() . '/assets/css/apphotography.css', array());
 	
 	// StyleZ css stylesheet
-	wp_enqueue_style('apphotography-styleZ',get_template_directory_uri() . 'styleZ.css',  array());
+	wp_enqueue_style('apphotography-styleZ',get_template_directory_uri() . '/assets/css/styleZ.css',  array());
 
 	// adding what-input js
 	wp_enqueue_script( 'apphotography-what-input', get_template_directory_uri() . '/assets/js/vendors/what-input.js', array('jquery'), '6.5.1', true );

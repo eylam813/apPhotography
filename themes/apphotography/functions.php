@@ -183,6 +183,7 @@ function apphotography_scripts() {
 	// Reset css stylesheet
 	wp_enqueue_style('apphotography-reset',get_template_directory_uri() . 'styleZ.css',  array());
 	
+	// gets style.css file
 	wp_enqueue_style( 'apphotography-style', get_stylesheet_uri(), array() );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -190,6 +191,7 @@ function apphotography_scripts() {
 	}
 	// enqueue foundation styles
 	wp_enqueue_style('apphotography-foundation',get_template_directory_uri() . '/assets/css/vendors/foundation.min.css', null, '6.5.1');
+	wp_enqueue_style('apphotography-apphotographyStyles',get_template_directory_uri() . '/assets/css/apphotography.css', array());
 
 	// adding what-input js
 	wp_enqueue_script( 'apphotography-what-input', get_template_directory_uri() . '/assets/js/vendors/what-input.js', array('jquery'), '6.5.1', true );

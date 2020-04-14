@@ -70,7 +70,39 @@ if ( ! function_exists( 'apphotography_setup' ) ) :
 				'script',
 			)
 		);
-
+		// Add theme support for custom colours
+		add_theme_support( 'editor-color-palette', array(
+			array(
+				'name' => esc_html__( 'Dark Green', 'apphotography' ),
+				'slug' => 'darkgreen',
+				'color' => '#003C44',
+			),
+			array(
+				'name' => esc_html__( 'Slate Grey', 'apphotography' ),
+				'slug' => 'slategrey',
+				'color' => '#6C888D',
+			),
+			array(
+				'name' => esc_html__( 'Outer Space', 'apphotography' ),
+				'slug' => 'outerspace',
+				'color' => '#404C56',
+			),
+			array(
+				'name' => esc_html__( 'Ash Grey', 'apphotography' ),
+				'slug' => 'ashgrey',
+				'color' => '#ACB4B6',
+			),
+			array(
+				'name' => esc_html__( 'White', 'apphotography' ),
+				'slug' => 'white',
+				'color' => '#FFFFFF',
+			),
+			array(
+				'name' => esc_html__( 'Black', 'apphotography' ),
+				'slug' => 'black',
+				'color' => '#000000',
+			),
+		) );
 		// Set up the WordPress core custom background feature.
 		add_theme_support(
 			'custom-background',

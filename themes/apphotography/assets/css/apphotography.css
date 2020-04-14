@@ -1,0 +1,79 @@
+@font-face {
+	font-family: headerFont;
+	src: url("../fonts/palatino-linotype.ttf");
+}
+
+@font-face {
+	font-family: mainTextFont;
+	src: url("../fonts/Roboto/Roboto-Light.ttf");
+}
+
+ul,li,p,span, button, input, optgroup, select, textarea {
+	font-family: mainTextFont;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: headerFont;
+}
+:root{
+    --dark-green: #003C44;
+    --slate-grey: #6C888D;
+    --outer-space: #404C56;
+    --ash-grey: #ACB4B6;
+    --white: #FFFFFF;
+    --black: #000000;
+}
+
+/* ******************** Colour Settings ******************** */
+.has-darkgreen-color {
+    color: var(--dark-green);
+}
+
+.has-darkgreen-background-color {
+    background-color: var(--dark-green);
+}
+
+.has-slategrey-color {
+    color: var(--slate-grey);
+}
+
+.has-slategrey-background-color {
+    background-color: var(--slate-grey);
+}
+
+.has-outerspace-color {
+    color: var(--outer-space);
+}
+
+.has-outerspace-background-color {
+    background-color: var(--outer-space);
+}
+
+.has-ashgrey-color {
+    color: var(--ash-grey);
+}
+
+.has-ashgrey-background-color {
+    background-color: var(--ash-grey);
+}
+
+.has-black-color {
+    color: var(--black);
+}
+
+.has-black-background-color {
+    background-color: var(--black);
+}
+
+.has-white-color {
+    color: var(--white);
+}
+
+.has-white-background-color {
+    background-color: var(--white);
+}

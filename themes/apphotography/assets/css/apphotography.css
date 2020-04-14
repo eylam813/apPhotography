@@ -1,11 +1,11 @@
 @font-face {
 	font-family: headerFont;
-	src: url("./assets/fonts/palatino-linotype.ttf");
+	src: url("../fonts/palatino-linotype.ttf");
 }
 
 @font-face {
 	font-family: mainTextFont;
-	src: url("./assets/fonts/Roboto/Roboto-Light.ttf");
+	src: url("../fonts/Roboto/Roboto-Light.ttf");
 }
 
 ul,li,p,span, button, input, optgroup, select, textarea {

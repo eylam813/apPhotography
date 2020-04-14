@@ -15,8 +15,23 @@ Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-com
 @font-face {
 	font-family: headerFont;
 	src: url("./assets/fonts/palatino-linotype.ttf");
-  }
+}
 
-  h1,h2,h3,h4,h5,h6 {
-	  font-family: headerFont;
-  }
+@font-face {
+	font-family: mainTextFont;
+	src: url("./assets/fonts/Roboto/Roboto-Light.ttf");
+	/* src: url("./assets/fonts/Roboto/Roboto-Regular.ttf"); */
+}
+
+* {
+	font-family: mainTextFont;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: headerFont;
+}

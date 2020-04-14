@@ -20,10 +20,9 @@ Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-com
 @font-face {
 	font-family: mainTextFont;
 	src: url("./assets/fonts/Roboto/Roboto-Light.ttf");
-	/* src: url("./assets/fonts/Roboto/Roboto-Regular.ttf"); */
 }
 
-* {
+ul,li,p,span, button, input, optgroup, select, textarea {
 	font-family: mainTextFont;
 }
 

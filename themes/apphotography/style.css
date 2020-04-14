@@ -10,27 +10,3 @@ License URI: LICENSE
 Text Domain: apphotography
 Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
 */
-
-
-@font-face {
-	font-family: headerFont;
-	src: url("./assets/fonts/palatino-linotype.ttf");
-}
-
-@font-face {
-	font-family: mainTextFont;
-	src: url("./assets/fonts/Roboto/Roboto-Light.ttf");
-}
-
-ul,li,p,span, button, input, optgroup, select, textarea {
-	font-family: mainTextFont;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-family: headerFont;
-}

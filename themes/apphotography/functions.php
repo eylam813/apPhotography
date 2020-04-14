@@ -180,6 +180,9 @@ function apphotography_scripts() {
 	// Reset css stylesheet
 	wp_enqueue_style('apphotography-reset',get_template_directory_uri() . '/assets/css/reset.css',  array());
 	
+	// Reset css stylesheet
+	wp_enqueue_style('apphotography-reset',get_template_directory_uri() . 'styleZ.css',  array());
+	
 	wp_enqueue_style( 'apphotography-style', get_stylesheet_uri(), array() );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

@@ -143,14 +143,16 @@ add_action( 'widgets_init', 'apphotography_widgets_init' );
  * Enqueue scripts and styles.
  */
 function apphotography_scripts() {
-	wp_enqueue_style( 'apphotography-style', get_stylesheet_uri(), array(), _S_VERSION );
+	// Reset css stylesheet
+	wp_enqueue_style('apphotography-reset',get_template_directory_uri() . '/assets/css/reset.css',  array());
+
+	wp_enqueue_style( 'apphotography-style', get_stylesheet_uri(), array() );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
 	// enqueue foundation styles
 
-	wp_enqueue_style('apphotography-reset',get_template_directory_uri() . '/assets/css/reset.css',  array());
 	wp_enqueue_style('apphotography-foundation',get_template_directory_uri() . '/assets/css/vendors/foundation.min.css', null, '6.5.1');
 
 	// adding what-input js

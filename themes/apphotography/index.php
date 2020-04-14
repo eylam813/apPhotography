@@ -17,7 +17,9 @@ get_header();
 
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main">
-
+	<!-- container for blogs page  -->
+	<div class="grid-container">
+			<div class="grid-x">
 		<?php
 		if ( have_posts() ) :
 
@@ -50,7 +52,8 @@ get_header();
 
 		endif;
 		?>
-
+			</div><!-- .grid-x -->
+			</div><!-- .grid-container -->
 		</main><!-- #main -->
 	</div><!-- #primary -->
 

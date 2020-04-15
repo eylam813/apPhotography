@@ -12,18 +12,12 @@
  * @package apPhotography
  */
 
-// get_header();
+get_header();
 ?>
 
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main">
 	<div class="grid-container">
-		<div class="grid-x">
-		<div class="large-2 grid-margin-x show-for-large sidebar-box">
-		<?php get_header() ?>
-		</div><!--large-2-->
-		
-		<div class="large-10">
 		<?php
 		while ( have_posts() ) :
 			the_post();
@@ -37,8 +31,6 @@
 
 		endwhile; // End of the loop.
 		?>
-		</div><!--large-10-->
-		</div><!--grid-x-->
 			</div><!--grid-container-->
 		</main><!-- #main -->
 	</div><!-- #primary -->

@@ -55,3 +55,24 @@
 .has-white-background-color {
     background-color: var(--white);
 }
+
+/* ******************** Nav Styling ******************** */
+header{
+    display: flex;
+    flex-direction: column;
+}
+#primary-menu a{
+    color: var(--dark-green);
+    font-weight: 500;
+    font-size: 18px;
+}
+#primary-menu a:hover{
+    font-weight: 600;
+}
+#primary-menu ul{
+    list-style: none;
+}
+.social-media{
+    justify-content: flex-end;
+}
+

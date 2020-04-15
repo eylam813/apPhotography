@@ -20,13 +20,19 @@
 	<?php wp_head(); ?>
 </head>
 
-<body <?php body_class(); ?>>
+<body class="grid-x" <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'apphotography' ); ?></a>
 
-	<header id="masthead" class="site-header">
-		<div class="site-branding">
+<div id="ap-wrapper" class="grid-x">
+	<div id="ap-wrapper-inner" class="large-3 medium-3 small-12">
+
+
+	<header>
+	<!-- <header id="masthead" class="site-header"> -->
+		<div >
+		<!-- <div class="site-branding"> -->
 			<?php
 			the_custom_logo();
 			if ( is_front_page() && is_home() ) :
@@ -81,4 +87,8 @@
 						</div>
 	</header><!-- #masthead -->
 
-	<div id="content" class="site-content">
+	</div> <!--#ap-wrapper -->
+</div> <!--#ap-wrapper-inner -->
+	<div id="ap-content-wrapper" class="grid-x large-9 medium-9 small-12">
+	<div id="ap-content" class="grid-x">
+	<!-- <div id="content" class="site-content"> -->

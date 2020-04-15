@@ -26,11 +26,20 @@
 
         <!-- <section class="ap-main-content-wrapper large-9 medium-9 small-12 grid-x"> -->
             
-                <div id="primary" class="content-area">
+                <div id="ap-primary" class="ap-content-area">
+                <!-- <div id="primary" class="content-area"> -->
                     <div class="grid-x">
                         <main id="main" class="site-main ap-main-content-wrapper large-9 medium-9 small-12 grid-x">
+
                             <?php
                             while ( have_posts() ) :
+                                ?>
+                                <div class="large-3 medium-3 small-12">
+                                    <?php the_post_thumbnail(); ?>
+                                </div>
+
+                                <?php
+                                
                                 the_post();
 
                                 get_template_part( 'template-parts/content', 'page' );

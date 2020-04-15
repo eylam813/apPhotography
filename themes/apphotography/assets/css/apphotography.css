@@ -84,9 +84,11 @@ h6 {
 
 #ap-wrapper {
     background-color: orange;
-    /* max-width: fit-content; */
+    max-width: 200px;
 }
-
+#ap-wrapper-inner{
+    width: 100%;
+}
 
 /* CONTENT */
 #ap-content {

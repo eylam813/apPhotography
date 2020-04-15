@@ -33,16 +33,16 @@
 			$ws_form_field->section_id = self::api_get_section_id($parameters);
 
 			// Get field type ID
-			$ws_form_field->type = WS_Form_Common::get_query_var('type', '', $parameters);
+			$ws_form_field->type = WS_Form_Common::get_query_var_nonce('type', '', $parameters);
 
 			// Get next sibling ID
-			$next_sibling_id = absint(WS_Form_Common::get_query_var('next_sibling_id', 0, $parameters));
+			$next_sibling_id = absint(WS_Form_Common::get_query_var_nonce('next_sibling_id', 0, $parameters));
 
 			// Create field
 			$ws_form_field->db_create($next_sibling_id);
 
 			// Width factor
-			$width_factor = WS_Form_Common::get_query_var('width_factor', false, $parameters);
+			$width_factor = WS_Form_Common::get_query_var_nonce('width_factor', false, $parameters);
 			if($width_factor !== false) {
 
 				// Get framework info and calculate breakpoint meta key and value for 50% width
@@ -93,10 +93,10 @@
 			$ws_form_field->form_id = self::api_get_form_id($parameters);
 
 			// Get meta key
-			$meta_key = WS_Form_Common::get_query_var('meta_key', false, $parameters);
+			$meta_key = WS_Form_Common::get_query_var_nonce('meta_key', false, $parameters);
 			if($meta_key === false) { parent::api_throw_error(__('Meta key not specified', 'ws-form')); }
 
-			$meta_value_url = WS_Form_Common::get_query_var('meta_value', false, $parameters);
+			$meta_value_url = WS_Form_Common::get_query_var_nonce('meta_value', false, $parameters);
 			if($meta_value_url !== false) {
 
 				// Get meta value (Scratch)
@@ -114,7 +114,7 @@
 			}
 
 			// Get file index
-			$group_index = WS_Form_Common::get_query_var('group_index', false, $parameters);
+			$group_index = WS_Form_Common::get_query_var_nonce('group_index', false, $parameters);
 			if($group_index === false) { parent::api_throw_error(__('Group index not specified', 'ws-form')); }
 			$group_index = intval($group_index);
 			if($group_index < 0) { parent::api_throw_error(__('Group index invalid', 'ws-form')); }
@@ -196,7 +196,7 @@
 			ini_set("auto_detect_line_endings", true);
 
 			// Get meta key
-			$meta_key = WS_Form_Common::get_query_var('meta_key', false, $parameters);
+			$meta_key = WS_Form_Common::get_query_var_nonce('meta_key', false, $parameters);
 			if($meta_key === false) { parent::api_throw_error(__('Meta key not specified', 'ws-form')); }
 
 			// Get files
@@ -381,7 +381,7 @@
 
 						default :
 
-							$data[$column_index] = utf8_encode($field);
+							$data[$column_index] = $field;
 							$column_index++;
 					}
 				}
@@ -435,7 +435,7 @@
 			$history = array(
 
 				'object'		=>	'field',
-				'method'		=>	WS_Form_Common::get_query_var('history_method', 'post'),
+				'method'		=>	WS_Form_Common::get_query_var_nonce('history_method', 'post'),
 				'label'			=>	$ws_form_field->db_get_label($ws_form_field->table_name, $ws_form_field->id),
 				'section_id'	=>	$ws_form_field->section_id,
 				'id'			=>	$ws_form_field->id
@@ -459,7 +459,7 @@
 			$ws_form_field->form_id = self::api_get_form_id($parameters);
 
 			// Get field data
-			$field = WS_Form_Common::get_query_var('field', false, $parameters);
+			$field = WS_Form_Common::get_query_var_nonce('field', false, $parameters);
 			if(!$field) { return false; }
 
 			// Put field
@@ -472,7 +472,7 @@
 			$history = array(
 
 				'object'		=>	'field',
-				'method'		=>	WS_Form_Common::get_query_var('history_method', 'put'),
+				'method'		=>	WS_Form_Common::get_query_var_nonce('history_method', 'put'),
 				'label'			=>	$ws_form_field->db_get_label($ws_form_field->table_name, $ws_form_field->id),
 				'section_id'	=>	$ws_form_field->section_id,
 				'id'			=>	$ws_form_field->id
@@ -499,7 +499,7 @@
 			$ws_form_field->section_id = self::api_get_section_id($parameters);
 
 			// Get next sibling ID
-			$next_sibling_id = absint(WS_Form_Common::get_query_var('next_sibling_id', 0, $parameters));
+			$next_sibling_id = absint(WS_Form_Common::get_query_var_nonce('next_sibling_id', 0, $parameters));
 
 			// Process sort index
 			$ws_form_field->db_object_sort_index($ws_form_field->table_name, 'section_id', $ws_form_field->section_id, $next_sibling_id);
@@ -540,7 +540,7 @@
 			$ws_form_field->section_id = $ws_form_field->db_get_section_id();
 
 			// Get next sibling ID
-			$next_sibling_id = absint(WS_Form_Common::get_query_var('next_sibling_id', 0, $parameters));
+			$next_sibling_id = absint(WS_Form_Common::get_query_var_nonce('next_sibling_id', 0, $parameters));
 
 			// Get sort_index
 			$ws_form_field->sort_index = $ws_form_field->db_object_sort_index_get($ws_form_field->table_name, 'section_id', $ws_form_field->section_id, $next_sibling_id);
@@ -616,24 +616,24 @@
 		// Get form ID
 		public function api_get_form_id($parameters) {
 
-			return absint(WS_Form_Common::get_query_var('id', 0, $parameters));
+			return absint(WS_Form_Common::get_query_var_nonce('id', 0, $parameters));
 		}
 
 		// Get section ID
 		public function api_get_section_id($parameters) {
 
-			return absint(WS_Form_Common::get_query_var('section_id', 0, $parameters));
+			return absint(WS_Form_Common::get_query_var_nonce('section_id', 0, $parameters));
 		}
 
 		// Get section ID from (used to determine where a field was dragged from)
 		public function api_get_section_id_from($parameters) {
 
-			return absint(WS_Form_Common::get_query_var('section_id_from', 0, $parameters));
+			return absint(WS_Form_Common::get_query_var_nonce('section_id_from', 0, $parameters));
 		}
 
 		// Get field ID
 		public function api_get_id($parameters) {
 
-			return absint(WS_Form_Common::get_query_var('field_id', 0, $parameters));
+			return absint(WS_Form_Common::get_query_var_nonce('field_id', 0, $parameters));
 		}
 	}

@@ -729,13 +729,22 @@
 							$condition->object_id = $this->new_lookup[$condition->object][$condition->object_id];
 						}
 
-						// String replace
+						// String replace - Field
 						foreach($this->new_lookup['field'] as $field_id_old => $field_id_new) {
 
 							if(isset($condition->value)) {
 
 								$condition->value = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '', $condition->value);
 								$condition->value = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $condition->value);
+							}
+						}
+
+						// String replace - Section
+						foreach($this->new_lookup['section'] as $section_id_old => $section_id_new) {
+
+							if(isset($condition->value)) {
+
+								$condition->value = str_replace('#section_row_count(' . $section_id_old . ')', ($section_id_new != '') ? '#section_row_count(' . $section_id_new . ')' : '', $condition->value);
 							}
 						}
 					}
@@ -751,13 +760,22 @@
 						$then_single->object_id = $this->new_lookup[$then_single->object][$then_single->object_id];
 					}
 
-					// String replace
+					// String replace - Field
 					foreach($this->new_lookup['field'] as $field_id_old => $field_id_new) {
 
 						if(isset($then_single->value)) {
 
 							$then_single->value = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '', $then_single->value);
 							$then_single->value = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $then_single->value);
+						}
+					}
+
+					// String replace - Section
+					foreach($this->new_lookup['section'] as $section_id_old => $section_id_new) {
+
+						if(isset($then_single->value)) {
+
+							$then_single->value = str_replace('#section_row_count(' . $section_id_old . ')', ($section_id_new != '') ? '#section_row_count(' . $section_id_new . ')' : '', $then_single->value);
 						}
 					}
 				}
@@ -772,13 +790,22 @@
 						$else_single->object_id = $this->new_lookup[$else_single->object][$else_single->object_id];
 					}
 
-					// String replace
+					// String replace - Field
 					foreach($this->new_lookup['field'] as $field_id_old => $field_id_new) {
 
 						if(isset($else_single->value)) {
 
 							$else_single->value = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '', $else_single->value);
 							$else_single->value = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $else_single->value);
+						}
+					}
+
+					// String replace - Section
+					foreach($this->new_lookup['section'] as $section_id_old => $section_id_new) {
+
+						if(isset($else_single->value)) {
+
+							$else_single->value = str_replace('#section_row_count(' . $section_id_old . ')', ($section_id_new != '') ? '#section_row_count(' . $section_id_new . ')' : '', $else_single->value);
 						}
 					}
 				}
@@ -857,11 +884,17 @@
 
 							foreach($repeater_row as $key => $value) {
 
-								// String replace
+								// String replace - Field
 								foreach($this->new_lookup['field'] as $field_id_old => $field_id_new) {
 
 									$metas->{$meta_key}[$repeater_key]->{$key} = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '',$metas->{$meta_key}[$repeater_key]->{$key});
 									$metas->{$meta_key}[$repeater_key]->{$key} = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $metas->{$meta_key}[$repeater_key]->{$key});
+								}
+
+								// String replace - Section
+								foreach($this->new_lookup['section'] as $section_id_old => $section_id_new) {
+
+									$metas->{$meta_key}[$repeater_key]->{$key} = str_replace('#section_row_count(' . $section_id_old . ')', ($section_id_new != '') ? '#section_row_count(' . $section_id_new . ')' : '', $metas->{$meta_key}[$repeater_key]->{$key});
 								}
 							}
 						}
@@ -872,11 +905,17 @@
 							$metas->{$meta_key} = $this->new_lookup['field'][$meta_value];
 						}
 
-						// String replace
+						// String replace - Field
 						foreach($this->new_lookup['field'] as $field_id_old => $field_id_new) {
 
 							$metas->{$meta_key} = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '', $metas->{$meta_key});
 							$metas->{$meta_key} = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $metas->{$meta_key});
+						}
+
+						// String replace - Section
+						foreach($this->new_lookup['section'] as $section_id_old => $section_id_new) {
+
+							$metas->{$meta_key} = str_replace('#section_row_count(' . $section_id_old . ')', ($section_id_new != '') ? '#section_row_count(' . $section_id_new . ')' : '', $metas->{$meta_key});
 						}
 					}
 				}
@@ -997,6 +1036,12 @@
 					if($counter > 0) { $field_meta_update = true; }
 
 					$field_meta = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $field_meta, $counter);
+					if($counter > 0) { $field_meta_update = true; }
+				}
+
+				foreach($this->new_lookup['section'] as $section_id_old => $section_id_new) {
+
+					$field_meta = str_replace('#section_row_count(' . $section_id_old . ')', ($section_id_new != '') ? '#section_row_count(' . $section_id_new . ')' : '', $field_meta, $counter);
 					if($counter > 0) { $field_meta_update = true; }
 				}
 

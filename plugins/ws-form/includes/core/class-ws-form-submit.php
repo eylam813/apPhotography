@@ -399,7 +399,7 @@
 			self::db_check_id();
 
 			// Get duration
-			$this->duration = intval(WS_Form_Common::get_query_var('wsf_duration', 0));
+			$this->duration = intval(WS_Form_Common::get_query_var_nonce('wsf_duration', 0));
 
 			global $wpdb;
 
@@ -756,8 +756,6 @@
 
 					// Build meta data
 					$meta_data = array('id' => $field_id, 'value' => $value, 'type' => $field_type, 'section_id' => $section_id, 'repeatable_index' => $repeatable_index);
-
-//					print_r($meta_data);
 
 					// Add to submit meta
 					$submit_meta[$meta_key] = $meta_data;
@@ -1223,22 +1221,12 @@
 
 			// No capabilities required, this is a public method
 
-			// Check public nonce
-			if(WS_Form_Common::option_get('ajax_nonce', false)) {
-
-				$nonce = (isset($_SERVER) && isset($_SERVER['HTTP_X_WP_NONCE'])) ? $_SERVER['HTTP_X_WP_NONCE'] : false;
-				if(!($nonce && wp_verify_nonce($nonce, 'wp_rest'))) {
-
-					parent::db_throw_error(__('Invalid nonce', 'ws-form'));
-				}
-			}
-
 			// Get form_id
-			$this->form_id = absint(WS_Form_Common::get_query_var('wsf_form_id', 0));
+			$this->form_id = absint(WS_Form_Common::get_query_var_nonce('wsf_form_id', 0));
 			self::db_check_form_id();
 
 			// Get hash
-			$this->hash = WS_Form_Common::get_query_var('wsf_hash', 0);
+			$this->hash = WS_Form_Common::get_query_var_nonce('wsf_hash', 0);
 
 			// If hash found, look for form submission
 			if(($this->hash != '') && (strlen($this->hash) == 32)) {
@@ -1257,25 +1245,25 @@
 			}
 
 			// Preview submit?
-			$this->preview = (WS_Form_Common::get_query_var('wsf_preview', false) !== false);
+			$this->preview = (WS_Form_Common::get_query_var_nonce('wsf_preview', false) !== false);
 
 			// Read form
 			self::db_form_object_read();
 
 			// Bypass fields
-			$bypass = WS_Form_Common::get_query_var('wsf_bypass', '');
+			$bypass = WS_Form_Common::get_query_var_nonce('wsf_bypass', '');
 			$this->bypass_array = explode(',', $bypass);
 
 			// Spam protection - Honeypot
 			$honeypot_hash = ($this->form_object->published_checksum != '') ? $this->form_object->published_checksum : 'honeypot_unpublished_' . $this->form_id;
-			$honeypot_value = WS_Form_Common::get_query_var("field_$honeypot_hash");
+			$honeypot_value = WS_Form_Common::get_query_var_nonce("field_$honeypot_hash");
 			if($honeypot_value != '') { parent::db_throw_error(__('Spam protection error', 'ws-form')); }
 
 			// Get sections array
 			$sections = WS_Form_Common::get_sections_from_form($this->form_object);
 
 			// Are we submitting the form or just saving it?
-			$this->post_mode = WS_Form_Common::get_query_var('wsf_post_mode', false);
+			$this->post_mode = WS_Form_Common::get_query_var_nonce('wsf_post_mode', false);
 			$form_submit = ($this->post_mode == 'submit');
 
 			// Ensure post mode is valid
@@ -1283,7 +1271,7 @@
 
 			// Build section_repeatable
 			$section_repeatable = array();
-			$wsf_form_section_repeatable_index_json = WS_Form_Common::get_query_var('wsf_form_section_repeatable_index', false);
+			$wsf_form_section_repeatable_index_json = WS_Form_Common::get_query_var_nonce('wsf_form_section_repeatable_index', false);
 			if(!empty($wsf_form_section_repeatable_index_json)) {
 
 				if(is_null($wsf_form_section_repeatable_index = (array) json_decode($wsf_form_section_repeatable_index_json))) {
@@ -1392,7 +1380,7 @@
 				$field_name = WS_FORM_FIELD_PREFIX . $field_id;
 
 				// Field value
-				$field_value = WS_Form_Common::get_query_var($field_name);
+				$field_value = WS_Form_Common::get_query_var_nonce($field_name);
 				if($section_repeatable_index !== false) {
 
 					$field_value = isset($field_value[$section_repeatable_index]) ? $field_value[$section_repeatable_index] : '';

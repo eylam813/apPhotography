@@ -456,9 +456,9 @@
 <!-- Blank -->
 <li>
 <div class="wsf-template" data-action="wsf-add-blank" data-id="blank">
-	<svg class="wsf-responsive" viewBox="0 0 140 180"><rect width="100%" height="100%" fill="<?php echo $this->color_default_inverted; ?>"/><text fill="<?php echo $this->color_default; ?>'" class="wsf-wizard-title"><tspan x="5" y="16"><?php _e('Blank', 'ws-form'); ?></tspan></text><g fill="none" fill-rule="evenodd" transform="translate(5 7)"><path stroke="<?php echo $this->color_default_lighter; ?>" stroke-dasharray="4 2" d="M.5 17.5h129v149H.5z"/><path fill="<?php echo $this->color_default; ?>" fill-rule="nonzero" d="M72 88.5h-5v-5h-2v5h-5v2h5v5h2v-5h5z"/></g></svg>
+	<svg class="wsf-responsive" viewBox="0 0 140 180"><rect width="100%" height="100%" fill="<?php echo esc_attr($this->color_default_inverted); ?>"/><text fill="<?php echo esc_attr($this->color_default) ?>'" class="wsf-wizard-title"><tspan x="5" y="16"><?php esc_html_e('Blank', 'ws-form'); ?></tspan></text><g fill="none" fill-rule="evenodd" transform="translate(5 7)"><path stroke="<?php echo esc_attr($this->color_default_lighter); ?>" stroke-dasharray="4 2" d="M.5 17.5h129v149H.5z"/><path fill="<?php echo esc_attr($this->color_default); ?>" fill-rule="nonzero" d="M72 88.5h-5v-5h-2v5h-5v2h5v5h2v-5h5z"/></g></svg>
 </div>
-<button class="<?php echo $button_class; ?>" data-action="wsf-add-blank" data-id="blank"><?php _e('Create', 'ws-form'); ?></button>
+<button class="<?php echo esc_attr($button_class); ?>" data-action="wsf-add-blank" data-id="blank"><?php esc_html_e('Create', 'ws-form'); ?></button>
 </li>
 <!-- /Blank -->
 <?php
@@ -471,10 +471,10 @@
 					$pro_required = !WS_Form_Common::is_edition($wizard->pro_required ? 'pro' : 'basic');
 
 ?><li<?php if($pro_required) { ?> class="wsf-pro-required"<?php } ?>>
-<div class="wsf-template"<?php if(!$pro_required) { ?> data-action="wsf-add-wizard" data-id="<?php echo $wizard->id; ?>"<?php } ?> title="<?php echo htmlentities($wizard->label); ?>">
+<div class="wsf-template"<?php if(!$pro_required) { ?> data-action="wsf-add-wizard" data-id="<?php echo esc_attr($wizard->id); ?>"<?php } ?> title="<?php echo esc_html($wizard->label); ?>">
 <?php
 					if($pro_required) {
-?><a href="<?php echo WS_Form_Common::get_plugin_website_url('', 'add_form'); ?>" target="_blank"><?php
+?><a href="<?php echo esc_attr(WS_Form_Common::get_plugin_website_url('', 'add_form')); ?>" target="_blank"><?php
 					}
 
 					// Parse SVG
@@ -486,7 +486,7 @@
 						$svg = $this->svg();
 					}
 					$svg = str_replace('#label', htmlentities($wizard->label), $svg);
-					echo $svg;
+					echo $svg;	 // phpcs:ignore
 
 					if($pro_required) {
 ?></a><?php
@@ -496,11 +496,11 @@
 <?php
 					if($pro_required) {
 ?>
-<a href="<?php echo WS_Form_Common::get_plugin_website_url('', 'add_form'); ?>" class="wsf-button wsf-button-primary wsf-button-full" target="_blank"><?php _e('PRO', 'ws-form'); ?></a>
+<a href="<?php echo esc_attr(WS_Form_Common::get_plugin_website_url('', 'add_form')); ?>" class="wsf-button wsf-button-primary wsf-button-full" target="_blank"><?php esc_html_e('PRO', 'ws-form'); ?></a>
 <?php
 					} else {
 ?>
-<button class="<?php echo $button_class; ?>" data-action="wsf-add-wizard" data-id="<?php echo $wizard->id; ?>"><?php _e('Create', 'ws-form'); ?></button>
+<button class="<?php echo esc_attr($button_class); ?>" data-action="wsf-add-wizard" data-id="<?php echo esc_attr($wizard->id); ?>"><?php esc_html_e('Create', 'ws-form'); ?></button>
 <?php
 					}
 ?>

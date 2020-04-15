@@ -56,6 +56,6 @@
 		// Get action ID
 		public function api_get_action_id($parameters) {
 
-			return WS_Form_Common::get_query_var('action_id', 0, $parameters);
+			return WS_Form_Common::get_query_var_nonce('action_id', 0, $parameters);
 		}
 	}

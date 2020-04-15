@@ -1021,7 +1021,7 @@
 				case 'radio' :
 				case 'price_radio' :
 
-					if(typeof(radio_field_processed[field_id]) === 'undefined') { 
+					if(typeof(radio_field_processed[field_name]) === 'undefined') { 
 
 						validity = $(this)[0].checkValidity();
 
@@ -1047,7 +1047,7 @@
 					validity = $(this)[0].checkValidity();
 			}
 
-			radio_field_processed[field_id] = true;
+			radio_field_processed[field_name] = true;
 
 			if(!validity) { valid = false; }
 		});
@@ -1214,7 +1214,7 @@
 						// Set selectors
 						var object_selector_wrapper = object_selector = '#' + this.form_id_prefix + object + '-' + object_id + object_repeatable_suffix;
 						var object_selector = '#' + this.form_id_prefix + object + '-' + object_id + object_repeatable_suffix;
-	
+
 					} else {
 
 						// Set selectors
@@ -1425,6 +1425,83 @@
 
 					break;
 
+				// Set row count
+				case 'set_row_count' :
+
+					// Get sections
+					var sections = $('[data-repeatable][data-id="' + object_id + '"]', this.form_canvas_obj);
+					if(!sections.length) { break; }
+					var section_count = sections.length;
+					if(isNaN(value)) { break; }
+					var section_count_required = parseInt(value);
+
+					// Get section data
+					var section = this.section_data_cache[object_id];
+
+					// Section repeat - Min
+					var section_repeat_min = this.get_object_meta_value(section, 'section_repeat_min', 1);
+					if(
+						(section_repeat_min == '') ||
+						isNaN(section_repeat_min)
+
+					) { section_repeat_min = 1; } else { section_repeat_min = parseInt(section_repeat_min); }
+					if(section_repeat_min < 1) { section_repeat_min = 1; }
+
+					// Section repeat - Max
+					var section_repeat_max = this.get_object_meta_value(section, 'section_repeat_max', false);
+					if(
+						(section_repeat_max == '') ||
+						isNaN(section_repeat_min)
+
+					) { section_repeat_max = false; } else { section_repeat_max = parseInt(section_repeat_max); }
+
+					// Checks
+					if(section_count_required < section_repeat_min) { section_count_required = section_repeat_min; }
+					if((section_repeat_max !== false) && (section_count_required > section_repeat_max)) {
+
+						section_count_required = section_repeat_max;
+					}
+
+					// Add rows
+					if(section_count < section_count_required) {
+
+						// Get section obj to clone
+						var section_clone_this = sections.last();
+
+						// Calculate number of rows to add
+						var rows_to_add = (section_count_required - section_count);
+						for(var add_count = 0; add_count < rows_to_add; add_count++) {
+
+							// Clone
+							this.section_clone(section_clone_this);
+						}
+
+						// Initialize
+						this.section_clone_init();
+
+						// Trigger event
+						this.form_canvas_obj.trigger('wsf-section-repeatable').trigger('wsf-section-repeatable-' + object_id);
+					}
+
+					// Delete rows
+					if(section_count > section_count_required) {
+
+						// Calculate number of rows to delete
+						var rows_to_delete = (section_count - section_count_required);
+						for(var delete_count = 0; delete_count < rows_to_delete; delete_count++) {
+
+							var sections = $('[data-repeatable][data-id="' + object_id + '"]', this.form_canvas_obj);
+							sections.last().remove();
+						}
+
+						// Trigger event
+						this.form_canvas_obj.trigger('wsf-section-repeatable').trigger('wsf-section-repeatable-' + object_id);
+					}
+
+					this.form_section_repeatable();
+
+					break;
+
 				// Disable
 				case 'disabled' :
 
@@ -1433,7 +1510,7 @@
 						case 'section' :
 
 							// For sections, we need to look for a fieldset
-							$('fieldset', obj_wrapper).first().prop('disabled', (value == 'on'));
+							obj_wrapper.prop('disabled', (value == 'on'));
 							break;
 
 						case 'field' :
@@ -1969,6 +2046,7 @@
 		this.form_add_hidden_input('wsf_form_id', this.form_id);
 		this.form_add_hidden_input('wsf_hash', this.hash);
 		this.form_add_hidden_input('wsf_duration', Math.round((new Date().getTime() - this.date_start) / 1000));
+		this.form_add_hidden_input(ws_form_settings.wsf_nonce_field_name, ws_form_settings.wsf_nonce);
 
 		// Reset date start
 		if(post_mode == 'submit') {
@@ -2107,23 +2185,27 @@
 	}
 
 	// Form lock
-	$.WS_Form.prototype.form_post_lock = function(cursor, force) {
+	$.WS_Form.prototype.form_post_lock = function(cursor, force, ecommerce_calculate_disable) {
 
 		if(typeof(cursor) === 'undefined') { var cursor = 'progress'; }
 		if(typeof(force) === 'undefined') { var timeout = false; }
+		if(typeof(ecommerce_calculate_disable) === 'undefined') { var ecommerce_calculate_disable = false; }
 
 		if(this.form_obj.hasClass('wsf-form-post-lock')) { return; }
 
 		if(force || this.get_object_meta_value(this.form, 'submit_lock', false)) {
 
 			// Stop further calculations
-			this.form_ecommerce_calculate_enabled = false;
+			if(ecommerce_calculate_disable) {
+
+				this.form_ecommerce_calculate_enabled = false;
+			}
 
 			// Add locked class to form
 			this.form_obj.addClass('wsf-form-post-lock' + (cursor ? ' wsf-form-post-lock-' + cursor : ''));
 
 			// Disable submit buttons
-			$('button[type="submit"].wsf-button, input[type="submit"].wsf-button, button[data-action="wsf-save"].wsf-button, button[data-ecommerce-payment].wsf-button', this.form_canvas_obj).attr('disabled', '');
+			$('button[type="submit"].wsf-button, input[type="submit"].wsf-button, button[data-action="wsf-save"].wsf-button, button[data-ecommerce-payment].wsf-button, [data-post-lock]', this.form_canvas_obj).attr('disabled', '');
 			this.form_post_locked = true;
 
 			// Trigger rendered event
@@ -2152,7 +2234,7 @@
 			ws_this.form_obj.removeClass('wsf-form-post-lock' + (cursor ? ' wsf-form-post-lock-' + cursor : ''));
 
 			// Enable submit buttons
-			$('button[type="submit"].wsf-button, input[type="submit"].wsf-button, button[data-action="wsf-save"].wsf-button, button[data-ecommerce-payment].wsf-button', ws_this.form_canvas_obj).removeAttr('disabled');
+			$('button[type="submit"].wsf-button, input[type="submit"].wsf-button, button[data-action="wsf-save"].wsf-button, button[data-ecommerce-payment].wsf-button, [data-post-lock]', ws_this.form_canvas_obj).removeAttr('disabled');
 			ws_this.form_post_locked = false;
 
 			// Trigger rendered event
@@ -2170,6 +2252,9 @@
 	// API Call
 	$.WS_Form.prototype.api_call = function(ajax_path, method, params, success_callback, error_callback, force_ajax_path) {
 
+		// Defaults
+		if(typeof(method) === 'undefined') { var method = 'POST'; }
+		if(!params) { var params = new FormData(); }
 		if(typeof(force_ajax_path) === 'undefined') { var force_ajax_path = false; }
 
 		var ws_this = this;
@@ -2191,12 +2276,27 @@
 			return true;
 		}
 
-		// Defaults
-		if(typeof method === 'undefined') { var method = 'POST'; }
-		if(typeof params === 'undefined') { var params = false; }
-
 		// Check for AJAX HTTP method override
 		var ajax_http_method_override = (ws_form_settings.ajax_http_method_override === true);
+
+		// NONCE
+		if(params.get(ws_form_settings.wsf_nonce_field_name) === null) {
+
+			params.append(ws_form_settings.wsf_nonce_field_name, ws_form_settings.wsf_nonce);
+		}
+
+		// Convert FormData to object if making GET request
+		if(method === 'GET') {
+
+			var params_object = {};
+
+			for(var pair of params.entries()) {
+
+				params_object[pair[0]] = pair[1];
+			}
+
+			params = params_object;
+		}
 
 		// Call AJAX
 		var ajax_request = {
@@ -2205,14 +2305,14 @@
 			url: url,
 			beforeSend: function(xhr) {
 
-				// Nonce
-				if(typeof(ws_form_settings.nonce) !== 'undefined') { xhr.setRequestHeader('X-WP-Nonce', ws_form_settings.nonce); }
+				// Nonce (X-WP-Nonce)
+				xhr.setRequestHeader('X-WP-Nonce', ws_form_settings.x_wp_nonce);
 
 				// HTTP method override
 				if(ajax_http_method_override) { xhr.setRequestHeader('X-HTTP-Method-Override', method); }
 			},
 			contentType: false,
-			processData: false,
+			processData: (method === 'GET'),
   			statusCode: {
 
 				// Success
@@ -2231,7 +2331,7 @@
 					) {
 
 						// Check for nonce
-						if(typeof(response.data.nonce) !== 'undefined') { ws_form_settings.nonce = response.data.nonce; }
+						if(typeof(response.data.x_wp_nonce) !== 'undefined') { ws_form_settings.x_wp_nonce = response.data.x_wp_nonce; }
 
 						// Check for action_js (These are returned from the action system to tell the browser to do something)
 						if(typeof(response.data.js) === 'object') { ws_this.action_js_init(response.data.js); }

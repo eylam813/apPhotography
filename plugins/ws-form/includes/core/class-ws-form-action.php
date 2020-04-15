@@ -266,7 +266,7 @@
 			if(!isset($data_grid->groups[0]->rows)) { return $actions; }
 
 			// Check for 'actions_run' (Conditional wants to run an action)
-			$actions_run = WS_Form_Common::get_query_var('wsf_actions_run');
+			$actions_run = WS_Form_Common::get_query_var_nonce('wsf_actions_run');
 			if(!is_array($actions_run) || (count($actions_run) == 0)) {
 
 				$actions_run = false;
@@ -825,7 +825,7 @@
 			if($api_response_error = is_wp_error($response)) {
 
 				// Handle error
-				$api_response_error_message = $response->get_error_message();;
+				$api_response_error_message = $response->get_error_message();
 				$api_response_headers = array();
 				$api_response_body = '';
 				$api_response_http_code = 0;
@@ -1542,19 +1542,19 @@
 		// Get form ID
 		public static function api_get_form_id() {
 
-			return absint(WS_Form_Common::get_query_var('form_id', 0));
+			return absint(WS_Form_Common::get_query_var_nonce('form_id', 0));
 		}
 
 		// Get submit ID
 		public static function api_get_submit_id() {
 
-			return absint(WS_Form_Common::get_query_var('submit_id', 0));
+			return absint(WS_Form_Common::get_query_var_nonce('submit_id', 0));
 		}
 
 		// Get submit action index
 		public static function api_get_submit_action_index() {
 
-			return absint(WS_Form_Common::get_query_var('submit_action_index', 0));
+			return absint(WS_Form_Common::get_query_var_nonce('submit_action_index', 0));
 		}
 
 		// Set lost password data

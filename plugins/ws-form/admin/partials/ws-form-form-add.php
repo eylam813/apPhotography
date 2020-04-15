@@ -24,7 +24,7 @@
 <script>
 
 	// Localize
-	var ws_form_settings_language_form_add_create = '<?php _e('Create', 'ws-form'); ?>';
+	var ws_form_settings_language_form_add_create = '<?php esc_html_e('Create', 'ws-form'); ?>';
 
 </script>
 
@@ -32,15 +32,19 @@
 
 <!-- Header -->
 <div class="wsf-heading">
-<h1 class="wp-heading-inline"><?php _e('Add New', 'ws-form'); ?></h1>
+<h1 class="wp-heading-inline"><?php esc_html_e('Add New', 'ws-form'); ?></h1>
 </div>
 <hr class="wp-header-end">
 <!-- /Header -->
+<?php
 
+	// Review nag
+	WS_Form_Common::review();
+?>
 <!-- Wizard -->
 <div id="wsf-form-add">
 
-<p><?php _e('Start a with a blank form or select a template. You can modify any template form with your own fields.', 'ws-form'); ?></p>
+<p><?php esc_html_e('Start a with a blank form or select a template. You can modify any template form with your own fields.', 'ws-form'); ?></p>
 
 <!-- Tabs - Categories -->
 <ul id="wsf-form-add-tabs">
@@ -51,11 +55,11 @@
 
 		$action_id = isset($wizard_category->action_id) ? $wizard_category->action_id : false;
 
-?><li><a href="#wsf_wizard_category_<?php echo $wizard_category->id; ?>"><?php echo htmlentities($wizard_category->label); ?><?php
+?><li><a href="<?php echo esc_attr(sprintf('#wsf_wizard_category_%s', $wizard_category->id)); ?>"><?php echo esc_html($wizard_category->label); ?><?php
 
 		if(($action_id !== false) && ($wizard_category->reload)) {
 
-?><span data-action="wsf-api-reload" data-action-id="<?php echo htmlentities($action_id); ?>" data-method="lists_fetch" title="<?php _e('Update', 'ws-form'); ?>"><?php WS_Form_Common::render_icon_16_svg('reload'); ?></span><?php
+?><span data-action="wsf-api-reload" data-action-id="<?php echo esc_html($action_id); ?>" data-method="lists_fetch" title="<?php esc_attr_e('Update', 'ws-form'); ?>"><?php WS_Form_Common::render_icon_16_svg('reload'); ?></span><?php
 
 		}
 
@@ -71,8 +75,8 @@
 	// Loop through wizards
 	foreach ($wizard_categories as $wizard_category)  {
 ?>
-<!-- Tab Content: <?php echo htmlentities($wizard_category->label); ?> -->
-<div id="wsf_wizard_category_<?php echo $wizard_category->id; ?>"<?php if(isset($wizard_category->action_id)) { ?> data-action-id="<?php echo $wizard_category->action_id; ?>"<?php } ?><?php if(isset($wizard_category->action_list_sub_modal_label)) { ?> data-action-list-sub-modal-label="<?php echo htmlentities($wizard_category->action_list_sub_modal_label); ?>"<?php } ?>>
+<!-- Tab Content: <?php echo esc_html($wizard_category->label); ?> -->
+<div id="<?php echo esc_attr(sprintf('wsf_wizard_category_%s', $wizard_category->id)); ?>"<?php if(isset($wizard_category->action_id)) { ?> data-action-id="<?php echo esc_attr($wizard_category->action_id); ?>"<?php } ?><?php if(isset($wizard_category->action_list_sub_modal_label)) { ?> data-action-list-sub-modal-label="<?php echo esc_html($wizard_category->action_list_sub_modal_label); ?>"<?php } ?> style="display: none;">
 <ul class="wsf-templates">
 <?php
 		$ws_form_wizard->wizard_category_render($wizard_category);
@@ -80,7 +84,7 @@
 </ul>
 
 </div>
-<!-- /Tab Content: <?php echo htmlentities($wizard_category->label); ?> -->
+<!-- /Tab Content: <?php echo esc_html($wizard_category->label); ?> -->
 <?php
 
 	}
@@ -90,7 +94,7 @@
 <!-- /Wizard -->
 
 <!-- Loading -->
-<div id="wsf-form-add-loading"><p><?php _e("Your form is being built... just a moment.", 'ws-form'); ?></p></div>
+<div id="wsf-form-add-loading"><p><?php esc_html_e("Your form is being built... just a moment.", 'ws-form'); ?></p></div>
 <!-- /Loading -->
 
 <!-- WS Form - Modal - List Sub -->
@@ -102,7 +106,7 @@
 
 <!-- WS Form - Modal - List Sub - Header -->
 <div class="wsf-modal-title"></div>
-<div class="wsf-modal-close" data-action="wsf-close" title="<?php _e('Close', 'ws-form'); ?>"></div>
+<div class="wsf-modal-close" data-action="wsf-close" title="<?php esc_attr_e('Close', 'ws-form'); ?>"></div>
 <!-- /WS Form - Modal - List Sub - Header -->
 
 <!-- WS Form - Modal - List Sub - Content -->
@@ -121,11 +125,11 @@
 <div class="wsf-modal-buttons">
 
 <div id="wsf-modal-buttons-cancel">
-<a data-action="wsf-close"><?php _e('Cancel', 'ws-form'); ?></a>
+<a data-action="wsf-close"><?php esc_html_e('Cancel', 'ws-form'); ?></a>
 </div>
 
 <div id="wsf-modal-buttons-list-sub">
-<button class="button button-primary" data-action="wsf-add-wizard-action-modal"><?php _e('Create', 'ws-form'); ?></button>
+<button class="button button-primary" data-action="wsf-add-wizard-action-modal"><?php esc_html_e('Create', 'ws-form'); ?></button>
 </div>
 
 </div>
@@ -137,7 +141,9 @@
 <!-- /WS Form - Modal - List Sub -->
 
 <!-- Form Actions -->
-<form action="<?php echo WS_Form_Common::get_admin_url(); ?>" id="ws-form-action-do" method="post">
+<form action="<?php echo esc_attr(WS_Form_Common::get_admin_url()); ?>" id="ws-form-action-do" method="post">
+<input type="hidden" name="_wpnonce" value="<?php echo esc_attr(wp_create_nonce('wp_rest')); ?>">
+<?php wp_nonce_field(WS_FORM_POST_NONCE_ACTION_NAME, WS_FORM_POST_NONCE_FIELD_NAME); ?>
 <input type="hidden" name="page" value="ws-form">
 <input type="hidden" id="ws-form-action" name="action" value="">
 <input type="hidden" id="ws-form-id" name="id" value="">

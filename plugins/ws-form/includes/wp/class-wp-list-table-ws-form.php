@@ -121,7 +121,6 @@ class WP_List_Table_WS_Form {
 			'ajax' => false,
 			'screen' => null,
 		) );
-
 		$this->screen = convert_to_screen( $args['screen'] );
 
 		add_filter( "manage_{$this->screen->id}_columns", array( $this, 'get_columns' ), 0 );
@@ -302,7 +301,7 @@ class WP_List_Table_WS_Form {
 	 * @since 3.1.0
 	 */
 	public function no_items() {
-		_e( 'No items found.' );
+		esc_html_e( 'No items found.' );
 	}
 
 	/**
@@ -314,6 +313,7 @@ class WP_List_Table_WS_Form {
 	 * @param string $input_id ID attribute value for the search input field.
 	 */
 	public function search_box( $text, $input_id ) {
+		echo $_REQUEST['s'];
 		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
 			return;
 
@@ -546,9 +546,9 @@ class WP_List_Table_WS_Form {
 
 		$m = isset( $_GET['m'] ) ? (int) $_GET['m'] : 0;
 ?>
-		<label for="filter-by-date" class="screen-reader-text"><?php _e( 'Filter by date' ); ?></label>
+		<label for="filter-by-date" class="screen-reader-text"><?php esc_html_e( 'Filter by date' ); ?></label>
 		<select name="m" id="filter-by-date">
-			<option<?php selected( $m, 0 ); ?> value="0"><?php _e( 'All dates' ); ?></option>
+			<option<?php selected( $m, 0 ); ?> value="0"><?php esc_html_e( 'All dates' ); ?></option>
 <?php
 		foreach ( $months as $arc_row ) {
 			if ( 0 == $arc_row->year )

@@ -24,7 +24,7 @@
 			$ws_form_group->db_tab_index_save($parameters);
 
 			// Get next sibling ID
-			$next_sibling_id = absint(WS_Form_Common::get_query_var('next_sibling_id', 0, $parameters));
+			$next_sibling_id = absint(WS_Form_Common::get_query_var_nonce('next_sibling_id', 0, $parameters));
 
 			// Create group
 			$ws_form_group->db_create($next_sibling_id);
@@ -60,7 +60,7 @@
 			$ws_form_group->form_id = self::api_get_form_id($parameters);
 
 			// Get group data
-			$group = WS_Form_Common::get_query_var('group', false, $parameters);
+			$group = WS_Form_Common::get_query_var_nonce('group', false, $parameters);
 			if(!$group) { return false; }
 
 			// Put group
@@ -70,7 +70,7 @@
 			$history = array(
 
 				'object'		=>	'group',
-				'method'		=>	WS_Form_Common::get_query_var('history_method', 'put'),
+				'method'		=>	WS_Form_Common::get_query_var_nonce('history_method', 'put'),
 				'label'			=>	$ws_form_group->db_get_label($ws_form_group->table_name, $ws_form_group->id),
 				'form_id'		=>	$ws_form_group->form_id,
 				'id'			=>	$ws_form_group->id
@@ -97,7 +97,7 @@
 			$ws_form_group->db_tab_index_save($parameters);
 
 			// Get next sibling ID
-			$next_sibling_id = absint(WS_Form_Common::get_query_var('next_sibling_id', 0, $parameters));
+			$next_sibling_id = absint(WS_Form_Common::get_query_var_nonce('next_sibling_id', 0, $parameters));
 
 			// Process sort index
 			$ws_form_group->db_object_sort_index($ws_form_group->table_name, 'form_id', $ws_form_group->form_id, $next_sibling_id);
@@ -136,7 +136,7 @@
 			$ws_form_group->db_read();
 
 			// Get next sibling ID
-			$next_sibling_id = absint(WS_Form_Common::get_query_var('next_sibling_id', 0, $parameters));
+			$next_sibling_id = absint(WS_Form_Common::get_query_var_nonce('next_sibling_id', 0, $parameters));
 
 			// Get sort_index
 			$ws_form_group->sort_index = $ws_form_group->db_object_sort_index_get($ws_form_group->table_name, 'form_id', $ws_form_group->form_id, $next_sibling_id);
@@ -208,13 +208,13 @@
 		// Get form ID
 		public function api_get_form_id($parameters) {
 
-			return absint(WS_Form_Common::get_query_var('id', 0, $parameters));
+			return absint(WS_Form_Common::get_query_var_nonce('id', 0, $parameters));
 		}
 
 		// Get group ID
 		public function api_get_id($parameters) {
 
-			return absint(WS_Form_Common::get_query_var('group_id', 0, $parameters));
+			return absint(WS_Form_Common::get_query_var_nonce('group_id', 0, $parameters));
 		}
 
 	}

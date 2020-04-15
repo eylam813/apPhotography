@@ -447,7 +447,7 @@
 			$ws_form_submit = New WS_Form_Submit();
 
 			$views = array();
-			$current = ( !empty($_REQUEST['ws-form-status']) ? $_REQUEST['ws-form-status'] : 'all');
+			$current = WS_Form_Common::get_query_var('ws-form-status', 'all');
 			$all_url = remove_query_arg(array('ws-form-status', 'paged'));
 
 			// All link
@@ -521,11 +521,13 @@
 
 			// Build ORDER BY
 			$order_by = '';
-			if (!empty($_REQUEST['orderby'])) {
+			$order_query_var = WS_Form_Common::get_query_var('order', '');
+			$order_by_query_var = WS_Form_Common::get_query_var('order', '');
+			if (!empty($order_by_query_var)) {
 
-				$order = !empty($_REQUEST['order']) && ($_REQUEST['order'] == 'desc') ? ' DESC' : ' ASC';
+				$order = !empty($order_query_var) && ($order_query_var == 'desc') ? ' DESC' : ' ASC';
 
-				switch($_REQUEST['orderby']) {
+				switch($order_by_query_var) {
 
 					case 'id' :
 					case 'starred' :
@@ -533,14 +535,14 @@
 					case 'date_added' :
 					case 'date_updated' :
 
-						$order_by = esc_sql($_REQUEST['orderby']) . $order;
+						$order_by = esc_sql($order_by_query_var) . $order;
 						break;
 
 					default :
 
 						$order_by = $wpdb->prefix . WS_FORM_DB_TABLE_PREFIX . 'submit_meta.meta_value * 1' . $order . ', ' . $wpdb->prefix . WS_FORM_DB_TABLE_PREFIX . 'submit_meta.meta_value'. $order;
 						$join = 'LEFT OUTER JOIN ' . $wpdb->prefix . WS_FORM_DB_TABLE_PREFIX . 'submit_meta ON ' . $wpdb->prefix . WS_FORM_DB_TABLE_PREFIX . 'submit_meta.parent_id = ' . $wpdb->prefix . WS_FORM_DB_TABLE_PREFIX . 'submit.id';
-						$where .= ' AND ' . $wpdb->prefix . WS_FORM_DB_TABLE_PREFIX . "submit_meta.meta_key = '" . esc_sql($_REQUEST['orderby']) . "'";
+						$where .= ' AND ' . $wpdb->prefix . WS_FORM_DB_TABLE_PREFIX . "submit_meta.meta_key = '" . esc_sql($order_by_query_var) . "'";
 
 				}
 
@@ -708,18 +710,18 @@
 ?>
 <div class="alignleft actions">
 <select id="wsf_filter_id" name="id">
-<option value=""><?php echo __('Select form...', 'ws-form'); ?></option>
+<option value=""><?php esc_html_e('Select form...', 'ws-form'); ?></option>
 <?php
 				foreach($forms as $form) {
 
-?><option value="<?php echo $form['id']; ?>"<?php if($form['id'] == $this->form_id) { ?> selected="selected"<?php } ?>><?php echo htmlentities($form['label']); ?> (<?php
+?><option value="<?php echo esc_attr($form['id']); ?>"<?php if($form['id'] == $this->form_id) { ?> selected="selected"<?php } ?>><?php echo esc_html($form['label']); ?> (<?php
 
-					echo __('ID', 'ws-form') . ': ' . $form['id'];
+					esc_html_e('ID', 'ws-form') . ': ' . $form['id'];
 
 					$count_submit = $form['count_submit'];
 					if($count_submit > 0) {
 
-						 echo ' - ' . sprintf(_n('%u record', '%u records', $count_submit, 'ws-form'), $count_submit);
+						 echo esc_html(' - ' . sprintf(_n('%u record', '%u records', $count_submit, 'ws-form'), $count_submit));
 					}
 ?>)</option>
 <?php
@@ -730,9 +732,9 @@
 				// Filters
 				if($this->form_id > 0) {
 ?>
-<input type="text" id="wsf_filter_date_from" name="date_from" value="<?php echo $this->date_from; ?>" placeholder="<?php _e('Date from', 'ws-form'); ?>" />
+<input type="text" id="wsf_filter_date_from" name="date_from" value="<?php echo esc_attr($this->date_from); ?>" placeholder="<?php esc_html_e('Date from', 'ws-form'); ?>" />
 
-<input type="text" id="wsf_filter_date_to" name="date_to" value="<?php echo $this->date_to; ?>" placeholder="<?php _e('Date to', 'ws-form'); ?>" />
+<input type="text" id="wsf_filter_date_to" name="date_to" value="<?php echo esc_attr($this->date_to); ?>" placeholder="<?php esc_html_e('Date to', 'ws-form'); ?>" />
 
 <input type="button" id="wsf_filter_do" class="button" value="Filter" />
 <input type="button" id="wsf_filter_reset" class="button" value="Reset" />
@@ -779,11 +781,11 @@
 
 			if($this->form_id == 0) {
 
-				_e('Please select a form.', 'ws-form');
+				esc_html_e('Please select a form.', 'ws-form');
 
 			} else {
 
-				_e('No submissions avaliable.', 'ws-form');
+				esc_html_e('No submissions avaliable.', 'ws-form');
 			}
 
 		}

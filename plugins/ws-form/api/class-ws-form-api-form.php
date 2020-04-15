@@ -18,7 +18,7 @@
 			$ws_form_form->id = self::api_get_id($parameters);
 
 			// Check if this is coming from the admin
-			$is_admin = (WS_Form_Common::get_query_var('form_is_admin', 'false', $parameters) == 'true');
+			$is_admin = (WS_Form_Common::get_query_var_nonce('form_is_admin', 'false', $parameters) == 'true');
 
 			// Get label
 			$label = $ws_form_form->db_get_label();
@@ -175,7 +175,7 @@
 			$history = ($form_id > 0) ? array(
 
 				'object'		=>	'form',
-				'method'		=>	WS_Form_Common::get_query_var('history_method', 'post_upload_json'),
+				'method'		=>	WS_Form_Common::get_query_var_nonce('history_method', 'post_upload_json'),
 				'label'			=>	$ws_form_form->db_get_label(),
 				'id'			=>	$ws_form_form->id
 			) : false;
@@ -205,7 +205,7 @@
 			$ws_form_form->id = self::api_get_id($parameters);
 
 			// Get form data
-			$form = WS_Form_Common::get_query_var('form', false, $parameters);
+			$form = WS_Form_Common::get_query_var_nonce('form', false, $parameters);
 			if(!$form) { return false; }
 
 			// Put form as array
@@ -215,7 +215,7 @@
 			$history = array(
 
 				'object'		=>	'form',
-				'method'		=>	WS_Form_Common::get_query_var('history_method', 'put'),
+				'method'		=>	WS_Form_Common::get_query_var_nonce('history_method', 'put'),
 				'label'			=>	$ws_form_form->db_get_label(),
 				'id'			=>	$ws_form_form->id
 			);
@@ -237,7 +237,7 @@
 			$ws_form_form->id = self::api_get_id($parameters);
 
 			// Get form data
-			$form = WS_Form_Common::get_query_var('form', false, $parameters);
+			$form = WS_Form_Common::get_query_var_nonce('form', false, $parameters);
 			if(!$form) { return false; }
 
 			// Put form as array
@@ -250,7 +250,7 @@
 			$history = array(
 
 				'object'		=>	'form',
-				'method'		=>	WS_Form_Common::get_query_var('history_method', 'put_full'),
+				'method'		=>	WS_Form_Common::get_query_var_nonce('history_method', 'put_full'),
 				'label'			=>	$ws_form_form->db_get_label(),
 				'id'			=>	$ws_form_form->id
 			);
@@ -364,13 +364,13 @@
 			// Return SVG
 			$ws_form_form = new WS_Form_Form();
 			$ws_form_form->id = $form_id;
-			echo $ws_form_form->get_svg($type);
+			echo $ws_form_form->get_svg($type);	// phpcs:ignore
 			exit;
 		}
 
 		// Get form ID
 		public function api_get_id($parameters) {
 
-			return absint(WS_Form_Common::get_query_var('form_id', 0, $parameters));
+			return absint(WS_Form_Common::get_query_var_nonce('form_id', 0, $parameters));
 		}
 	}

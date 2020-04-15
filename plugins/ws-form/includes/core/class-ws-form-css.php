@@ -209,7 +209,10 @@
 				unset($breakpoints_inner[$breakpoint_inner_key_to_delete]);
 			}
 
-			return $css_return;
+			// Minify
+			$css_minify = WS_Form_Common::option_get('css_minify', false);
+
+			return $css_minify ? self::minify($css_return) : $css_return;
 		}
 
 		// Public
@@ -329,7 +332,7 @@
 					// Build CSS selectors
 					$css_return .= $css_indent . $class_single;
 
-					$column_width_percentage = ($column_index / $columns) * 100;
+					$column_width_percentage = round(($column_index / $columns) * 100, 6);
 
 					$css_return .= " {";
 
@@ -434,7 +437,10 @@
 			$css_return .= "\talign-self: center;\n";
 			$css_return .= "}\n\n";
 
-			return $css_return;
+			// Minify
+			$css_minify = WS_Form_Common::option_get('css_minify', false);
+
+			return $css_minify ? self::minify($css_return) : $css_return;
 		}
 
 		// Skin
@@ -515,12 +521,12 @@
 			$form_hover_border_color = $color_primary;
 			$form_hover_color = $form_color;
 			$form_label_color = $form_color;
-			$form_placeholder_color = $color_default_lighter;
+			$form_placeholder_color = $color_default_light;
 			$form_spacing_horizontal = $spacing_small;
 			$form_spacing_vertical = ($spacing_small * .85);
 			$form_transition = $transition; // true | false
-			$form_transition_speed = $transition_speed;
 			$form_transition_timing_function = $transition_timing_function;
+			$form_transition_speed = $transition_speed . 'ms ' . $form_transition_timing_function;
 			$input_height = ((round($form_font_size * $line_height) + ($form_spacing_vertical * 2)) + ($form_border_width * 2));
 			$checkbox_size = round($form_font_size * $line_height);
 			$radio_size = round($form_font_size * $line_height);
@@ -534,11 +540,11 @@
 ?>
 .wsf-form {
 	box-sizing: border-box;
-	color: <?php echo $color_default; ?>;
-	font-family: <?php echo $font_family; ?>;
-	font-size: <?php echo $font_size . $unit_of_measurement; ?>;
-	font-weight: <?php echo $font_weight; ?>;
-	line-height: <?php echo $line_height; ?>;
+	color: <?php self::e($color_default); ?>;
+	font-family: <?php self::e($font_family); ?>;
+	font-size: <?php self::e($font_size . $unit_of_measurement); ?>;
+	font-weight: <?php self::e($font_weight); ?>;
+	line-height: <?php self::e($line_height); ?>;
 	-webkit-tap-highlight-color: transparent;
 	text-size-adjust: 100%;
 }
@@ -547,33 +553,33 @@
 	box-sizing: inherit;
 }
 
-.wsf-form fieldset {
+.wsf-section {
 	border: none;
 	margin: 0;
 	min-width: 0;
 	padding: 0;
 }
 
-.wsf-form fieldset legend {
+.wsf-section legend {
 	border: 0;
 	font-size: 25px;
-	margin-bottom: <?php echo $spacing_small . $unit_of_measurement; ?>;
+	margin-bottom: <?php self::e($spacing_small . $unit_of_measurement); ?>;
 	padding: 0;
 }
 
 .wsf-form small {
-	font-size: <?php echo $font_size_small . $unit_of_measurement; ?>;
+	font-size: <?php self::e($font_size_small . $unit_of_measurement); ?>;
 }
 
 .wsf-form ul.wsf-group-tabs {
-	border-bottom: <?php echo $border_width . $unit_of_measurement . ' ' . $border_style . ' ' . $color_default_lighter; ?>;
+	border-bottom: <?php self::e($border_width . $unit_of_measurement . ' ' . $border_style . ' ' . $color_default_lighter); ?>;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	list-style: none;
-	margin-bottom: <?php echo $spacing . $unit_of_measurement; ?>;
-	margin-left: -<?php echo $spacing_extra_small . $unit_of_measurement; ?>;
-	margin-right: -<?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	margin-bottom: <?php self::e($spacing . $unit_of_measurement); ?>;
+	margin-left: -<?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
+	margin-right: -<?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 	margin-top: 0;
 	padding-left: 0;
 	position: relative;
@@ -581,31 +587,35 @@
 
 .wsf-form ul.wsf-group-tabs > li {
 	box-sizing: border-box;
-	margin-bottom: -<?php echo $border_width . $unit_of_measurement; ?>;
+	margin-bottom: -<?php self::e($border_width . $unit_of_measurement); ?>;
 	outline: none;
-	padding: 0 <?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	padding: 0 <?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 	position: relative;
 }
 
 .wsf-form ul.wsf-group-tabs > li > a {
 	background-color: transparent;
-	border: <?php echo $border_width . $unit_of_measurement . ' ' . $border_style . ' transparent'; ?>;
+	border: <?php self::e(($border_width . $unit_of_measurement . ' ' . $border_style) . ' transparent'); ?>;
 <?php if ($border_radius > 0) { ?>
-	border-top-left-radius: <?php echo $form_border_radius . $unit_of_measurement; ?>;
-	border-top-right-radius: <?php echo $form_border_radius . $unit_of_measurement; ?>;
+	border-top-left-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
+	border-top-right-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
 <?php } ?>
 	box-shadow: none;
-	color: <?php echo $color_default; ?>;
+	color: <?php self::e($color_default); ?>;
 	cursor: pointer;
 	display: block;
-	font-size: <?php echo $form_font_size . $unit_of_measurement; ?>;
-	padding: 11px <?php echo $spacing . $unit_of_measurement; ?>;
+	font-size: <?php self::e($form_font_size . $unit_of_measurement); ?>;
+	padding: 11px <?php self::e($spacing . $unit_of_measurement); ?>;
 	text-align: center;
 	text-decoration: none;
 <?php if ($transition) { ?>
-	transition: background-color <?php echo $transition_speed . 'ms ' . $transition_timing_function; ?>, border-color <?php echo $transition_speed . 'ms ' . $transition_timing_function; ?>;
+	transition: background-color <?php self::e($transition_speed . 'ms ' . $transition_timing_function); ?>, border-color <?php self::e($transition_speed . 'ms ' . $transition_timing_function); ?>;
 <?php } ?>
 	white-space: nowrap;
+}
+
+.wsf-form ul.wsf-group-tabs > li > a:focus {
+	outline: 0;
 }
 
 .wsf-form ul.wsf-group-tabs > li.wsf-tab-active {
@@ -613,31 +623,31 @@
 }
 
 .wsf-form ul.wsf-group-tabs > li.wsf-tab-active > a {
-	background-color: <?php echo $color_default_inverted; ?>;
-	border-color: <?php echo  $color_default_lighter; ?>;
+	background-color: <?php self::e($color_default_inverted); ?>;
+	border-color: <?php self::e($color_default_lighter); ?>;
 	border-bottom-color: transparent;
-	color: <?php echo $color_default; ?>;
+	color: <?php self::e($color_default); ?>;
 	cursor: default;
 }
 
 .wsf-form ul.wsf-group-tabs > li > a.wsf-tab-disabled {
-	color: <?php echo $color_default_light; ?>;
+	color: <?php self::e($color_default_light); ?>;
 	cursor: not-allowed;
 	pointer-events: none;
 }
 
 .wsf-grid {
-	margin-left: -<?php echo ($grid_gutter / 2) . $unit_of_measurement; ?>;
-	margin-right: -<?php echo ($grid_gutter / 2) . $unit_of_measurement; ?>;
+	margin-left: -<?php self::e(($grid_gutter / 2) . $unit_of_measurement); ?>;
+	margin-right: -<?php self::e(($grid_gutter / 2) . $unit_of_measurement); ?>;
 }
 
 .wsf-tile {
-	padding-left: <?php echo ($grid_gutter / 2) . $unit_of_measurement; ?>;
-	padding-right: <?php echo ($grid_gutter / 2) . $unit_of_measurement; ?>;
+	padding-left: <?php self::e(($grid_gutter / 2) . $unit_of_measurement); ?>;
+	padding-right: <?php self::e(($grid_gutter / 2) . $unit_of_measurement); ?>;
 }
 
 .wsf-field-wrapper {
-	margin-bottom: <?php echo $grid_gutter . $unit_of_measurement; ?>;
+	margin-bottom: <?php self::e($grid_gutter . $unit_of_measurement); ?>;
 }
 
 .wsf-field-wrapper[data-type='divider'],
@@ -649,38 +659,40 @@
 .wsf-inline {
 	display: inline-flex;
 	flex-direction: column;
-	margin-right: <?php echo $spacing_small . $unit_of_measurement; ?>;
+	margin-right: <?php self::e($spacing_small . $unit_of_measurement); ?>;
 }
 
 html.rtl .wsf-inline,
 body.rtl .wsf-inline {
-	margin-left: <?php echo $spacing_small . $unit_of_measurement; ?>;
+	margin-left: <?php self::e($spacing_small . $unit_of_measurement); ?>;
 	margin-right: 0;
 }
 
 label.wsf-label {
 	display: block;
 <?php if ($form_label_color != $color_default) { ?>
-	color: <?php echo $form_label_color; ?>;
+	color: <?php self::e($form_label_color); ?>;
 <?php } ?>
-	font-size: <?php echo $form_font_size . $unit_of_measurement; ?>;
-	line-height: <?php echo $line_height; ?>;
-	margin-bottom: <?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	font-family: <?php self::e($font_family); ?>;
+	font-size: <?php self::e($form_font_size . $unit_of_measurement); ?>;
+	font-weight: <?php self::e($font_weight); ?>;
+	line-height: <?php self::e($line_height); ?>;
+	margin-bottom: <?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 }
 
 .wsf-invalid-feedback {
-	color: <?php echo $form_invalid_feedback_color; ?>;
-	font-size: <?php echo $form_font_size_small . $unit_of_measurement; ?>;
-	line-height: <?php echo $line_height; ?>;
-	margin-top: <?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	color: <?php self::e($form_invalid_feedback_color); ?>;
+	font-size: <?php self::e($form_font_size_small . $unit_of_measurement); ?>;
+	line-height: <?php self::e($line_height); ?>;
+	margin-top: <?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 }
 
 .wsf-help {
-	color: <?php echo $form_help_color; ?>;
+	color: <?php self::e($form_help_color); ?>;
 	display: block;
-	font-size: <?php echo $form_font_size_small . $unit_of_measurement; ?>;
-	line-height: <?php echo $line_height; ?>;
-	margin-top: <?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	font-size: <?php self::e($form_font_size_small . $unit_of_measurement); ?>;
+	line-height: <?php self::e($line_height); ?>;
+	margin-top: <?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 }
 
 input[type=email].wsf-field,
@@ -692,23 +704,23 @@ input[type=url].wsf-field,
 select.wsf-field,
 textarea.wsf-field {
 	-webkit-appearance: none;
-	background-color: <?php echo $form_background_color; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
 <?php if ($form_border) { ?>
-	border: <?php echo $form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color; ?>;
+	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
 <?php } else { ?>
 	border: none;
 <?php } ?>
-	border-radius: <?php echo $form_border_radius . $unit_of_measurement; ?>;
-	color: <?php echo $form_color; ?>;
-	font-family: <?php echo $font_family; ?>;
-	font-size: <?php echo $form_font_size . $unit_of_measurement; ?>;
-	font-weight: <?php echo $font_weight; ?>;
-	line-height: <?php echo $line_height; ?>;
+	border-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
+	color: <?php self::e($form_color); ?>;
+	font-family: <?php self::e($font_family); ?>;
+	font-size: <?php self::e($form_font_size . $unit_of_measurement); ?>;
+	font-weight: <?php self::e($font_weight); ?>;
+	line-height: <?php self::e($line_height); ?>;
 	margin: 0;
-	padding: <?php echo $form_spacing_vertical . $unit_of_measurement . ' ' . $form_spacing_horizontal . $unit_of_measurement; ?>;
+	padding: <?php self::e($form_spacing_vertical . $unit_of_measurement . ' ' . $form_spacing_horizontal . $unit_of_measurement); ?>;
 	touch-action: manipulation;
 <?php if ($form_transition) { ?>
-	transition: background-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, border-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, background-image <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>;
+	transition: background-color <?php self::e($form_transition_speed); ?>, border-color <?php self::e($form_transition_speed); ?>, background-image <?php self::e($form_transition_speed); ?>;
 <?php } ?>
 	width: 100%;
 }
@@ -720,7 +732,7 @@ input[type=text].wsf-field,
 input[type=search].wsf-field,
 input[type=url].wsf-field,
 select.wsf-field:not([multiple]):not([size]) {
-	height: <?php echo $input_height . $unit_of_measurement; ?>;
+	height: <?php self::e($input_height . $unit_of_measurement); ?>;
 }
 
 
@@ -732,7 +744,7 @@ input[type=search].wsf-field::placeholder,
 input[type=url].wsf-field::placeholder,
 select.wsf-field::placeholder,
 textarea.wsf-field::placeholder {
-	color: <?php echo $form_placeholder_color; ?>;
+	color: <?php self::e($form_placeholder_color); ?>;
 	opacity: 1;
 }
 
@@ -746,13 +758,13 @@ input[type=url].wsf-field:hover:enabled,
 select.wsf-field:hover:enabled,
 textarea.wsf-field:hover:enabled {
 <?php if ($form_hover_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_hover_background_color; ?>;
+	background-color: <?php self::e($form_hover_background_color); ?>;
 <?php } ?>
 <?php if ($form_hover_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_hover_border_color ?>;
+	border-color: <?php self::e($form_hover_border_color); ?>;
 <?php } ?>
 <?php if ($form_hover_color != $form_color) { ?>
-	color: <?php echo $form_hover_color ?>;
+	color: <?php self::e($form_hover_color); ?>;
 <?php } ?>
 }
 <?php } ?>
@@ -767,13 +779,13 @@ select.wsf-field:focus,
 textarea.wsf-field:focus {
 <?php if ($form_focus) { ?>
 <?php if ($form_focus_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_focus_background_color; ?>;
+	background-color: <?php self::e($form_focus_background_color); ?>;
 <?php } ?>
 <?php if ($form_focus_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_focus_border_color; ?>;
+	border-color: <?php self::e($form_focus_border_color); ?>;
 <?php } ?>
 <?php if ($form_focus_color != $form_color) { ?>
-	color: <?php echo $form_focus_color; ?>;
+	color: <?php self::e($form_focus_color); ?>;
 <?php } ?>
 <?php } ?>
 	outline: 0;
@@ -788,18 +800,18 @@ input[type=url].wsf-field:disabled,
 select.wsf-field:disabled,
 textarea.wsf-field:disabled {
 <?php if ($form_disabled_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_disabled_background_color; ?>;
+	background-color: <?php self::e($form_disabled_background_color); ?>;
 <?php } ?>
 <?php if ($form_border) { ?>
 <?php if ($form_disabled_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_disabled_border_color; ?>;
+	border-color: <?php self::e($form_disabled_border_color); ?>;
 <?php } ?>
 <?php } ?>
 <?php if ($form_disabled_color != $form_color) { ?>
-	color: <?php echo $form_disabled_color; ?>;
-	-webkit-text-fill-color: <?php echo $form_disabled_color; ?>;
+	color: <?php self::e($form_disabled_color); ?>;
+	-webkit-text-fill-color: <?php self::e($form_disabled_color); ?>;
 <?php } else { ?>
-	-webkit-text-fill-color: <?php echo $form_color; ?>;
+	-webkit-text-fill-color: <?php self::e($form_color); ?>;
 <?php } ?>
 	cursor: not-allowed;
 	opacity: 1;
@@ -826,10 +838,10 @@ input[type=number].wsf-field::-webkit-outer-spin-button {
 
 select.wsf-field:not([multiple]):not([size]) {
 	background-image: url('data:image/svg+xml,<svg%20width%3D"10"%20height%3D"5"%20viewBox%3D"169%20177%2010%205"%20xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg"><path%20fill%3D"<?php echo urlencode($form_color); ?>"%20fill-rule%3D"evenodd"%20d%3D"M174%20182l5-5h-10"%2F><%2Fsvg>');
-	background-position: right <?php echo $spacing_small . $unit_of_measurement; ?> center;
+	background-position: right <?php self::e($spacing_small . $unit_of_measurement); ?> center;
 	background-repeat: no-repeat;
-	background-size: <?php echo $spacing_small . $unit_of_measurement . ' ' . $spacing_extra_small . $unit_of_measurement; ?>;
-	padding-right: <?php echo (($form_spacing_horizontal * 2) + $spacing_small) . $unit_of_measurement; ?>;
+	background-size: <?php self::e($spacing_small . $unit_of_measurement . ' ' . $spacing_extra_small . $unit_of_measurement); ?>;
+	padding-right: <?php self::e((($form_spacing_horizontal * 2) + $spacing_small) . $unit_of_measurement); ?>;
 }
 
 select.wsf-field:not([multiple]):not([size])::-ms-expand {
@@ -859,7 +871,7 @@ select.wsf-field:not([multiple]):not([size]):-moz-focusring {
 
 select.wsf-field:not([multiple]):not([size]):disabled {
 <?php if ($form_disabled_color != $form_color) { ?>
-	border-color: <?php echo $form_disabled_border_color; ?>;
+	border-color: <?php self::e($form_disabled_border_color); ?>;
 	background-image: url('data:image/svg+xml,<svg%20width%3D"10"%20height%3D"5"%20viewBox%3D"169%20177%2010%205"%20xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg"><path%20fill%3D"<?php echo urlencode($form_disabled_color); ?>"%20fill-rule%3D"evenodd"%20d%3D"M174%20182l5-5h-10"%2F><%2Fsvg>');
 <?php } ?>
 }
@@ -870,7 +882,7 @@ select.wsf-field optgroup {
 
 <?php if ($form_disabled_color != $form_color) { ?>
 select.wsf-field option:disabled {
-	color: <?php echo $form_disabled_color; ?>;
+	color: <?php self::e($form_disabled_color); ?>;
 }
 <?php } ?>
 
@@ -885,56 +897,56 @@ textarea.wsf-field[data-textarea-type='tinymce'] {
 }
 
 input[type=checkbox].wsf-field {
-	height: <?php echo $checkbox_size . $unit_of_measurement; ?>;
+	height: <?php self::e($checkbox_size . $unit_of_measurement); ?>;
 	margin: 0;
 	opacity: 0;
 	position: absolute;
-	width: <?php echo $checkbox_size . $unit_of_measurement; ?>;
+	width: <?php self::e($checkbox_size . $unit_of_measurement); ?>;
 }
 
 input[type=checkbox].wsf-field + label.wsf-label {
 	display: inline-block;
-	margin-bottom: <?php echo $spacing_small . $unit_of_measurement; ?>;
-	padding-left: <?php echo ($checkbox_size + $spacing_extra_small) . $unit_of_measurement; ?>;
+	margin: 0 0 <?php self::e($spacing_small . $unit_of_measurement); ?>;
+	padding-left: <?php self::e(($checkbox_size + $spacing_extra_small) . $unit_of_measurement); ?>;
 	position: relative;
 	user-select: none;
 }
 
 input[type=checkbox].wsf-field + label.wsf-label:before {
-	background-color: <?php echo $form_background_color; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
 <?php if ($form_border) { ?>
-	border: <?php echo $form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color; ?>;
+	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
 <?php } ?>
 <?php if ($form_border_radius > 0) { ?>
-	border-radius: <?php echo $form_border_radius . $unit_of_measurement; ?>;
+	border-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
 <?php } ?>
 	content: '';
 	cursor: pointer;
 	display: inline-block;
-	height: <?php echo $checkbox_size . $unit_of_measurement; ?>;
+	height: <?php self::e($checkbox_size . $unit_of_measurement); ?>;
 	left: 0;
-	margin-bottom: -<?php echo $spacing_extra_small . $unit_of_measurement; ?>;
-	margin-right: <?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	margin-bottom: -<?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
+	margin-right: <?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 	position: absolute;
 <?php if ($form_transition) { ?>
-	transition: background-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, border-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, box-shadow <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>;
+	transition: background-color <?php self::e($form_transition_speed); ?>, border-color <?php self::e($form_transition_speed); ?>, box-shadow <?php self::e($form_transition_speed); ?>;
 <?php } ?>
 	vertical-align: top;
-	width: <?php echo $checkbox_size . $unit_of_measurement; ?>;
+	width: <?php self::e($checkbox_size . $unit_of_measurement); ?>;
 }
 
 input[type=checkbox].wsf-field + label.wsf-label + .wsf-invalid-feedback {
-	margin-bottom: <?php echo $spacing_small . $unit_of_measurement; ?>;
-	margin-top: -<?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	margin-bottom: <?php self::e($spacing_small . $unit_of_measurement); ?>;
+	margin-top: -<?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 }
 
 <?php if ($form_hover) { ?>
 input[type=checkbox].wsf-field:enabled:hover + label.wsf-label:before {
 <?php if ($form_hover_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_hover_background_color; ?>;
+	background-color: <?php self::e($form_hover_background_color); ?>;
 <?php } ?>
 <?php if ($form_hover_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_hover_border_color; ?>
+	border-color: <?php self::e($form_hover_border_colo); ?>
 <?php } ?>
 }
 <?php } ?>
@@ -942,36 +954,36 @@ input[type=checkbox].wsf-field:enabled:hover + label.wsf-label:before {
 <?php if ($form_focus) { ?>
 input[type=checkbox].wsf-field:focus + label.wsf-label:before {
 <?php if ($form_focus_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_focus_background_color; ?>;
+	background-color: <?php self::e($form_focus_background_color); ?>;
 <?php } ?>
 <?php if ($form_focus_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_focus_border_color; ?>;
+	border-color: <?php self::e($form_focus_border_color); ?>;
 <?php } ?>
 }
 <?php } ?>
 
 input[type=checkbox].wsf-field:disabled + label.wsf-label {
 <?php if ($form_disabled_color != $form_color) { ?>
-	color: <?php echo $form_disabled_color; ?>;
+	color: <?php self::e($form_disabled_color); ?>;
 <?php } ?>
 }
 
 input[type=checkbox].wsf-field:disabled + label.wsf-label:before {
 <?php if ($form_disabled_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_disabled_background_color; ?>;
+	background-color: <?php self::e($form_disabled_background_color); ?>;
 <?php } ?>
 <?php if ($form_border) { ?>
 <?php if ($form_disabled_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_disabled_border_color; ?>;
+	border-color: <?php self::e($form_disabled_border_color); ?>;
 <?php } ?>
 <?php } ?>
 cursor: not-allowed;
 }
 
 input[type=checkbox].wsf-field:checked + label.wsf-label:before {
-	background-color: <?php echo $form_checked_color; ?>;
-	border-color: <?php echo $form_checked_color; ?>;
-	box-shadow: inset 0 0 0 2px <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($form_checked_color); ?>;
+	border-color: <?php self::e($form_checked_color); ?>;
+	box-shadow: inset 0 0 0 2px <?php self::e($color_default_inverted); ?>;
 }
 
 input[type=checkbox].wsf-field:checked:disabled + label.wsf-label:before {
@@ -979,45 +991,45 @@ input[type=checkbox].wsf-field:checked:disabled + label.wsf-label:before {
 }
 
 input[type=checkbox].wsf-field.wsf-switch {
-	width: <?php echo ($checkbox_size * 2) . $unit_of_measurement; ?>;
+	width: <?php self::e(($checkbox_size * 2) . $unit_of_measurement); ?>;
 }
 
 input[type=checkbox].wsf-field.wsf-switch + label.wsf-label {
-	padding-left: <?php echo (($checkbox_size * 2) + $spacing_extra_small) . $unit_of_measurement; ?>;
+	padding-left: <?php self::e((($checkbox_size * 2) + $spacing_extra_small) . $unit_of_measurement); ?>;
 	position: relative;
 }
 
 input[type=checkbox].wsf-field.wsf-switch + label.wsf-label:before {
 	position: absolute;
-	width: <?php echo ($checkbox_size * 2) . $unit_of_measurement; ?>;
+	width: <?php self::e(($checkbox_size * 2) . $unit_of_measurement); ?>;
 }
 
 input[type=checkbox].wsf-field.wsf-switch + label.wsf-label:after {
-	background-color: <?php echo $form_border_color; ?>;
+	background-color: <?php self::e($form_border_color); ?>;
 <?php if ($form_border) { ?>
-	border: <?php echo $form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color; ?>;
+	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
 <?php } ?>
 <?php if ($form_border_radius > 0) { ?>
-	border-radius: <?php echo $form_border_radius . $unit_of_measurement; ?>;
+	border-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
 <?php } ?>
 	content: '';
 	cursor: pointer;
 	display: inline-block;
-	height: <?php echo $checkbox_size . $unit_of_measurement; ?>;
+	height: <?php self::e($checkbox_size . $unit_of_measurement); ?>;
 	left: 0;
 	position: absolute;
 	top: 0;
 <?php if ($form_transition) { ?>
-	transition: background-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, border-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, left <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>;
+	transition: background-color <?php self::e($form_transition_speed); ?>, border-color <?php self::e($form_transition_speed); ?>, left <?php self::e($form_transition_speed); ?>;
 <?php } ?>
 	vertical-align: top;
-	width: <?php echo $checkbox_size . $unit_of_measurement; ?>;
+	width: <?php self::e($checkbox_size . $unit_of_measurement); ?>;
 }
 
 <?php if ($form_hover) { ?>
 input[type=checkbox].wsf-field.wsf-switch:enabled:hover + label.wsf-label:after {
 <?php if ($form_hover_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_hover_border_color; ?>
+	border-color: <?php self::e($form_hover_border_colo); ?>
 <?php } ?>
 }
 <?php } ?>
@@ -1025,7 +1037,7 @@ input[type=checkbox].wsf-field.wsf-switch:enabled:hover + label.wsf-label:after 
 <?php if ($form_focus) { ?>
 input[type=checkbox].wsf-field.wsf-switch:focus + label.wsf-label:after {
 <?php if ($form_focus_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_focus_border_color; ?>;
+	border-color: <?php self::e($form_focus_border_color); ?>;
 <?php } ?>
 }
 <?php } ?>
@@ -1033,21 +1045,21 @@ input[type=checkbox].wsf-field.wsf-switch:focus + label.wsf-label:after {
 input[type=checkbox].wsf-field.wsf-switch:disabled + label.wsf-label:after {
 <?php if ($form_border) { ?>
 <?php if ($form_disabled_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_disabled_border_color; ?>;
+	border-color: <?php self::e($form_disabled_border_color); ?>;
 <?php } ?>
 <?php } ?>
 	cursor: not-allowed;
 }
 
 input[type=checkbox].wsf-field.wsf-switch:checked + label.wsf-label:before {
-	background-color: <?php echo $form_background_color; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
 	box-shadow: none;
 }
 
 input[type=checkbox].wsf-field.wsf-switch:checked + label.wsf-label:after {
-	background-color: <?php echo $form_checked_color; ?>;
-	border-color: <?php echo $form_checked_color; ?>;
-	left: <?php echo $checkbox_size . $unit_of_measurement; ?>;
+	background-color: <?php self::e($form_checked_color); ?>;
+	border-color: <?php self::e($form_checked_color); ?>;
+	left: <?php self::e($checkbox_size . $unit_of_measurement); ?>;
 }
 
 input[type=checkbox].wsf-field.wsf-switch:checked:disabled + label.wsf-label:before,
@@ -1058,66 +1070,66 @@ input[type=checkbox].wsf-field.wsf-switch:checked:disabled + label.wsf-label:aft
 html.rtl input[type=checkbox].wsf-field + label.wsf-label,
 body.rtl input[type=checkbox].wsf-field + label.wsf-label {
 	padding-left: 0;
-	padding-right: <?php echo ($checkbox_size + $spacing_extra_small) . $unit_of_measurement; ?>;
+	padding-right: <?php self::e(($checkbox_size + $spacing_extra_small) . $unit_of_measurement); ?>;
 }
 
 html.rtl input[type=checkbox].wsf-field + label.wsf-label:before,
 body.rtl input[type=checkbox].wsf-field + label.wsf-label:before {
 	left: initial;
-	margin-right: <?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	margin-right: <?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 	margin-right: 0;
 	right: 0;
 }
 
 input[type=radio].wsf-field {
-	height: <?php echo $radio_size . $unit_of_measurement; ?>;
+	height: <?php self::e($radio_size . $unit_of_measurement); ?>;
 	margin: 0;
 	opacity: 0;
 	position: absolute;
-	width: <?php echo $radio_size . $unit_of_measurement; ?>;
+	width: <?php self::e($radio_size . $unit_of_measurement); ?>;
 }
 
 input[type=radio].wsf-field + label.wsf-label {
 	display: inline-block;
-	margin-bottom: <?php echo $spacing_small . $unit_of_measurement; ?>;
-	padding-left: <?php echo ($radio_size + $spacing_extra_small) . $unit_of_measurement; ?>;
+	margin: 0 0 <?php self::e($spacing_small . $unit_of_measurement); ?>;
+	padding-left: <?php self::e(($radio_size + $spacing_extra_small) . $unit_of_measurement); ?>;
 	position: relative;
 	user-select: none;
 }
 
 input[type=radio].wsf-field + label.wsf-label:before {
-	background-color: <?php echo $form_background_color; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
 <?php if ($form_border) { ?>
-	border: <?php echo $form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color; ?>;
+	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
 <?php } ?>
 	border-radius: 50%;
 	content: '';
 	cursor: pointer;
 	display: inline-block;
-	height: <?php echo $radio_size . $unit_of_measurement; ?>;
+	height: <?php self::e($radio_size . $unit_of_measurement); ?>;
 	left: 0;
-	margin-bottom: -<?php echo $spacing_extra_small . $unit_of_measurement; ?>;
-	margin-right: <?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	margin-bottom: -<?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
+	margin-right: <?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 	position: absolute;
 <?php if ($form_transition) { ?>
-	transition: background-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, border-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, box-shadow <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>;
+	transition: background-color <?php self::e($form_transition_speed); ?>, border-color <?php self::e($form_transition_speed); ?>, box-shadow <?php self::e($form_transition_speed); ?>;
 <?php } ?>
 	vertical-align: top;
-	width: <?php echo $radio_size . $unit_of_measurement; ?>;
+	width: <?php self::e($radio_size . $unit_of_measurement); ?>;
 }
 
 input[type=radio].wsf-field + label.wsf-label + .wsf-invalid-feedback {
-	margin-bottom: <?php echo $spacing_small . $unit_of_measurement; ?>;
-	margin-top: -<?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	margin-bottom: <?php self::e($spacing_small . $unit_of_measurement); ?>;
+	margin-top: -<?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 }
 
 <?php if ($form_hover) { ?>
 input[type=radio].wsf-field:enabled:hover + label.wsf-label:before {
 <?php if ($form_hover_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_hover_background_color; ?>;
+	background-color: <?php self::e($form_hover_background_color); ?>;
 <?php } ?>
 <?php if ($form_hover_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_hover_border_color; ?>
+	border-color: <?php self::e($form_hover_border_colo); ?>
 <?php } ?>
 }
 <?php } ?>
@@ -1125,36 +1137,36 @@ input[type=radio].wsf-field:enabled:hover + label.wsf-label:before {
 <?php if ($form_focus) { ?>
 input[type=radio].wsf-field:focus + label.wsf-label:before {
 <?php if ($form_focus_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_focus_background_color; ?>;
+	background-color: <?php self::e($form_focus_background_color); ?>;
 <?php } ?>
 <?php if ($form_focus_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_focus_border_color; ?>;
+	border-color: <?php self::e($form_focus_border_color); ?>;
 <?php } ?>
 }
 <?php } ?>
 
 input[type=radio].wsf-field:disabled + label.wsf-label {
 <?php if ($form_disabled_color != $form_color) { ?>
-	color: <?php echo $form_disabled_color; ?>;
+	color: <?php self::e($form_disabled_color); ?>;
 <?php } ?>
 }
 
 input[type=radio].wsf-field:disabled + label.wsf-label:before {
 <?php if ($form_disabled_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_disabled_background_color; ?>;
+	background-color: <?php self::e($form_disabled_background_color); ?>;
 <?php } ?>
 <?php if ($form_border) { ?>
 <?php if ($form_disabled_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_disabled_border_color; ?>;
+	border-color: <?php self::e($form_disabled_border_color); ?>;
 <?php } ?>
 <?php } ?>
 	cursor: not-allowed;
 }
 
 input[type=radio].wsf-field:checked + label.wsf-label:before {
-	background-color: <?php echo $form_checked_color; ?>;
-	border-color: <?php echo $form_checked_color; ?>;
-	box-shadow: inset 0 0 0 2px <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($form_checked_color); ?>;
+	border-color: <?php self::e($form_checked_color); ?>;
+	box-shadow: inset 0 0 0 2px <?php self::e($color_default_inverted); ?>;
 }
 
 input[type=radio].wsf-field:checked:disabled + label.wsf-label:before {
@@ -1164,13 +1176,13 @@ input[type=radio].wsf-field:checked:disabled + label.wsf-label:before {
 html.rtl input[type=radio].wsf-field + label.wsf-label,
 body.rtl input[type=radio].wsf-field + label.wsf-label {
 	padding-left: 0;
-	padding-right: <?php echo ($radio_size + $spacing_extra_small) . $unit_of_measurement; ?>;
+	padding-right: <?php self::e(($radio_size + $spacing_extra_small) . $unit_of_measurement); ?>;
 }
 
 html.rtl input[type=radio].wsf-field + label.wsf-label:before,
 body.rtl input[type=radio].wsf-field + label.wsf-label:before {
 	left: initial;
-	margin-right: <?php echo $spacing_extra_small . $unit_of_measurement; ?>;
+	margin-right: <?php self::e($spacing_extra_small . $unit_of_measurement); ?>;
 	margin-right: 0;
 	right: 0;
 }
@@ -1178,29 +1190,30 @@ body.rtl input[type=radio].wsf-field + label.wsf-label:before {
 input[type=checkbox].wsf-field.wsf-button + label.wsf-label,
 input[type=radio].wsf-field.wsf-button + label.wsf-label {
   	appearance: none;
-  	background-color: <?php echo $color_default_lighter; ?>;
+  	background-color: <?php self::e($color_default_lighter); ?>;
   <?php if ($form_border) { ?>
-  	border: <?php echo $form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color; ?>;
+  	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
   <?php } else { ?>
   	border: none;
   <?php } ?>
   <?php if ($form_border_radius > 0) { ?>
-  	border-radius: <?php echo $form_border_radius . $unit_of_measurement; ?>;
+  	border-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
   <?php } ?>
-  	color: <?php echo $form_color; ?>;
+  	color: <?php self::e($form_color); ?>;
   	cursor: pointer;
   	display: inline-block;
-  	font-family: <?php echo $font_family; ?>;
-  	font-size: <?php echo $form_font_size . $unit_of_measurement; ?>;
-  	font-weight: <?php echo $font_weight; ?>;
-  	line-height: <?php echo $line_height; ?>;
-  	padding: <?php echo $form_spacing_vertical . $unit_of_measurement . ' ' . $form_spacing_horizontal . $unit_of_measurement; ?>;
-  	margin: 0 0 <?php echo ($grid_gutter / 2) . $unit_of_measurement; ?>;
+  	font-family: <?php self::e($font_family); ?>;
+  	font-size: <?php self::e($form_font_size . $unit_of_measurement); ?>;
+  	font-weight: <?php self::e($font_weight); ?>;
+  	height: <?php self::e($input_height . $unit_of_measurement); ?>;
+  	line-height: <?php self::e($line_height); ?>;
+  	padding: <?php self::e($form_spacing_vertical . $unit_of_measurement . ' ' . $form_spacing_horizontal . $unit_of_measurement); ?>;
+  	margin: 0 0 <?php self::e(($grid_gutter / 2) . $unit_of_measurement); ?>;
   	text-align: center;
   	text-decoration: none;
   	touch-action: manipulation;
   <?php if ($form_transition) { ?>
-  	transition: background-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, border-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>;
+  	transition: background-color <?php self::e($form_transition_speed); ?>, border-color <?php self::e($form_transition_speed); ?>, color <?php self::e($form_transition_speed); ?>;
   <?php } ?>
   	user-select: none;
   	vertical-align: middle;
@@ -1219,15 +1232,15 @@ input[type=radio].wsf-field.wsf-button:disabled + label.wsf-label {
 
 input[type=checkbox].wsf-field.wsf-button:checked + label.wsf-label,
 input[type=radio].wsf-field.wsf-button:checked + label.wsf-label {
-	background-color: <?php echo $color_primary; ?>;
-	border-color: <?php echo $color_primary; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_primary); ?>;
+	border-color: <?php self::e($color_primary); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 
 input[type=checkbox].wsf-field.wsf-color,
 input[type=radio].wsf-field.wsf-color {
-	height: <?php echo $color_size . $unit_of_measurement; ?>;
-	width: <?php echo $color_size . $unit_of_measurement; ?>;
+	height: <?php self::e($color_size . $unit_of_measurement); ?>;
+	width: <?php self::e($color_size . $unit_of_measurement); ?>;
 }
 
 input[type=checkbox].wsf-field.wsf-color + label.wsf-label,
@@ -1244,44 +1257,44 @@ input[type=radio].wsf-field.wsf-color + label.wsf-label:before {
 
 input[type=checkbox].wsf-field.wsf-color + label.wsf-label > span {
 <?php if ($form_border) { ?>
-	border: <?php echo $form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color; ?>;
+	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
 <?php } ?>
 <?php if ($form_border_radius > 0) { ?>
-	border-radius: <?php echo $form_border_radius . $unit_of_measurement; ?>;
+	border-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
 <?php } ?>
 	cursor: pointer;
 	display: inline-block;
-	height: <?php echo $color_size . $unit_of_measurement; ?>;
+	height: <?php self::e($color_size . $unit_of_measurement); ?>;
 <?php if ($form_transition) { ?>
-	transition: border-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, box-shadow <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>;
+	transition: border-color <?php self::e($form_transition_speed); ?>, box-shadow <?php self::e($form_transition_speed); ?>;
 <?php } ?>
 	vertical-align: middle;
-	width: <?php echo $color_size . $unit_of_measurement; ?>;
+	width: <?php self::e($color_size . $unit_of_measurement); ?>;
 }
 
 input[type=radio].wsf-field.wsf-color + label.wsf-label > span {
 <?php if ($form_border) { ?>
-	border: <?php echo $form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color; ?>;
+	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
 <?php } ?>
 	border-radius: 50%;
 	cursor: pointer;
 	display: inline-block;
-	height: <?php echo $color_size . $unit_of_measurement; ?>;
+	height: <?php self::e($color_size . $unit_of_measurement); ?>;
 <?php if ($form_transition) { ?>
-	transition: border-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, box-shadow <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>;
+	transition: border-color <?php self::e($form_transition_speed); ?>, box-shadow <?php self::e($form_transition_speed); ?>;
 <?php } ?>
 	vertical-align: middle;
-	width: <?php echo $color_size . $unit_of_measurement; ?>;
+	width: <?php self::e($color_size . $unit_of_measurement); ?>;
 }
 
 <?php if ($form_hover) { ?>
 input[type=checkbox].wsf-field.wsf-color:enabled:hover + label.wsf-label > span,
 input[type=radio].wsf-field.wsf-color:enabled:hover + label.wsf-label > span {
 <?php if ($form_hover_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_hover_background_color; ?>;
+	background-color: <?php self::e($form_hover_background_color); ?>;
 <?php } ?>
 <?php if ($form_hover_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_hover_border_color; ?>
+	border-color: <?php self::e($form_hover_border_colo); ?>
 <?php } ?>
 }
 <?php } ?>
@@ -1290,10 +1303,10 @@ input[type=radio].wsf-field.wsf-color:enabled:hover + label.wsf-label > span {
 input[type=checkbox].wsf-field.wsf-color:focus + label.wsf-label > span,
 input[type=radio].wsf-field.wsf-color:focus + label.wsf-label > span {
 <?php if ($form_focus_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_focus_background_color; ?>;
+	background-color: <?php self::e($form_focus_background_color); ?>;
 <?php } ?>
 <?php if ($form_focus_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_focus_border_color; ?>;
+	border-color: <?php self::e($form_focus_border_color); ?>;
 <?php } ?>
 }
 <?php } ?>
@@ -1306,8 +1319,74 @@ input[type=radio].wsf-field.wsf-color:disabled + label.wsf-label > span {
 
 input[type=checkbox].wsf-field.wsf-color:checked + label.wsf-label > span,
 input[type=radio].wsf-field.wsf-color:checked + label.wsf-label > span {
-	border-color: <?php echo $form_checked_color; ?>;
-	box-shadow: inset 0 0 0 2px <?php echo $color_default_inverted; ?>;
+	border-color: <?php self::e($form_checked_color); ?>;
+	box-shadow: inset 0 0 0 2px <?php self::e($color_default_inverted); ?>;
+}
+
+input[type=checkbox].wsf-field.wsf-image + label.wsf-label,
+input[type=radio].wsf-field.wsf-image + label.wsf-label {
+	margin-left: 0;
+	padding-left: 0;
+	position: relative;
+}
+
+input[type=checkbox].wsf-field.wsf-image + label.wsf-label:before,
+input[type=radio].wsf-field.wsf-image + label.wsf-label:before {
+	display: none;
+}
+
+input[type=checkbox].wsf-field.wsf-image + label.wsf-label > img,
+input[type=radio].wsf-field.wsf-image + label.wsf-label > img {
+<?php if ($form_border) { ?>
+	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
+<?php } ?>
+<?php if ($form_border_radius > 0) { ?>
+	border-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
+<?php } ?>
+	cursor: pointer;
+	display: inline-block;
+	height: auto;
+	max-width: 100%;
+	padding: 2px;
+<?php if ($form_transition) { ?>
+	transition: border-color <?php self::e($form_transition_speed); ?>, box-shadow <?php self::e($form_transition_speed); ?>;
+<?php } ?>
+	vertical-align: middle;
+}
+
+<?php if ($form_hover) { ?>
+input[type=checkbox].wsf-field.wsf-image:enabled:hover + label.wsf-label > img,
+input[type=radio].wsf-field.wsf-image:enabled:hover + label.wsf-label > img {
+<?php if ($form_hover_background_color != $form_background_color) { ?>
+	background-color: <?php self::e($form_hover_background_color); ?>;
+<?php } ?>
+<?php if ($form_hover_border_color != $form_border_color) { ?>
+	border-color: <?php self::e($form_hover_border_colo); ?>
+<?php } ?>
+}
+<?php } ?>
+
+<?php if ($form_focus) { ?>
+input[type=checkbox].wsf-field.wsf-image:focus + label.wsf-label > img,
+input[type=radio].wsf-field.wsf-image:focus + label.wsf-label > img {
+<?php if ($form_focus_background_color != $form_background_color) { ?>
+	background-color: <?php self::e($form_focus_background_color); ?>;
+<?php } ?>
+<?php if ($form_focus_border_color != $form_border_color) { ?>
+	border-color: <?php self::e($form_focus_border_color); ?>;
+<?php } ?>
+}
+<?php } ?>
+
+input[type=checkbox].wsf-field.wsf-image:disabled + label.wsf-label > img,
+input[type=radio].wsf-field.wsf-image:disabled + label.wsf-label > img {
+	cursor: not-allowed;
+	opacity: .5;
+}
+
+input[type=checkbox].wsf-field.wsf-image:checked + label.wsf-label > img,
+input[type=radio].wsf-field.wsf-image:checked + label.wsf-label > img {
+	border-color: <?php self::e($form_checked_color); ?>;
 }
 
 
@@ -1320,15 +1399,15 @@ input[type=radio].wsf-field.wsf-color:checked + label.wsf-label > span {
 .wsf-validated select.wsf-field:invalid,
 .wsf-validated textarea.wsf-field:invalid {
 <?php if ($form_error_background_color != $form_background_color) { ?>
-	background-color: <?php echo $form_error_background_color; ?>;
+	background-color: <?php self::e($form_error_background_color); ?>;
 <?php } ?>
 <?php if ($form_border) { ?>
 <?php if ($form_error_border_color != $form_border_color) { ?>
-	border-color: <?php echo $form_error_border_color; ?>;
+	border-color: <?php self::e($form_error_border_color); ?>;
 <?php } ?>
 <?php } ?>
 <?php if ($form_error_border_color != $form_color) { ?>
-	color: <?php echo $form_error_color; ?>;
+	color: <?php self::e($form_error_color); ?>;
 <?php } ?>
 }
 
@@ -1345,7 +1424,7 @@ input[type=radio].wsf-field.wsf-color:checked + label.wsf-label > span {
 
 <?php if ($form_error_color != $form_color) { ?>
 select.wsf-field:not([multiple]):not([size]):invalid {
-	background-image: url('data:image/svg+xml,<svg%20width%3D"10"%20height%3D"5"%20viewBox%3D"169%20177%2010%205"%20xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg"><path%20fill%3D"<?php echo $form_error_color; ?>"%20fill-rule%3D"evenodd"%20d%3D"M174%20182l5-5h-10"%2F><%2Fsvg>');
+	background-image: url('data:image/svg+xml,<svg%20width%3D"10"%20height%3D"5"%20viewBox%3D"169%20177%2010%205"%20xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg"><path%20fill%3D"<?php echo urlencode($form_error_color); ?>"%20fill-rule%3D"evenodd"%20d%3D"M174%20182l5-5h-10"%2F><%2Fsvg>');
 }
 <?php } ?>
 
@@ -1354,36 +1433,37 @@ select.wsf-field:not([multiple]):not([size]):invalid {
 .wsf-validated input[type=checkbox].wsf-field:invalid + label.wsf-label:before,
 .wsf-validated input[type=checkbox].wsf-field.wsf-switch:invalid + label.wsf-label:after,
 .wsf-validated input[type=radio].wsf-field:invalid + label.wsf-label:before {
-	border-color: <?php echo $form_error_border_color; ?>;
+	border-color: <?php self::e($form_error_border_color); ?>;
 }
 <?php } ?>
 <?php } ?>
 
 button.wsf-button {
 	appearance: none;
-	background-color: <?php echo $color_default_lighter; ?>;
+	background-color: <?php self::e($color_default_lighter); ?>;
 <?php if ($form_border) { ?>
-	border: <?php echo $form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color; ?>;
+	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
 <?php } else { ?>
 	border: none;
 <?php } ?>
 <?php if ($form_border_radius > 0) { ?>
-	border-radius: <?php echo $form_border_radius . $unit_of_measurement; ?>;
+	border-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
 <?php } ?>
-	color: <?php echo $form_color; ?>;
+	color: <?php self::e($form_color); ?>;
 	cursor: pointer;
 	display: inline-block;
-	font-family: <?php echo $font_family; ?>;
-	font-size: <?php echo $form_font_size . $unit_of_measurement; ?>;
-	font-weight: <?php echo $font_weight; ?>;
-	line-height: <?php echo $line_height; ?>;
-	padding: <?php echo $form_spacing_vertical . $unit_of_measurement . ' ' . $form_spacing_horizontal . $unit_of_measurement; ?>;
+	font-family: <?php self::e($font_family); ?>;
+	font-size: <?php self::e($form_font_size . $unit_of_measurement); ?>;
+	font-weight: <?php self::e($font_weight); ?>;
+	height: <?php self::e($input_height . $unit_of_measurement); ?>;
+	line-height: <?php self::e($line_height); ?>;
+	padding: <?php self::e($form_spacing_vertical . $unit_of_measurement . ' ' . $form_spacing_horizontal . $unit_of_measurement); ?>;
 	margin: 0;
 	text-align: center;
 	text-decoration: none;
 	touch-action: manipulation;
 <?php if ($form_transition) { ?>
-	transition: background-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, border-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>;
+	transition: background-color <?php self::e($form_transition_speed); ?>, border-color <?php self::e($form_transition_speed); ?>;
 <?php } ?>
 	user-select: none;
 	vertical-align: middle;
@@ -1395,368 +1475,368 @@ button.wsf-button.wsf-button-full {
 
 <?php if ($form_hover) { ?>
 button.wsf-button:hover {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($form_border_color, 10); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($form_border_color, 10); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($form_border_color, 10)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($form_border_color, 10)); ?>;
 }
 <?php } ?>
 
 button.wsf-button:focus,
 button.wsf-button:active {
 <?php if ($form_focus) { ?>
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_default_lighter, 20); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($form_border_color, 20); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_default_lighter, 20)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($form_border_color, 20)); ?>;
 <?php } ?>
 	outline: 0;
 }
 
 button.wsf-button:disabled {
-	background-color: <?php echo $color_default_lighter; ?>;
-	border-color: <?php echo $form_border_color; ?>;
+	background-color: <?php self::e($color_default_lighter); ?>;
+	border-color: <?php self::e($form_border_color); ?>;
 }
 
 button.wsf-button.wsf-button-primary {
-	background-color: <?php echo $color_primary; ?>;
-	border-color: <?php echo $color_primary; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_primary); ?>;
+	border-color: <?php self::e($color_primary); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-primary:hover {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_primary, 10); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_primary, 10); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_primary, 10)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_primary, 10)); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-primary:focus,
 button.wsf-button.wsf-button-primary:active {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_primary, 20); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_primary, 20); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_primary, 20)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_primary, 20)); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-primary:disabled {
-	background-color: <?php echo $color_primary; ?>;
-	border-color: <?php echo $color_primary; ?>;
+	background-color: <?php self::e($color_primary); ?>;
+	border-color: <?php self::e($color_primary); ?>;
 }
 
 button.wsf-button.wsf-button-secondary {
-	background-color: <?php echo $color_secondary; ?>;
-	border-color: <?php echo $color_secondary; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_secondary); ?>;
+	border-color: <?php self::e($color_secondary); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-secondary:hover {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_secondary, 10); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_secondary, 10); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_secondary, 10)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_secondary, 10)); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-secondary:focus,
 button.wsf-button.wsf-button-secondary:active {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_secondary, 20); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_secondary, 20); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_secondary, 20)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_secondary, 20)); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-secondary:disabled {
-	background-color: <?php echo $color_secondary; ?>;
-	border-color: <?php echo $color_secondary; ?>;
+	background-color: <?php self::e($color_secondary); ?>;
+	border-color: <?php self::e($color_secondary); ?>;
 }
 
 button.wsf-button.wsf-button-success {
-	background-color: <?php echo $color_success; ?>;
-	border-color: <?php echo $color_success; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_success); ?>;
+	border-color: <?php self::e($color_success); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-success:hover {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_success, 10); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_success, 10); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_success, 10)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_success, 10)); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-success:focus,
 button.wsf-button.wsf-button-success:active {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_success, 20); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_success, 20); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_success, 20)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_success, 20)); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-success:disabled {
-	background-color: <?php echo $color_success; ?>;
-	border-color: <?php echo $color_success; ?>;
+	background-color: <?php self::e($color_success); ?>;
+	border-color: <?php self::e($color_success); ?>;
 }
 
 button.wsf-button.wsf-button-information {
-	background-color: <?php echo $color_information; ?>;
-	border-color: <?php echo $color_information; ?>;
-	color: <?php echo $color_default; ?>;
+	background-color: <?php self::e($color_information); ?>;
+	border-color: <?php self::e($color_information); ?>;
+	color: <?php self::e($color_default); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-information:hover {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_information, 10); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_information, 10); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage(esc_html($color_information), 10)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage(esc_html($color_information), 10)); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-information:focus,
 button.wsf-button.wsf-button-information:active {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_information, 20); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_information, 20); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage(esc_html($color_information), 20)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage(esc_html($color_information), 20)); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-information:disabled {
-	background-color: <?php echo $color_information; ?>;
-	border-color: <?php echo $color_information; ?>;
+	background-color: <?php self::e($color_information); ?>;
+	border-color: <?php self::e($color_information); ?>;
 }
 
 button.wsf-button.wsf-button-warning {
-	background-color: <?php echo $color_warning; ?>;
-	border-color: <?php echo $color_warning; ?>;
-	color: <?php echo $color_default; ?>;
+	background-color: <?php self::e($color_warning); ?>;
+	border-color: <?php self::e($color_warning); ?>;
+	color: <?php self::e($color_default); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-warning:hover {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_warning, 10); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_warning, 10); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_warning, 10)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_warning, 10)); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-warning:focus,
 button.wsf-button.wsf-button-warning:active {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_warning, 20); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_warning, 20); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_warning, 20)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_warning, 20)); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-warning:disabled {
-	background-color: <?php echo $color_warning; ?>;
-	border-color: <?php echo $color_warning; ?>;
+	background-color: <?php self::e($color_warning); ?>;
+	border-color: <?php self::e($color_warning); ?>;
 }
 
 button.wsf-button.wsf-button-danger {
-	background-color: <?php echo $color_danger; ?>;
-	border-color: <?php echo $color_danger; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_danger); ?>;
+	border-color: <?php self::e($color_danger); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-danger:hover {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_danger, 10); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_danger, 10); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_danger, 10)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_danger, 10)); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-danger:focus,
 button.wsf-button.wsf-button-danger:active {
-	background-color: <?php echo WS_Form_Common::hex_darken_percentage($color_danger, 20); ?>;
-	border-color: <?php echo WS_Form_Common::hex_darken_percentage($color_danger, 20); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_danger, 20)); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_danger, 20)); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-danger:disabled {
-	background-color: <?php echo $color_danger; ?>;
-	border-color: <?php echo $color_danger; ?>;
+	background-color: <?php self::e($color_danger); ?>;
+	border-color: <?php self::e($color_danger); ?>;
 }
 
 <?php if ($form_border) { ?>
 button.wsf-button.wsf-button-inverted {
-	background-color: <?php echo $form_background_color; ?>;
-	border-color: <?php echo $form_border_color; ?>;
-	color: <?php echo $form_color; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
+	border-color: <?php self::e($form_border_color); ?>;
+	color: <?php self::e($form_color); ?>;
 <?php if ($form_transition) { ?>
-	transition: background-color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>, color <?php echo $form_transition_speed . 'ms ' . $form_transition_timing_function; ?>;
+	transition: background-color <?php self::e($form_transition_speed); ?>, color <?php self::e($form_transition_speed); ?>;
 <?php } ?>
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-inverted:hover {
-	background-color: <?php echo $color_default_lighter; ?>;
+	background-color: <?php self::e($color_default_lighter); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-inverted:focus,
 button.wsf-button.wsf-button-inverted:active {
-	background-color: <?php echo $color_default_lighter; ?>;
+	background-color: <?php self::e($color_default_lighter); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-inverted:disabled {
-	background-color: <?php echo $form_background_color; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
 }
 
 button.wsf-button.wsf-button-inverted.wsf-button-primary {
-	border-color: <?php echo $color_primary; ?>;
-	color: <?php echo $color_primary; ?>;
+	border-color: <?php self::e($color_primary); ?>;
+	color: <?php self::e($color_primary); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-primary:hover {
-	background-color: <?php echo $color_primary; ?>;
-	border-color: <?php echo $color_primary; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_primary); ?>;
+	border-color: <?php self::e($color_primary); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-primary:focus {
-	background-color: <?php echo $color_primary; ?>;
-	border-color: <?php echo $color_primary; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_primary); ?>;
+	border-color: <?php self::e($color_primary); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-inverted.wsf-button-primary:disabled {
-	background-color: <?php echo $form_background_color; ?>;
-	border-color: <?php echo $color_primary; ?>;
-	color: <?php echo $color_primary; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
+	border-color: <?php self::e($color_primary); ?>;
+	color: <?php self::e($color_primary); ?>;
 }
 
 button.wsf-button.wsf-button-inverted.wsf-button-secondary {
-	border-color: <?php echo $color_secondary; ?>;
-	color: <?php echo $color_secondary; ?>;
+	border-color: <?php self::e($color_secondary); ?>;
+	color: <?php self::e($color_secondary); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-secondary:hover {
-	background-color: <?php echo $color_secondary; ?>;
-	border-color: <?php echo $color_secondary; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_secondary); ?>;
+	border-color: <?php self::e($color_secondary); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-secondary:focus {
-	background-color: <?php echo $color_secondary; ?>;
-	border-color: <?php echo $color_secondary; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_secondary); ?>;
+	border-color: <?php self::e($color_secondary); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-inverted.wsf-button-secondary:disabled {
-	background-color: <?php echo $form_background_color; ?>;
-	border-color: <?php echo $color_secondary; ?>;
-	color: <?php echo $color_secondary; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
+	border-color: <?php self::e($color_secondary); ?>;
+	color: <?php self::e($color_secondary); ?>;
 }
 
 button.wsf-button.wsf-button-inverted.wsf-button-success {
-	border-color: <?php echo $color_success; ?>;
-	color: <?php echo $color_success; ?>;
+	border-color: <?php self::e($color_success); ?>;
+	color: <?php self::e($color_success); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-success:hover {
-	background-color: <?php echo $color_success; ?>;
-	border-color: <?php echo $color_success; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_success); ?>;
+	border-color: <?php self::e($color_success); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-success:focus {
-	background-color: <?php echo $color_success; ?>;
-	border-color: <?php echo $color_success; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_success); ?>;
+	border-color: <?php self::e($color_success); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-inverted.wsf-button-success:disabled {
-	background-color: <?php echo $form_background_color; ?>;
-	border-color: <?php echo $color_success; ?>;
-	color: <?php echo $color_success; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
+	border-color: <?php self::e($color_success); ?>;
+	color: <?php self::e($color_success); ?>;
 }
 
 button.wsf-button.wsf-button-inverted.wsf-button-information {
-	border-color: <?php echo $color_information; ?>;
-	color: <?php echo $color_information; ?>;
+	border-color: <?php self::e($color_information); ?>;
+	color: <?php self::e($color_information); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-information:hover {
-	background-color: <?php echo $color_information; ?>;
-	border-color: <?php echo $color_information; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_information); ?>;
+	border-color: <?php self::e($color_information); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-information:focus {
-	background-color: <?php echo $color_information; ?>;
-	border-color: <?php echo $color_information; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_information); ?>;
+	border-color: <?php self::e($color_information); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-inverted.wsf-button-information:disabled {
-	background-color: <?php echo $form_background_color; ?>;
-	border-color: <?php echo $color_information; ?>;
-	color: <?php echo $color_information; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
+	border-color: <?php self::e($color_information); ?>;
+	color: <?php self::e($color_information); ?>;
 }
 
 button.wsf-button.wsf-button-inverted.wsf-button-warning {
-	border-color: <?php echo $color_warning; ?>;
-	color: <?php echo $color_warning; ?>;
+	border-color: <?php self::e($color_warning); ?>;
+	color: <?php self::e($color_warning); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-warning:hover {
-	background-color: <?php echo $color_warning; ?>;
-	border-color: <?php echo $color_warning; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_warning); ?>;
+	border-color: <?php self::e($color_warning); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-warning:focus {
-	background-color: <?php echo $color_warning; ?>;
-	border-color: <?php echo $color_warning; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_warning); ?>;
+	border-color: <?php self::e($color_warning); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-inverted.wsf-button-warning:disabled {
-	background-color: <?php echo $form_background_color; ?>;
-	border-color: <?php echo $color_warning; ?>;
-	color: <?php echo $color_warning; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
+	border-color: <?php self::e($color_warning); ?>;
+	color: <?php self::e($color_warning); ?>;
 }
 
 button.wsf-button.wsf-button-inverted.wsf-button-danger {
-	border-color: <?php echo $color_danger; ?>;
-	color: <?php echo $color_danger; ?>;
+	border-color: <?php self::e($color_danger); ?>;
+	color: <?php self::e($color_danger); ?>;
 }
 
 <?php if ($form_hover) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-danger:hover {
-	background-color: <?php echo $color_danger; ?>;
-	border-color: <?php echo $color_danger; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_danger); ?>;
+	border-color: <?php self::e($color_danger); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 <?php if ($form_focus) { ?>
 button.wsf-button.wsf-button-inverted.wsf-button-danger:focus {
-	background-color: <?php echo $color_danger; ?>;
-	border-color: <?php echo $color_danger; ?>;
-	color: <?php echo $color_default_inverted; ?>;
+	background-color: <?php self::e($color_danger); ?>;
+	border-color: <?php self::e($color_danger); ?>;
+	color: <?php self::e($color_default_inverted); ?>;
 }
 <?php } ?>
 
 button.wsf-button.wsf-button-inverted.wsf-button-danger:disabled {
-	background-color: <?php echo $form_background_color; ?>;
-	border-color: <?php echo $color_danger; ?>;
-	color: <?php echo $color_danger; ?>;
+	background-color: <?php self::e($form_background_color); ?>;
+	border-color: <?php self::e($color_danger); ?>;
+	color: <?php self::e($color_danger); ?>;
 }
 <?php } ?>
 
@@ -1777,19 +1857,19 @@ button.wsf-button:disabled {
 }
 
 .wsf-alert {
-	background-color: <?php echo $color_default_lightest; ?>;
+	background-color: <?php self::e($color_default_lightest); ?>;
 <?php if ($form_border) { ?>
-	border: <?php echo $form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color; ?>;
+	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
 <?php } ?>
 <?php if ($form_border_radius > 0) { ?>
-	border-radius: <?php echo $form_border_radius . $unit_of_measurement; ?>;
+	border-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
 <?php } ?>
-	font-family: <?php echo $font_family; ?>;
-	font-size: <?php echo $form_font_size . $unit_of_measurement; ?>;
-	font-weight: <?php echo $font_weight; ?>;
-	line-height: <?php echo $line_height; ?>;
-	padding: <?php echo $spacing_small . $unit_of_measurement; ?>;
-	margin-bottom: <?php echo $grid_gutter . $unit_of_measurement; ?>;
+	font-family: <?php self::e($font_family); ?>;
+	font-size: <?php self::e($form_font_size . $unit_of_measurement); ?>;
+	font-weight: <?php self::e($font_weight); ?>;
+	line-height: <?php self::e($line_height); ?>;
+	padding: <?php self::e($spacing_small . $unit_of_measurement); ?>;
+	margin-bottom: <?php self::e($grid_gutter . $unit_of_measurement); ?>;
 }
 
 .wsf-alert > :last-child {
@@ -1797,79 +1877,93 @@ button.wsf-button:disabled {
 }
 
 .wsf-alert-success {
-	background-color: <?php echo WS_Form_Common::hex_lighten_percentage($color_success, 85); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_lighten_percentage($color_success, 85)); ?>;
 <?php if ($form_border) { ?>
-	border-color: <?php echo WS_Form_Common::hex_lighten_percentage($color_success, 40); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_lighten_percentage($color_success, 40)); ?>;
 <?php } ?>
 }
 
 .wsf-alert-information {
-	background-color: <?php echo WS_Form_Common::hex_lighten_percentage($color_information, 85); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_lighten_percentage(esc_html($color_information), 85)); ?>;
 <?php if ($form_border) { ?>
-	border-color: <?php echo WS_Form_Common::hex_lighten_percentage($color_information, 40); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_lighten_percentage(esc_html($color_information), 40)); ?>;
 <?php } ?>
 }
 
 .wsf-alert-warning {
-	background-color: <?php echo WS_Form_Common::hex_lighten_percentage($color_warning, 85); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_lighten_percentage($color_warning, 85)); ?>;
 <?php if ($form_border) { ?>
-	border-color: <?php echo WS_Form_Common::hex_lighten_percentage($color_warning, 40); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_lighten_percentage($color_warning, 40)); ?>;
 <?php } ?>
 }
 
 .wsf-alert-danger {
-	background-color: <?php echo WS_Form_Common::hex_lighten_percentage($color_danger, 85); ?>;
+	background-color: <?php self::e(WS_Form_Common::hex_lighten_percentage($color_danger, 85)); ?>;
 <?php if ($form_border) { ?>
-	border-color: <?php echo WS_Form_Common::hex_lighten_percentage($color_danger, 40); ?>;
+	border-color: <?php self::e(WS_Form_Common::hex_lighten_percentage($color_danger, 40)); ?>;
 <?php } ?>
 }
 
 .wsf-text-primary {
-	color: <?php echo $color_primary; ?>;
+	color: <?php self::e($color_primary); ?>;
 }
 
 .wsf-text-secondary {
-	color: <?php echo $color_secondary; ?>;
+	color: <?php self::e($color_secondary); ?>;
 }
 
 .wsf-text-success {
-	color: <?php echo $color_success; ?>;
+	color: <?php self::e($color_success); ?>;
 }
 
 .wsf-text-information {
-	color: <?php echo $color_information; ?>;
+	color: <?php self::e($color_information); ?>;
 }
 
 .wsf-text-warning {
-	color: <?php echo $color_warning; ?>;
+	color: <?php self::e($color_warning); ?>;
 }
 
 .wsf-text-danger {
-	color: <?php echo $color_danger; ?>;
-}
-<?php
-
-	$cheese_background_image = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PGRlZnM+PHBhdGggaWQ9ImEiIGQ9Ik0wIDBoMTAwdjEwMEgweiIvPjxsaW5lYXJHcmFkaWVudCB4MT0iMTMuMiUiIHkxPSIxNC42JSIgeDI9Ijg1LjUlIiB5Mj0iODguMiUiIGlkPSJkIj48c3RvcCBzdG9wLWNvbG9yPSIjRUFCNzU4IiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZFRTJBMyIgb2Zmc2V0PSIxMDAlIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgeDE9IjE0LjglIiB5MT0iMTMuMSUiIHgyPSI4Ni40JSIgeTI9Ijg1LjklIiBpZD0iYyI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZBRTNBMCIgb2Zmc2V0PSIwJSIvPjxzdG9wIHN0b3AtY29sb3I9IiNGRUYzQ0QiIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IHgxPSI2LjQlIiB5MT0iMTIuOSUiIHgyPSIyOC4yJSIgeTI9IjI2LjIlIiBpZD0iZSI+PHN0b3Agc3RvcC1jb2xvcj0iI0UxQUIzRiIgb2Zmc2V0PSIwJSIvPjxzdG9wIHN0b3AtY29sb3I9IiNGQUUzQTAiIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IHgxPSI2LjQlIiB5MT0iMTIuOSUiIHgyPSIyMC41JSIgeTI9IjQyJSIgaWQ9ImYiPjxzdG9wIHN0b3AtY29sb3I9IiNFMUFCM0YiIG9mZnNldD0iMCUiLz48c3RvcCBzdG9wLWNvbG9yPSIjRkFFM0EwIiBvZmZzZXQ9IjEwMCUiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCB4MT0iMTYuMSUiIHkxPSIxNC40JSIgeDI9Ijg2LjQlIiB5Mj0iODUuOSUiIGlkPSJnIj48c3RvcCBzdG9wLWNvbG9yPSIjRkFFM0EwIiBvZmZzZXQ9IjAlIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZFRjNDRCIgb2Zmc2V0PSIxMDAlIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48bWFzayBpZD0iYiIgZmlsbD0iI2ZmZiI+PHVzZSB4bGluazpocmVmPSIjYSIvPjwvbWFzaz48cGF0aCBmaWxsPSIjRkFFM0EwIiBtYXNrPSJ1cmwoI2IpIiBkPSJNMCAwaDEwMHYxMDBIMHoiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNjKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9IjM3LjUiIGN5PSI2Mi41IiByPSI0LjUiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNjKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9IjM3LjUiIGN5PSI2Mi41IiByPSI0LjUiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNjKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9IjIyLjUiIGN5PSI2MC41IiByPSI1LjUiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNjKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9IjE0LjUiIGN5PSI1MC41IiByPSIzLjUiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNjKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9IjI1LjUiIGN5PSI0MC41IiByPSI1LjUiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNjKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9IjgiIGN5PSI0MiIgcj0iNCIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iMTEuNSIgY3k9IjY2LjUiIHI9IjQuNSIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iODUuNSIgY3k9IjMzLjUiIHI9IjUuNSIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iMjAiIGN5PSI4MSIgcj0iOSIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iMzQuNSIgY3k9IjgxLjUiIHI9IjIuNSIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iNy41IiBjeT0iOTIuNSIgcj0iMi41Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSI1MCIgY3k9IjcyIiByPSI4Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSIxNSIgY3k9IjIzIiByPSIxMyIvPjxlbGxpcHNlIHN0cm9rZT0idXJsKCNlKSIgbWFzaz0idXJsKCNiKSIgY3g9IjEwMCIgY3k9IjU1IiByeD0iMTIiIHJ5PSIxMCIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2YpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iMzgiIGN5PSI5OCIgcj0iMTAiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNnKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9IjkxIiBjeT0iOSIgcj0iOCIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iNzkiIGN5PSI1NCIgcj0iNCIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iODYiIGN5PSI0NiIgcj0iMiIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iNjgiIGN5PSI5NiIgcj0iMyIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iNzAuNSIgY3k9IjcwLjUiIHI9IjUuNSIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iNC41IiBjeT0iNzYuNSIgcj0iMi41Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSIyMC41IiBjeT0iNS41IiByPSIzLjUiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNjKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9IjQuNSIgY3k9IjguNSIgcj0iMi41Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSI0NSIgY3k9IjUwIiByPSI2Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSI4MS41IiBjeT0iNjkuNSIgcj0iMS41Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSI0Ni41IiBjeT0iMzYuNSIgcj0iMS41Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSIzNCIgY3k9IjMzIiByPSIyIi8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSIzOC41IiBjeT0iNDIuNSIgcj0iMS41Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSI2NiIgY3k9Ijg0IiByPSI0Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSI3NS41IiBjeT0iMjAuNSIgcj0iNS41Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSI2MC41IiBjeT0iMTguNSIgcj0iNC41Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSI1Ni41IiBjeT0iNi41IiByPSIzLjUiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNjKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9Ijc2LjUiIGN5PSIzLjUiIHI9IjIuNSIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iNjEuNSIgY3k9IjM3LjUiIHI9IjEyLjUiLz48Y2lyY2xlIHN0cm9rZT0idXJsKCNjKSIgZmlsbD0idXJsKCNkKSIgbWFzaz0idXJsKCNiKSIgY3g9Ijg0LjUiIGN5PSI4My41IiByPSIxMS41Ii8+PGNpcmNsZSBzdHJva2U9InVybCgjYykiIGZpbGw9InVybCgjZCkiIG1hc2s9InVybCgjYikiIGN4PSI2MS41IiBjeT0iMzcuNSIgcj0iMTIuNSIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsLW9wYWNpdHk9Ii44IiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iNDEuNSIgY3k9IjIwLjUiIHI9IjkuNSIvPjxjaXJjbGUgc3Ryb2tlPSJ1cmwoI2MpIiBmaWxsPSJ1cmwoI2QpIiBtYXNrPSJ1cmwoI2IpIiBjeD0iOTUiIGN5PSIyNCIgcj0iNCIvPjwvZz48L3N2Zz4=';
-?>
-input[type=email].wsf-field.cheese,
-input[type=number].wsf-field.cheese,
-input[type=tel].wsf-field.cheese,
-input[type=text].wsf-field.cheese,
-input[type=search].wsf-field.cheese,
-input[type=url].wsf-field.cheese,
-select.wsf-field.cheese,
-textarea.wsf-field.cheese,
-input[type=checkbox].wsf-field.cheese + label.wsf-label:before,
-input[type=radio].wsf-field.cheese + label.wsf-label:before {
-	background-image: url(<?php echo $cheese_background_image; ?>);
-	border-color: orange;
+	color: <?php self::e($color_danger); ?>;
 }
 <?php
 		}
 
+		public function get_skin() {
+
+			ob_start();
+			self::render_skin();
+			$css_return = ob_get_contents();
+			ob_end_clean();
+
+			// Minify
+			$css_minify = WS_Form_Common::option_get('css_minify', false);
+
+			return $css_minify ? self::minify($css_return) : $css_return;
+		}
+
+		public function inline($css) {
+
+			// Output CSS
+			return sprintf('<style>%s</style>', $css);
+		}
+
+		public function minify($css) {
+
+			// Basic minify
+			$css = preg_replace('/\/\*((?!\*\/).)*\*\//', '', $css);
+			$css = preg_replace('/\s{2,}/', ' ', $css);
+			$css = preg_replace('/\s*([:;{}])\s*/', '$1', $css);
+			$css = preg_replace('/;}/', '}', $css);
+			$css = str_replace(array("\r\n","\r","\n","\t",'  ','    ','    '),"",$css);
+
+			return $css;
+		}
+
 		public function get_email() {
 
-			$css = '	svg { max-width: 100%; }
+			$css_return = '	svg { max-width: 100%; }
 
 	h1, h2, h3, h4 {
 
@@ -1922,6 +2016,17 @@ input[type=radio].wsf-field.cheese + label.wsf-label:before {
 	}
 			';
 
-			return $css;
+			// Minify
+			$css_minify = WS_Form_Common::option_get('css_minify', false);
+
+			return $css_minify ? self::minify($css_return) : $css_return;
+		}
+
+		// Escape CSS values
+		public function e($css_value) {
+
+			$css_value = wp_strip_all_tags($css_value);
+			$css_value = str_replace(';', '', $css_value);
+			echo esc_html($css_value);
 		}
 	}

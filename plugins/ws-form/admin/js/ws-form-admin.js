@@ -245,7 +245,7 @@
 
 						// Redraw form
 						$.WS_Form.this.form_build();
-					});
+					}, true);
 				}
 			});
 
@@ -324,19 +324,12 @@
 
 			e.preventDefault();
 
-			if(confirm($.WS_Form.this.language('form_import_confirm'))) {
+			var files = e.originalEvent.dataTransfer.files;
+			$.WS_Form.this.form_upload_json(files, $(this), function(response) {
 
-				var files = e.originalEvent.dataTransfer.files;
-				$.WS_Form.this.form_upload_json(files, $(this), function(response) {
-
-					// Redraw form
-					$.WS_Form.this.form_build();
-				});
-				
-			} else {
-
-				$('.wsf-form-upload-json-window', $.WS_Form.this.form_obj).fadeOut(200);
-			}
+				// Redraw form
+				$.WS_Form.this.form_build();
+			}, true);
 		});
 
 		// Drag leave
@@ -392,7 +385,15 @@
 	}
 
 	// Form - Uploader
-	$.WS_Form.prototype.form_upload_json = function(files, obj, success_callback) {
+	$.WS_Form.prototype.form_upload_json = function(files, obj, success_callback, show_confirm) {
+
+		if(typeof(show_confirm) === 'undefined') { var show_confirm = false; }
+
+		if(show_confirm && !confirm($.WS_Form.this.language('form_import_confirm'))) {
+
+			$('.wsf-form-upload-json-window', $.WS_Form.this.form_obj).hide();
+			return false;
+		}
 
 		// Hide H1
 		$('h1', obj).hide();
@@ -403,6 +404,7 @@
 		var form_data = new FormData();
 		form_data.append('form_id', this.form_id);
 		form_data.append('file', files[0]);
+		form_data.append(ws_form_settings.wsf_nonce_field_name, ws_form_settings.wsf_nonce);
 
 		// Reset sidebar
 		this.sidebar_reset();
@@ -424,7 +426,7 @@
 
 			beforeSend: function(xhr) {
 
-				xhr.setRequestHeader('X-WP-Nonce', ws_form_settings.nonce);
+				xhr.setRequestHeader('X-WP-Nonce', ws_form_settings.x_wp_nonce);
 			},
 
 			xhr: function() {
@@ -555,7 +557,8 @@
 		var downloader_html = '<form id="wsf-data-grid-downloader" action="' + ws_form_settings.url + 'form/' + this.form_id + '/download/json" method="post">';
 
 		downloader_html += '<input type="hidden" name="form_id" value="' + this.form_id + '" />';
-		downloader_html += '<input type="hidden" name="_wpnonce" value="' + ws_form_settings.nonce + '" />';
+		downloader_html += '<input type="hidden" name="_wpnonce" value="' + ws_form_settings.x_wp_nonce + '" />';
+		downloader_html += '<input type="hidden" name="' + ws_form_settings.wsf_nonce_field_name + '" value="' + ws_form_settings.wsf_nonce + '" />';
 
 		downloader_html += '</form>';
 
@@ -1073,7 +1076,7 @@
 		// Variables for rendering field
 		var this_field_label = field_data.label;
 
-		if(typeof field_type !== 'undefined') {
+		if(typeof(field_type) !== 'undefined') {
 
 			var field_type_label = field_type.label;
 			var field_type_icon = field_type.icon;
@@ -2045,6 +2048,8 @@
 
 		if(save) {
 
+			var sidebar_fields_toggle_init_process = false;
+
 			// Move new object data to appropriate object
 			switch(object) {
 
@@ -2056,15 +2061,16 @@
 
 				case 'group' :
 
-					// Remove editing class on tab
-//					$('.wsf-group-tab[data-id="' + object_id + '"]').removeClass('wsf-editing');
-
 					this.group_data_cache[object_id].label = this.object_data_scratch.label;
 					this.group_data_cache[object_id].meta = this.object_data_scratch.meta;
-
 					break;
 
 				case 'section' :
+
+					// Check to see if sidebar fields toggle should run
+					var section_repeatable_old = this.get_object_meta_value(this.section_data_cache[object_id], 'section_repeatable', false);
+					var section_repeatable_new = this.get_object_meta_value(this.object_data_scratch, 'section_repeatable', false);
+					sidebar_fields_toggle_init_process = (!section_repeatable_old && section_repeatable_new); 
 
 					this.section_data_cache[object_id].label = this.object_data_scratch.label;
 					this.section_data_cache[object_id].meta = this.object_data_scratch.meta;
@@ -2074,12 +2080,8 @@
 
 					this.field_data_cache[object_id].label = this.object_data_scratch.label;
 					this.field_data_cache[object_id].meta = this.object_data_scratch.meta;
-
 					break;
 			}
-
-			// Remove editing class
-//			obj.removeClass('wsf-editing');
 
 			// Build parameters
 			var params = {};
@@ -2108,7 +2110,10 @@
 					case 'section' :
 
 						// Initialize fields toggle for objects
-						$.WS_Form.this.sidebar_fields_toggle_init(obj, object, obj_sidebar_inner);
+						if(sidebar_fields_toggle_init_process) {
+
+							$.WS_Form.this.sidebar_fields_toggle_init(obj, object, obj_sidebar_inner);
+						}
 
 						break;
 				}
@@ -6945,6 +6950,7 @@
 		form_data.append('id', this.form_id);
 		form_data.append('file', files[0]);
 		form_data.append('meta_key', meta_key);
+		form_data.append(ws_form_settings.wsf_nonce_field_name, ws_form_settings.wsf_nonce);
 
 		// Create status bar for this file
 		var status_bar = new this.upload_status_bar(obj)
@@ -6997,7 +7003,8 @@
 		downloader_html += '<input type="hidden" name="form_id" value="' + $.WS_Form.this.form_id + '" />';
 		downloader_html += '<input type="hidden" name="meta_key" value="' + meta_key + '" />';
 		downloader_html += '<input type="hidden" name="group_index" value="' + group_index + '" />';
-		downloader_html += '<input type="hidden" name="_wpnonce" value="' + ws_form_settings.nonce + '" />';
+		downloader_html += '<input type="hidden" name="_wpnonce" value="' + ws_form_settings.x_wp_nonce + '" />';
+		downloader_html += '<input type="hidden" name="' + ws_form_settings.wsf_nonce_field_name + '" value="' + ws_form_settings.wsf_nonce + '" />';
 
 		if(use_scratch) {
 
@@ -7044,7 +7051,7 @@
 
 			beforeSend: function(xhr) {
 
-				xhr.setRequestHeader('X-WP-Nonce', ws_form_settings.nonce);
+				xhr.setRequestHeader('X-WP-Nonce', ws_form_settings.x_wp_nonce);
 			},
 
 			xhr: function() {
@@ -9531,10 +9538,13 @@
 
 			} else {
 
-				error_callback();
+				error_callback((typeof(response.error_message) !== 'undefined') ? response.error_message : false);
 			}
 
-		}, error_callback);
+		}, function(response) {
+
+			error_callback(false);
+		});
 	}
 
 	// Detect framework
@@ -9694,7 +9704,7 @@
 			var api_call_path = $.WS_Form.this.action_api_method_path(action_id, 'list_subs_fetch', list_id);
 
 			// Clear select
-			$('#wsf-list-sub-id').empty().append($("<option />").val('').text($.WS_Form.this.language('list_subs_call')));;
+			$('#wsf-list-sub-id').empty().append($("<option />").val('').text($.WS_Form.this.language('list_subs_call')));
 
 			// Make API call
 			$.WS_Form.this.api_call(api_call_path, 'GET', false, function(response) {
@@ -9714,7 +9724,7 @@
 				}
 
 				// Populate select
-				$('#wsf-list-sub-id').empty().append($("<option />").val('').text($.WS_Form.this.language('list_subs_select')));;
+				$('#wsf-list-sub-id').empty().append($("<option />").val('').text($.WS_Form.this.language('list_subs_select')));
 
 				var list_subs = response.data;
 
@@ -11126,7 +11136,7 @@
 
 		var path = 'helper/file_download';
 
-		var query_string = 'hash=' + hash + '&field_id=' + id + '&section_repeatable_index=' + ((section_repeatable_index !== false) ? section_repeatable_index : 0) + '&file_index=' + index + '&_wpnonce=' + ws_form_settings.nonce + (download ? '&download=1' : '');
+		var query_string = 'hash=' + hash + '&field_id=' + id + '&section_repeatable_index=' + ((section_repeatable_index !== false) ? section_repeatable_index : 0) + '&file_index=' + index + '&_wpnonce=' + ws_form_settings.x_wp_nonce + '&' + ws_form_settings.wsf_nonce_field_name + '=' + ws_form_settings.wsf_nonce + (download ? '&download=1' : '');
 
 		return ws_form_settings.url + (ws_form_settings.permalink_custom ? path + '?' + query_string : encodeURIComponent(path) + '&' + query_string);
 	}
@@ -11269,6 +11279,9 @@
 		// Set is admin
 		data.form_is_admin = true;
 
+		// NONCE
+		data[ws_form_settings.wsf_nonce_field_name] = ws_form_settings.wsf_nonce;
+
 		// Make AJAX request
 		var ajax_url = ws_form_settings.url + ajax_path;
 
@@ -11278,7 +11291,7 @@
 			url: ajax_url,
 			beforeSend: function(xhr) {
 
-				xhr.setRequestHeader('X-WP-Nonce', ws_form_settings.nonce);
+				xhr.setRequestHeader('X-WP-Nonce', ws_form_settings.x_wp_nonce);
 
 				if(ws_form_settings.ajax_http_method_override) {
 

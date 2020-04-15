@@ -179,7 +179,7 @@
 
 					if(is_expanded) {
 
-						wp.customize.previewer.previewUrl.set('<?php echo $form_preview_url; ?>');
+						wp.customize.previewer.previewUrl.set('<?php echo esc_html($form_preview_url); ?>');
 					}
 				});
 			});

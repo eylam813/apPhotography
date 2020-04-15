@@ -95,7 +95,7 @@
 			wp_send_user_request($request_id);
 
 			// Success
-			parent::success(array(__('Delete data request successfully processed', 'ws-form') . ' (' . __('ID', 'ws-form') . ': ' . $request_id . ')'));
+			parent::success(array(__('Delete data request successfully processed', 'ws-form') . ' (' . esc_html__('ID', 'ws-form') . ': ' . $request_id . ')'));
 
 			return true;
 		}

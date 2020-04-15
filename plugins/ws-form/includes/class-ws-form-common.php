@@ -17,6 +17,9 @@
 		// Options cache
 		public static $options = false;
 
+		// NONCE verified
+		public static $nonce_verified = false;
+
 		// Admin messages - Push
 		public static function admin_message_push($message, $type = 'notice-success', $dismissible = true, $nag_notice = true) {
 
@@ -45,13 +48,11 @@
 		}
 
 		// Admin messages - Render single
-		public static function admin_message_render($message, $type = 'notice-success', $dismissible = true, $nag_notice = false) {
+		public static function admin_message_render($message, $type = 'notice-success', $dismissible = true, $nag_notice = false, $class = '') {
 
 			if(!(defined('DISABLE_NAG_NOTICES') && DISABLE_NAG_NOTICES && $nag_notice)) {
 
-				$notice = '<div class="notice ' . $type . (($dismissible) ? ' is-dismissible' : '') . '"><p>' . str_replace("\n", "<br />\n", $message) . '</p></div>';
-
-				echo $notice;
+				echo sprintf('<div class="notice %s"><p>%s</p></div>', esc_attr($type . ($dismissible ? ' is-dismissible' : '') . ($class ? ' '  . $class : '')), str_replace("\n", "<br />\n", $message));	// phpcs:ignore
 			}
 		}
 
@@ -77,7 +78,7 @@
 			}
 
 			// Output classes
-			echo implode(' ', $wrapper_classes_array);
+			echo esc_attr(implode(' ', $wrapper_classes_array));
 		}
 
 		// Get plugin option key value
@@ -174,7 +175,7 @@
 			return sprintf('https://wsform.com%s?utm_source=ws_form%s', $path, (($medium !== false) ? '&utm_medium=' . $medium : ''));
 		}
 
-		// Get query var
+		// Get query var (NONCE is not available)
 		public static function get_query_var($var, $default = '', $parameters = false, $esc_sql = false, $strip_slashes = true) {
 
 			// REST parameters
@@ -192,48 +193,185 @@
 			$request_method = WS_Form_Common::get_request_method();
 			if(!$request_method) { return $default; }
 
-			// Check if X-HTTP-Method-Override is being used
-			$ajax_http_method_override = self::option_get('ajax_http_method_override', true);
-			if(!$ajax_http_method_override && ($request_method !== 'POST')) {
+			// Regular GET, POST, PUT handling
+			switch($request_method) {
 
-				parse_str(file_get_contents('php://input'), $_POST);
-				$strip_slashes = false;
+				case 'GET' :
+
+					$post_vars = $_GET;		// phpcs:ignore
+
+					break;
+
+				case 'POST' :
+
+					$post_vars = $_POST;	// phpcs:ignore
+
+					break;
+
+				case 'PUT' :
+
+					// PUT method data is in php://input so parse that into $post_vars
+					parse_str(file_get_contents('php://input'), $post_vars);
+					$strip_slashes = false;
+
+					break;
+
+				default :
+
+					return $default;
 			}
 
 			// DATA param (This overcomes standard 1000 POST parameter limitation in PHP)
-			if(isset($_POST)) {
+			if(
+				isset($post_vars['data'])
+			) {
 
-				if(isset($_POST['data'])) {
+				$data = $strip_slashes ? stripslashes_deep($post_vars['data']) : $post_vars['data'];
+				$data = self::mod_security_fix($data);
 
-					$data = $strip_slashes ? stripslashes_deep($_POST['data']) : $_POST['data'];
-					$data = self::mod_security_fix($data);
+				$data_array = is_string($data) ? json_decode($data, true) : array();
 
-					$data_array = is_string($data) ? json_decode($data, true) : array();
+				if(isset($data_array[$var])) { return $data_array[$var]; }
+			}
 
-					if(isset($data_array[$var])) { return $data_array[$var]; }
+			// Get return value
+			$return_value = isset($post_vars[$var]) ? ($esc_sql ? esc_sql($post_vars[$var]) : $post_vars[$var]) : $default;
+			$return_value = self::mod_security_fix($return_value);
+			return $strip_slashes ? stripslashes_deep($return_value) : $return_value;
+		}
+
+		// Get request var 
+		public static function get_query_var_nonce($var, $default = '', $parameters = false, $esc_sql = false, $strip_slashes = true, $request_method_required = false) {
+
+			// REST parameters
+			if($parameters !== false) {
+
+				if(isset($parameters[$var])) {
+
+					$return_value = $esc_sql ? esc_sql($parameters[$var]) : $parameters[$var];
+					$return_value = self::mod_security_fix($return_value);
+					return $strip_slashes ? stripslashes_deep($return_value) : $return_value;
 				}
 			}
+
+			// Get from standard _GET _POST arrays
+			$request_method = WS_Form_Common::get_request_method();
+			if(!$request_method) { return $default; }
+			if(
+				($request_method_required !== false) &&
+				($request_method_required !== $request_method)
+			) {
+
+				return $default;
+			}
+
+			// Check wp_verify_nonce exists
+			if(!function_exists('wp_verify_nonce')) { self::error_nonce(); }
 
 			// Regular GET, POST, PUT handling
 			switch($request_method) {
 
 				case 'GET' :
 
-					$return_value = isset($_GET[$var]) ? ($esc_sql ? esc_sql($_GET[$var]) : $_GET[$var]) : $default;
-					$return_value = self::mod_security_fix($return_value);
-					return $strip_slashes ? stripslashes_deep($return_value) : $return_value;
+					// NONCE
+					if(
+						!self::$nonce_verified && (
+
+							!isset($_GET[WS_FORM_POST_NONCE_FIELD_NAME]) ||
+							!wp_verify_nonce($_GET[WS_FORM_POST_NONCE_FIELD_NAME], WS_FORM_POST_NONCE_ACTION_NAME)
+						)
+					) {
+
+						self::error_nonce();
+
+					} else {
+
+						self::$nonce_verified = true;
+					}
+
+					$post_vars = $_GET;
+
+					break;
 
 				case 'POST' :
+
+					// NONCE
+					if(
+						!self::$nonce_verified && (
+
+							!isset($_POST[WS_FORM_POST_NONCE_FIELD_NAME]) ||
+							!wp_verify_nonce($_POST[WS_FORM_POST_NONCE_FIELD_NAME], WS_FORM_POST_NONCE_ACTION_NAME)
+						)
+					) {
+
+						// DEBUG
+						// echo debug_backtrace()[1]['function'];
+						// echo debug_backtrace()[1]['class'];
+						self::error_nonce();
+
+					} else {
+
+						self::$nonce_verified = true;
+					}
+
+					$post_vars = $_POST;
+
+					break;
+
 				case 'PUT' :
 
-					$return_value = isset($_POST[$var]) ? ($esc_sql ? esc_sql($_POST[$var]) : $_POST[$var]) : $default;
-					$return_value = self::mod_security_fix($return_value);
-					return $strip_slashes ? stripslashes_deep($return_value) : $return_value;
+					// PUT method data is in php://input so parse that into $post_vars
+					parse_str(file_get_contents('php://input'), $post_vars);
+
+					// NONCE
+					if(
+						!self::$nonce_verified && (
+
+							!isset($post_vars[WS_FORM_POST_NONCE_FIELD_NAME]) ||
+							!wp_verify_nonce($post_vars[WS_FORM_POST_NONCE_FIELD_NAME], WS_FORM_POST_NONCE_ACTION_NAME)
+						)
+					) {
+
+						self::error_nonce();
+
+					} else {
+
+						self::$nonce_verified = true;
+					}
+
+					$strip_slashes = false;
+
+					break;
 
 				default :
 
 					return $default;
 			}
+
+			// DATA param (This overcomes standard 1000 POST parameter limitation in PHP)
+			if(
+				isset($post_vars['data'])
+			) {
+
+				$data = $strip_slashes ? stripslashes_deep($post_vars['data']) : $post_vars['data'];
+				$data = self::mod_security_fix($data);
+
+				$data_array = is_string($data) ? json_decode($data, true) : array();
+
+				if(isset($data_array[$var])) { return $data_array[$var]; }
+			}
+
+			// Get return value
+			$return_value = isset($post_vars[$var]) ? ($esc_sql ? esc_sql($post_vars[$var]) : $post_vars[$var]) : $default;
+			$return_value = self::mod_security_fix($return_value);
+			return $strip_slashes ? stripslashes_deep($return_value) : $return_value;
+		}
+
+		// nonce error
+		public static function error_nonce() {
+
+			esc_html_e('NONCE error', 'ws-form');
+			exit;
 		}
 
 		// mod_security fix
@@ -371,7 +509,10 @@
 
 			$return_html = WS_Form_Config::get_icon_16_svg($id);
 
-			if($return_html !== false) { echo $return_html; }
+			if($return_html !== false) {
+
+				echo $return_html;	// phpcs:ignore
+			}
 
 			return $return_html;
 		}
@@ -465,7 +606,7 @@
 					break;
 			}
 
-			$debug_enabled = apply_filters('wsf-debug-enabled', $debug_enabled);
+			$debug_enabled = apply_filters('wsf_debug_enabled', $debug_enabled);
 
 			return $debug_enabled;
 		}
@@ -1298,13 +1439,13 @@
 
 										case 'query_var' :
 
-											$parsed_variable = isset($_GET) ? isset($_GET[$variable_attribute_array[0]]) ? $_GET[$variable_attribute_array[0]] : '' : '';
+											$parsed_variable = isset($_GET) ? isset($_GET[$variable_attribute_array[0]]) ? $_GET[$variable_attribute_array[0]] : '' : '';	// phpcs:ignore
 											if($content_type == 'text/html') { $parsed_variable = htmlentities($parsed_variable); }
 											break;
 
 										case 'post_var' :
 
-											$parsed_variable = isset($_POST) ? isset($_POST[$variable_attribute_array[0]]) ? $_POST[$variable_attribute_array[0]] : '' : '';
+											$parsed_variable = isset($_POST) ? isset($_POST[$variable_attribute_array[0]]) ? $_POST[$variable_attribute_array[0]] : '' : '';	// phpcs:ignore
 											if($content_type == 'text/html') { $parsed_variable = htmlentities($parsed_variable); }
 											break;
 
@@ -2019,6 +2160,42 @@
 <?php
 		}
 
+		// Review
+		public static function review() {
+
+			// Review nag
+			$review_nag = WS_Form_Common::option_get('review_nag', false);
+			if($review_nag) { return; }
+
+			// Determine if review nag should be shown
+			$install_timestamp = intval(WS_Form_Common::option_get('install_timestamp', time(), true));
+			$review_nag_show = (time() > ($install_timestamp + (WS_FORM_REVIEW_NAG_DURATION * 86400)));
+			if(!$review_nag_show) { return; }
+
+			// Show nag
+			self::admin_message_render(sprintf(__('<p><strong>Thank you for using %1$s!</strong></p><p>We hope you have enjoyed using the plugin. Positive reviews from awesome users like you help others to feel confident about choosing %1$s too. If convenient, we would greatly appreciate you sharing your happy experiences with the WordPress community. Thank you in advance for helping us out!</p><p class="buttons"><a href="https://wordpress.org/support/plugin/ws-form/reviews/#new-post" class="button button-primary" onclick="wsf_review_nag_dismiss();" target="_blank">Leave a review</a> <a href="#" class="button" onclick="wsf_review_nag_dismiss();">No thanks</a></p>', 'ws-form'), WS_FORM_NAME_PRESENTABLE), 'notice-success', false, false, 'wsf-review');
+?>
+<script>
+
+	function wsf_review_nag_dismiss() {
+
+		(function($) {
+
+			'use strict';
+
+			// Hide nag
+			$('.wsf-review').hide();
+
+			// Call AJAX to prevent review nag appearing again
+			$.ajax({ method: 'POST', url: '<?php echo esc_html(WS_Form_Common::get_api_path('helper/review_nag/dismiss/')); ?>' });
+
+		})(jQuery);
+	}
+
+</script>
+<?php
+		}
+
 		// Check edition
 		public static function is_edition($edition) {
 
@@ -2293,9 +2470,8 @@
 			);
 
 			$url = WS_Form_Common::mask_parse($url, $url_variables);
-			$error_html = sprintf(__('<a href="%s" target="_blank">Click here</a> to learn more about WS Form PRO.', 'ws-form'), WS_Form_Common::get_plugin_website_url('', 'settings'));
 
-			echo '<div id="wsf-settings-content"><script>(function($) {\'use strict\';$(\'#' . $id . '\').load(\'' .  $url . '\', function(response, status, xhr) { if(status == \'error\') { $(\'#' . $id . '\').html(\'' . $error_html . '\'); }});})(jQuery);</script></div>';
+			echo '<div id="wsf-settings-content"><script>(function($) {\'use strict\';$(\'#' . esc_html($id) . '\').load(\'' .  esc_html($url) . '\', function(response, status, xhr) { if(status == \'error\') { $(\'#' . esc_html($id) . '\').html(\'' . sprintf(__('<a href="%s" target="_blank">Click here</a> to learn more about WS Form PRO.', 'ws-form'), esc_html(WS_Form_Common::get_plugin_website_url('', 'settings'))) . '\'); }});})(jQuery);</script></div>';
 		}
 
 		// Get root post

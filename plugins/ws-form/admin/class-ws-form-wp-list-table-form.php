@@ -26,7 +26,7 @@
 				'cb'			=> '<input type="checkbox" />',
 			];
 
-			$current = (!empty($_REQUEST['ws-form-status']) ? $_REQUEST['ws-form-status'] : 'all');
+			$current = WS_Form_Common::get_query_var('ws-form-status', 'all');
 
 			if($current == 'all') {
 
@@ -56,7 +56,7 @@
 				'shortcode'			=> array('id', true)
 			);
 
-			$current = (!empty($_REQUEST['ws-form-status']) ? $_REQUEST['ws-form-status'] : 'all');
+			$current = WS_Form_Common::get_query_var('ws-form-status', 'all');
 
 			if($current == 'all') {
 
@@ -261,7 +261,7 @@
 			$ws_form_form = New WS_Form_Form();
 
 			$views = array();
-			$current = ( !empty($_REQUEST['ws-form-status']) ? $_REQUEST['ws-form-status'] : 'all');
+			$current = WS_Form_Common::get_query_var('ws-form-status', 'all');
 			$all_url = remove_query_arg(array('ws-form-status', 'paged'));
 
 			// All link
@@ -321,11 +321,12 @@
 
 			// Build ORDER BY
 			$order_by = '';
-			if (!empty($_REQUEST['orderby'])) {
+			$order_by_query_var = WS_Form_Common::get_query_var('orderby');
+			if (!empty($order_by_query_var)) {
 
-				$order_by = esc_sql($_REQUEST['orderby']);
+				$order_by = esc_sql($order_by_query_var);
 
-				$order_by .= !empty($order_by) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
+				$order_by .= !empty($order_by) ? ' ' . esc_sql(WS_Form_Common::get_query_var('order')) : ' ASC';
 
 			} else {
 
@@ -431,7 +432,7 @@
 
 			$ws_form_form = New WS_Form_Form();
 
-			$current = ( !empty($_REQUEST['ws-form-status']) ? $_REQUEST['ws-form-status'] : 'all');
+			$current = WS_Form_Common::get_query_var('ws-form-status', 'all');
 			if($current === 'all') { $current = ''; }
 
 			return $ws_form_form->db_get_count_by_status($current);
@@ -440,6 +441,6 @@
 		// No records
 		public function no_items() {
 
-			_e('No forms avaliable.', 'ws-form');
+			esc_html_e('No forms avaliable.', 'ws-form');
 		}
 	}

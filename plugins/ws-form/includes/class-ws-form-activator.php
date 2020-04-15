@@ -7,7 +7,7 @@
 
 			// These are set here to avoid problems if someone has both plugins installed and migrates from basic to PRO without de-activating the basic edition first. This ensures the PRO options are set up.
 			$ws_form_edition = 'basic';
-			$ws_form_version = '1.5.0';
+			$ws_form_version = '1.5.19';
 
 			$run_version_check = true;
 
@@ -25,6 +25,9 @@
 
 			// Get current plug-in version
 			$version = WS_Form_Common::option_get('version');
+
+			// Set initial install timestamp if one does not exist
+			WS_Form_Common::option_get('install_timestamp', time(), true);
 
 			// Debug - Uncomment this to force activation scripts to run
 //			$run_version_check = false;

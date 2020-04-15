@@ -15,7 +15,7 @@
 			if(!WS_Form_Common::can_user('manage_options_wsform')) { parent::api_access_denied(); }
 
 			// Get file path if provided
-			$path = WS_Form_Common::get_query_var('path', '', $parameters);
+			$path = WS_Form_Common::get_query_var_nonce('path', '', $parameters);
 
 			// Get framework auto detect configuration
 			$frameworks = WS_Form_Config::get_frameworks(false);
@@ -119,7 +119,7 @@
 			if(!WS_Form_Common::can_user('manage_options_wsform')) { parent::api_access_denied(); }
 
 			// Get framework
-			$framework = WS_Form_Common::get_query_var('framework', '', $parameters);
+			$framework = WS_Form_Common::get_query_var_nonce('framework', '', $parameters);
 			if($framework == '') { self::api_throw_error(__('Framework not specified', 'ws-form')); }
 
 			// Check framework
@@ -127,7 +127,7 @@
 			if(!isset($frameworks['types'][$framework])) { self::api_throw_error(__('Invalid framework specified', 'ws-form')); }
 
 			// Get mode
-			$mode = WS_Form_Common::get_query_var('mode', '', $parameters);
+			$mode = WS_Form_Common::get_query_var_nonce('mode', '', $parameters);
 			if($mode == '') { $mode = WS_FORM_DEFAULT_MODE; }
 
 			// Check mode
@@ -197,15 +197,15 @@
 			// Read support inquiry fields
 			$data = array(
 
-				'contact_first_name'	=> WS_Form_Common::get_query_var('contact_first_name'),
-				'contact_last_name'		=> WS_Form_Common::get_query_var('contact_last_name'),
-				'contact_email'			=> WS_Form_Common::get_query_var('contact_email'),
-				'contact_inquiry'		=> WS_Form_Common::get_query_var('contact_inquiry')
+				'contact_first_name'	=> WS_Form_Common::get_query_var_nonce('contact_first_name'),
+				'contact_last_name'		=> WS_Form_Common::get_query_var_nonce('contact_last_name'),
+				'contact_email'			=> WS_Form_Common::get_query_var_nonce('contact_email'),
+				'contact_inquiry'		=> WS_Form_Common::get_query_var_nonce('contact_inquiry')
 			);
 
 			// Push form
-			$contact_push_form = WS_Form_Common::get_query_var('contact_push_form');
-			$form_id = absint(WS_Form_Common::get_query_var('id'));
+			$contact_push_form = WS_Form_Common::get_query_var_nonce('contact_push_form');
+			$form_id = absint(WS_Form_Common::get_query_var_nonce('id'));
 			if($contact_push_form && ($form_id > 0)) {
 
 				// Create form file attachment
@@ -237,7 +237,7 @@
 			}
 
 			// Push system
-			$contact_push_system = WS_Form_Common::get_query_var('contact_push_system');
+			$contact_push_system = WS_Form_Common::get_query_var_nonce('contact_push_system');
 			if($contact_push_system) {
 
 				// Add to data
@@ -268,7 +268,63 @@
 			if($api_response_error = is_wp_error($response)) {
 
 				// Handle error
-				$api_response_error_message = $response->get_error_message();;
+				$api_response_error_message = $response->get_error_message();
+				$api_response_headers = array();
+				$api_response_body = '';
+				$api_response_http_code = 0;
+
+			} else {
+
+				// Handle response
+				$api_response_error_message = '';
+				$api_response_headers = wp_remote_retrieve_headers($response);
+				$api_response_body = wp_remote_retrieve_body($response);
+				$api_response_http_code = wp_remote_retrieve_response_code($response);
+			}
+
+			// Return response
+			return array('error' => $api_response_error, 'error_message' => $api_response_error_message, 'response' => $api_response_body, 'http_code' => $api_response_http_code);
+		}
+
+		// API - Deactivate feedback submit
+		public function api_deactivate_feedback_submit() {
+
+			// User capability check
+			if(!WS_Form_Common::can_user('manage_options_wsform')) { parent::api_access_denied(); }
+
+			// Read support inquiry fields
+			$data = array(
+
+				'feedback_reason'						=> WS_Form_Common::get_query_var_nonce('feedback_reason'),
+				'feedback_reason_found_better_plugin'	=> WS_Form_Common::get_query_var_nonce('feedback_reason_found_better_plugin'),
+				'feedback_reason_other'					=> WS_Form_Common::get_query_var_nonce('feedback_reason_other')
+			);
+
+			// Filters
+			$timeout = apply_filters('wsf_api_call_timeout', WS_FORM_API_CALL_TIMEOUT);
+			$sslverify = apply_filters('wsf_api_call_verify_ssl',WS_FORM_API_CALL_VERIFY_SSL);
+
+			// Build args
+			$args = array(
+
+				'method'		=>	'POST',
+				'body'			=>	http_build_query($data),
+				'user-agent'	=>	'WSForm/' . WS_FORM_VERSION . ' (wsform.com)',
+				'timeout'		=>	$timeout,
+				'sslverify'		=>	$sslverify
+			);
+
+			// URL
+			$url = 'https://wsform.com/plugin-support/deactivate_feedback.php';
+
+			// Call using Wordpress wp_remote_get
+			$response = wp_remote_get($url, $args);
+
+			// Check for error
+			if($api_response_error = is_wp_error($response)) {
+
+				// Handle error
+				$api_response_error_message = $response->get_error_message();
 				$api_response_headers = array();
 				$api_response_body = '';
 				$api_response_http_code = 0;
@@ -294,9 +350,7 @@
 
 			// Output CSS
 			$ws_form_css = new WS_Form_CSS();
-			$css = $ws_form_css->get_admin();
-
-			echo $css;
+			echo $ws_form_css->get_admin();	// phpcs:ignore
 
 			exit;
 		}
@@ -309,9 +363,7 @@
 
 			// Output CSS
 			$ws_form_css = new WS_Form_CSS();
-			$css = $ws_form_css->get_public();
-
-			echo $css;
+			echo $ws_form_css->get_public();	// phpcs:ignore
 
 			exit;
 		}
@@ -324,7 +376,7 @@
 
 			// Output CSS
 			$ws_form_css = new WS_Form_CSS();
-			$ws_form_css->render_skin();
+			echo $ws_form_css->get_skin();	// phpcs:ignore
 
 			exit;
 		}
@@ -337,9 +389,7 @@
 
 			// Output CSS
 			$ws_form_css = new WS_Form_CSS();
-			$css = $ws_form_css->get_email();
-
-			echo $css;
+			echo $ws_form_css->get_email();	// phpcs:ignore
 
 			exit;
 		}
@@ -351,10 +401,10 @@
 			header("Content-type: text/css; charset: UTF-8");
 
 			// Caching
-			$expires = 	WS_Form_Common::option_get('css_cache_duration', 86400);
+			$css_cache_duration = 	WS_Form_Common::option_get('css_cache_duration', 86400);
 			header("Pragma: public");
-			header("Cache-Control: maxage=" . $expires);
-			header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
+			header("Cache-Control: maxage=" . $css_cache_duration);
+			header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $css_cache_duration) . ' GMT');
 		}
 
 		// API - File download
@@ -364,18 +414,18 @@
 			if(!WS_Form_Common::can_user('read_submission')) { parent::api_access_denied(); }
 
 			// Get submit hash
-			$hash = WS_Form_Common::get_query_var('hash', '', $parameters);
+			$hash = WS_Form_Common::get_query_var_nonce('hash', '', $parameters);
 			if($hash == '' || (strlen($hash) != 32)) { self::api_throw_error(__('Hash not specified', 'ws-form')); }
 
 			// Get field ID
-			$field_id = intval(WS_Form_Common::get_query_var('field_id', '', $parameters));
+			$field_id = intval(WS_Form_Common::get_query_var_nonce('field_id', '', $parameters));
 			if($field_id == 0) { self::api_throw_error(__('Field ID not specified', 'ws-form')); }
 
 			// Get section repeatable index
-			$section_repeatable_index = intval(WS_Form_Common::get_query_var('section_repeatable_index', '', $parameters));
+			$section_repeatable_index = intval(WS_Form_Common::get_query_var_nonce('section_repeatable_index', '', $parameters));
 
 			// Get file index
-			$file_index = intval(WS_Form_Common::get_query_var('file_index', '', $parameters));
+			$file_index = intval(WS_Form_Common::get_query_var_nonce('file_index', '', $parameters));
 			if($file_index < 0) { self::api_throw_error(__('File index invalid', 'ws-form')); }
 
 			// Get submit record
@@ -412,7 +462,7 @@
 			header('Content-Type: ' . $file_type);
 
 			// Make browser download file instead of viewing it
-			$download = (WS_Form_Common::get_query_var('download', '', $parameters) !== '');
+			$download = (WS_Form_Common::get_query_var_nonce('download', '', $parameters) !== '');
 			if($download) {
 
 				header("Content-Transfer-Encoding: Binary"); 
@@ -437,11 +487,11 @@
 			// User capability check
 			if(!WS_Form_Common::can_user('read_submission')) { parent::api_access_denied(); }
 
-			$form_id = intval(WS_Form_Common::get_query_var('id', '', $parameters));
+			$form_id = intval(WS_Form_Common::get_query_var_nonce('id', '', $parameters));
 			if($form_id == 0) { exit; }
 
 			// Get hidden columns
-			$form_hidden_columns_string = WS_Form_Common::get_query_var('hidden', '', $parameters);
+			$form_hidden_columns_string = WS_Form_Common::get_query_var_nonce('hidden', '', $parameters);
 			$form_hidden_columns = explode(',', $form_hidden_columns_string);
 
 			// Write hidden columns back to user meta for current form
@@ -457,7 +507,7 @@
 			if(!WS_Form_Common::can_user('edit_form')) { parent::api_access_denied(); }
 
 			// Get form ID
-			$form_id = intval(WS_Form_Common::get_query_var('id', 0, $parameters));
+			$form_id = intval(WS_Form_Common::get_query_var_nonce('id', 0, $parameters));
 			if($form_id == 0) { exit; }
 
 			$variables = WS_Form_Config::get_parse_variable_help($form_id, false);
@@ -465,10 +515,30 @@
 			return $variables;
 		}
 
+		// API - Review nag dismiss
+		public function api_review_nag_dismiss($parameters) {
+
+			WS_Form_Common::option_set('review_nag', true);
+
+			return array('error' => false);
+		}
+
 		// API - Test API is working
 		public function api_test($parameters) {
 
-			return array('error' => false);
+			// REST API test
+			wp_set_current_user(0);
+			setup_userdata(0);
+			$access = apply_filters('rest_authentication_errors', true);
+
+			if(is_wp_error($access)) {
+
+				return array('error' => true, 'error_message' => $access->get_error_message());
+
+			} else {
+
+				return array('error' => false);
+			}
 		}
 
 		// API - System

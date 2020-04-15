@@ -93,20 +93,19 @@
 			}
 
 			// Push JSON response
-			$api_json_response = json_encode($json_array);
 			if(json_last_error() !== 0) {
 
 				// Set response code
 				header('HTTP/1.1 400 Bad Request', true, 400);
 
 				// Build error JSON
-				$api_json_response = json_encode([
+				$json_array = array(
 
 					'error' => 			true,
 					'error_message' =>	'JSON encoding error: ' . json_last_error_msg() . ' (' . json_last_error() . ')'
-				]);
+				);
 			}
-			echo $api_json_response;
+			echo wp_json_encode($json_array);
 
 			// Stop execution
 			exit;
@@ -134,7 +133,9 @@
 			register_rest_route(WS_FORM_RESTFUL_NAMESPACE, '/helper/user_meta_hidden_column/', array('methods' => 'POST', 'callback' => array($plugin_api_helper, 'api_user_meta_hidden_columns')));
 			register_rest_route(WS_FORM_RESTFUL_NAMESPACE, '/helper/variables/', array('methods' => 'GET', 'callback' => array($plugin_api_helper, 'api_variables')));
 			register_rest_route(WS_FORM_RESTFUL_NAMESPACE, '/helper/support_contact_submit/', array('methods' => 'POST', 'callback' => array($plugin_api_helper, 'api_support_contact_submit')));
+			register_rest_route(WS_FORM_RESTFUL_NAMESPACE, '/helper/deactivate_feedback_submit/', array('methods' => 'POST', 'callback' => array($plugin_api_helper, 'api_deactivate_feedback_submit')));
 			register_rest_route(WS_FORM_RESTFUL_NAMESPACE, '/helper/count_submit_unread/', array('methods' => 'GET', 'callback' => array($plugin_api_helper, 'api_count_submit_unread')));
+			register_rest_route(WS_FORM_RESTFUL_NAMESPACE, '/helper/review_nag/dismiss/', array('methods' => 'POST', 'callback' => array($plugin_api_helper, 'api_review_nag_dismiss')));
 
 			/* API - Form */
 			$plugin_api_form = new WS_Form_API_Form();
@@ -151,6 +152,7 @@
 			register_rest_route(WS_FORM_RESTFUL_NAMESPACE, '/form/(?P<form_id>[\d]+)/locations/', array('methods' => 'GET', 'callback' => array($plugin_api_form, 'api_get_locations')));
 			register_rest_route(WS_FORM_RESTFUL_NAMESPACE, '/form/(?P<form_id>[\d]+)/svg/draft/', array('methods' => 'GET', 'callback' => array($plugin_api_form, 'api_get_svg_draft')));
 			register_rest_route(WS_FORM_RESTFUL_NAMESPACE, '/form/(?P<form_id>[\d]+)/svg/published/', array('methods' => 'GET', 'callback' => array($plugin_api_form, 'api_get_svg_published')));
+
 
 			/* API - Group */
 			$plugin_api_group = new WS_Form_API_Group();

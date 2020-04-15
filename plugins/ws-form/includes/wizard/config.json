@@ -179,6 +179,13 @@
 				"label" 				: 	"Order Form",
 				"file_json"				:	"ws-form-repeatable-order-form.json",
 				"pro_required"			:	1
+			},
+
+			{
+				"id"					:	"repeatable-booking-form",
+				"label" 				: 	"Booking Form",
+				"file_json"				:	"ws-form-repeatable-booking-form.json",
+				"pro_required"			:	1
 			}
 		]
 	},
@@ -246,6 +253,13 @@
 				"id"					:	"cascade-select-and-radio-fields",
 				"label" 				: 	"Cascade Fields",
 				"file_json"				:	"ws-form-cascade-select-and-radio-fields.json",
+				"pro_required"			:	1
+			},
+
+			{
+				"id"					:	"create-a-form-recipient-selector",
+				"label" 				: 	"Recipient Selector",
+				"file_json"				:	"ws-form-create-a-form-recipient-selector.json",
 				"pro_required"			:	1
 			},
 

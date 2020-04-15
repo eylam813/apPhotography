@@ -11,7 +11,7 @@
 		public function __construct() {
 
 			// Get form_id
-			$this->form_id = isset($_GET) ? isset($_GET['wsf_preview_form_id']) ? intval($_GET['wsf_preview_form_id']) : 0 : 0;
+			$this->form_id = intval(WS_Form_Common::get_query_var('wsf_preview_form_id'));
 			if($this->form_id <= 0) { return false; }
 			if(!WS_Form_Common::can_user('edit_form')) { return false; }
 

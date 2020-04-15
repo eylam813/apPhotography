@@ -10,7 +10,7 @@
 
 <!-- Header -->
 <div class="wsf-heading">
-<h1 class="wp-heading-inline"><?php _e('Edit Form', 'ws-form') ?></h1>
+<h1 class="wp-heading-inline"><?php esc_html_e('Edit Form', 'ws-form') ?></h1>
 
 <!-- Form actions -->
 <?php
@@ -18,19 +18,19 @@
 	// Publish
 	if(WS_Form_Common::can_user('publish_form')) {
 ?>
-<button data-action="wsf-publish" class="wsf-button wsf-button-small wsf-button-information" disabled><?php WS_Form_Common::render_icon_16_svg('publish'); ?> <?php _e('Publish', 'ws-form'); ?></button>
+<button data-action="wsf-publish" class="wsf-button wsf-button-small wsf-button-information" disabled><?php WS_Form_Common::render_icon_16_svg('publish'); ?> <?php esc_html_e('Publish', 'ws-form'); ?></button>
 <?php
 	}
 
 	// Preview
 ?>
-<a data-action="wsf-preview" class="wsf-button wsf-button-small" href="<?php echo WS_Form_Common::get_preview_url($form_id); ?>" target="_blank"><?php WS_Form_Common::render_icon_16_svg('visible'); ?> <?php _e('Preview', 'ws-form'); ?></a>
+<a data-action="wsf-preview" class="wsf-button wsf-button-small" href="<?php echo esc_attr(WS_Form_Common::get_preview_url($form_id)); ?>" target="_blank"><?php WS_Form_Common::render_icon_16_svg('visible'); ?> <?php esc_html_e('Preview', 'ws-form'); ?></a>
 <?php
 
 	// Submissions
 	if(WS_Form_Common::can_user('read_submission')) {
 ?>
-<a data-action="wsf-submission" class="wsf-button wsf-button-small" href="<?php echo admin_url('admin.php?page=ws-form-submit&id=' . $form_id); ?>"><?php WS_Form_Common::render_icon_16_svg('table'); ?> <?php _e('Submissions', 'ws-form'); ?></a>
+<a data-action="wsf-submission" class="wsf-button wsf-button-small" href="<?php echo esc_attr(admin_url('admin.php?page=ws-form-submit&id=' . $form_id)); ?>"><?php WS_Form_Common::render_icon_16_svg('table'); ?> <?php esc_html_e('Submissions', 'ws-form'); ?></a>
 <?php
 	}
 
@@ -38,21 +38,21 @@
 	do_action('wsf_form_edit_nav_left');
 ?>
 <ul class="wsf-settings">
-<li data-action="wsf-undo" title="<?php _e('Undo', 'ws-form'); ?>" class="wsf-undo-inactive"><?php WS_Form_Common::render_icon_16_svg('undo'); ?></li>
-<li data-action="wsf-redo" title="<?php _e('Redo', 'ws-form'); ?>" class="wsf-redo-inactive"><?php WS_Form_Common::render_icon_16_svg('redo'); ?></li>
+<li data-action="wsf-undo" title="<?php esc_attr_e('Undo', 'ws-form'); ?>" class="wsf-undo-inactive"><?php WS_Form_Common::render_icon_16_svg('undo'); ?></li>
+<li data-action="wsf-redo" title="<?php esc_attr_e('Redo', 'ws-form'); ?>" class="wsf-redo-inactive"><?php WS_Form_Common::render_icon_16_svg('redo'); ?></li>
 <?php
 
 	// Upload
 	if(WS_Form_Common::can_user('import_form')) {
 ?>
-<li data-action="wsf-form-upload" title="<?php _e('Import', 'ws-form'); ?>"><?php WS_Form_Common::render_icon_16_svg('upload'); ?></li>
+<li data-action="wsf-form-upload" title="<?php esc_attr_e('Import', 'ws-form'); ?>"><?php WS_Form_Common::render_icon_16_svg('upload'); ?></li>
 <?php
 	}
 
 	// Download
 	if(WS_Form_Common::can_user('export_form')) {
 ?>
-<li data-action="wsf-form-download" title="<?php _e('Export', 'ws-form'); ?>"><?php WS_Form_Common::render_icon_16_svg('download'); ?></li>
+<li data-action="wsf-form-download" title="<?php esc_attr_e('Export', 'ws-form'); ?>"><?php WS_Form_Common::render_icon_16_svg('download'); ?></li>
 <?php
 	}
 ?>
@@ -69,7 +69,11 @@
 </div>
 <hr class="wp-header-end">
 <!-- /Header -->
+<?php
 
+	// Review nag
+	WS_Form_Common::review();
+?>
 <!-- Wrapper -->
 <div id="poststuff"><div id="post-body" class="metabox-holder columns-2"><div id="post-body-content" style="position: relative;">
 
@@ -77,7 +81,7 @@
 <div id="titlediv">
 <div id="titlewrap">
 
-<label class="screen-reader-text" id="title-prompt-text" for="title"><?php _e('Form Name', 'ws-form'); ?></label>
+<label class="screen-reader-text" id="title-prompt-text" for="title"><?php esc_html_e('Form Name', 'ws-form'); ?></label>
 <input type="text" id="title" class="wsf-field" data-action="wsf-form-label" name="form_label" size="30" value="" spellcheck="true" autocomplete="off" />
 
 </div>
@@ -132,7 +136,7 @@
 			wsf_obj.render({
 
 				'obj' : 	'#wsf-form',
-				'form_id':	<?php echo $form_id; ?>
+				'form_id':	<?php echo esc_attr($form_id); ?>
 			});
 			wsf_obj.menu_highlight();
 		});

@@ -1,6 +1,7 @@
 <?php
-
 	/**
+	 * WS Form
+	 *
 	 * @link              https://wsform.com/
 	 * @since             1.0.0
 	 * @package           WS_Form
@@ -9,7 +10,7 @@
 	 * Plugin Name:       WS Form
 	 * Plugin URI:        https://wsform.com/
 	 * Description:       Build Better WordPress Forms
-	 * Version:           1.5.0
+	 * Version:           1.5.19
 	 * Author:            Westguard Solutions
 	 * Author URI:        https://wsform.com/
 	 * License:           GPL-2.0+
@@ -19,12 +20,12 @@
 	 */
 
 	// If this file is called directly, abort.
-	if (!defined('WPINC')) {
+	if( !defined('WPINC') ) {
 		die;
 	}
 
 	// Load plugin.php
-	if(!function_exists('is_plugin_active')) {
+	if( !function_exists('is_plugin_active') ) {
 
 		include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 	}
@@ -33,10 +34,12 @@
 
 		// Constants
 		define('WS_FORM_NAME', 'ws-form');
-		define('WS_FORM_VERSION', '1.5.0');
+		define('WS_FORM_VERSION', '1.5.19');
 		define('WS_FORM_NAME_PRESENTABLE', 'WS Form');
 		define('WS_FORM_EDITION', 'basic');
 		define('WS_FORM_PLUGIN_BASENAME_COUNTERPART', 'ws-form-pro/ws-form.php');
+		define('WS_FORM_POST_NONCE_FIELD_NAME', 'wsf_nonce');
+		define('WS_FORM_POST_NONCE_ACTION_NAME', 'wsf_post');
 		define('WS_FORM_UPLOAD_DIR', 'ws-form');
 		define('WS_FORM_IDENTIFIER', 'ws_form');
 		define('WS_FORM_DB_TABLE_PREFIX', 'wsf_');
@@ -91,6 +94,8 @@
 		define('WS_FORM_SECTION_REPEATABLE_DELIMITER_SECTION', ',');
 		define('WS_FORM_SECTION_REPEATABLE_DELIMITER_ROW', ';');
 		define('WS_FORM_SECTION_REPEATABLE_DELIMTIER_SUBMIT', '<br />');
+
+		define('WS_FORM_REVIEW_NAG_DURATION', 14);
 	}
 
 	function activate_ws_form() {

@@ -67,9 +67,17 @@
 	font-weight: 600;
 	left: 0;
 	line-height: 36px;
-	padding: 0 36px 0 16px;
+	padding: 0 36px 0 42px;
 	right: 0;
 	top: 0;
+}
+
+.wsf-modal-title svg {
+    height: 36px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 36px;
 }
 
 .wsf-modal-close {
@@ -103,6 +111,20 @@
 	padding: 8px 0 12px;
 }
 
+.wsf-modal-content form label {
+	display: block;
+	margin-bottom: 6px;
+}
+
+#wsf-feedback-reason-found-better-plugin-select {
+	margin-bottom: 6px;
+	width: 100%;
+}
+
+#wsf-feedback-reason-other-text {
+	width: 100%;
+}
+
 .wsf-modal-buttons {
 	padding: 8px 16px;
 	background: #FCFCFC;
@@ -128,17 +150,10 @@
 	color: #DC3232;
 }
 
-#wsf-modal-buttons-add-form {
+#wsf-modal-buttons-add-form,
+#wsf-modal-buttons-feedback-submit {
 	float: right;
 	line-height: 23px;
-}
-
-#wsf_settings select {
-	height: auto;
-}
-
-#wsf_settings select[size] {
-	font-size: 12px;
 }
 
 .wsf-submit-unread > span {

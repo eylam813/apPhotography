@@ -38,17 +38,17 @@
 
 			if($forms) {
 ?>
-<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'ws-form'); ?></label> 
-<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></p>
+<p><label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_html_e('Title:', 'ws-form'); ?></label> 
+<input class="widefat" id="<?php echo esc_attr($this->get_field_id('title')); ?>" name="<?php echo esc_attr($this->get_field_name('title')); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></p>
 
-<p><label for="<?php echo esc_attr($this->get_field_id('form_id')); ?>"><?php _e('Select the form you want to add...', 'ws-form'); ?></label>
+<p><label for="<?php echo esc_attr($this->get_field_id('form_id')); ?>"><?php esc_html_e('Select the form you want to add...', 'ws-form'); ?></label>
 
 <select id="<?php echo esc_attr($this->get_field_id('form_id')); ?>" name="<?php echo esc_attr($this->get_field_name('form_id')); ?>">
-<option value=""><?php _e('Select...', 'ws-form'); ?></option>
+<option value=""><?php esc_html_e('Select...', 'ws-form'); ?></option>
 <?php
 				foreach($forms as $form) {
 
-?><option value="<?php echo $form['id']; ?>"<?php if($form['id'] == $form_id) { ?> selected="selected"<?php } ?>><?php echo sprintf('%s (ID: %u)', $form['label'], $form['id']); ?></option>
+?><option value="<?php echo esc_attr($form['id']); ?>"<?php if($form['id'] == $form_id) { ?> selected="selected"<?php } ?>><?php echo sprintf('%s (ID: %u)', esc_html($form['label']), esc_html($form['id'])); ?></option>
 <?php
 				}
 ?>
@@ -56,8 +56,8 @@
 <?php
 			} else {
 ?>
-<p><?php _e("You haven't created any forms yet.", 'ws-form'); ?></p>
-<p><a href="<?php echo WS_Form_Common::get_admin_url('ws-form-add'); ?>"><?php _e('Click here to create a form', 'ws-form'); ?></a></p>
+<p><?php esc_html_e("You haven't created any forms yet.", 'ws-form'); ?></p>
+<p><a href="<?php echo esc_attr(WS_Form_Common::get_admin_url('ws-form-add')); ?>"><?php esc_html_e('Click here to create a form', 'ws-form'); ?></a></p>
 <?php
 			}
 		}
@@ -80,17 +80,22 @@
 			$title = apply_filters('widget_title', isset($instance['title']) ? $instance['title'] : '');
 			$form_id = isset($instance['form_id']) ? $instance['form_id'] : '';
 
-			// WordPress core before_widget hook (always include )
-			echo $before_widget;
+			// WordPress core before_widget hook (always include)
+			echo $before_widget;	// phpcs:ignore
 
 			// Display the title
-			if(!empty($title)) { echo $args['before_title'] . $title . $args['after_title']; }
+			if(!empty($title)) {
+
+				echo $args['before_title'];	// phpcs:ignore
+				echo esc_html($title);
+				echo $args['after_title'];	// phpcs:ignore
+			}
 
 			// Display the widget
 			echo do_shortcode('[' . WS_FORM_SHORTCODE . ' id=' . $form_id . ']');
 
-			// WordPress core after_widget hook (always include )
-			echo $after_widget;
+			// WordPress core after_widget hook (always include)
+			echo $after_widget;	 // phpcs:ignore
 		}
 
 	}

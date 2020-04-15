@@ -74,7 +74,7 @@
 				add_action('wsf_actions_post_complete', array($this, 'api_post_complete'), 10, 2);
 
 				// Get action_id
-				$action_id = intval(WS_Form_Common::get_query_var('wsf_action_id'));
+				$action_id = intval(WS_Form_Common::get_query_var_nonce('wsf_action_id'));
 
 				// Process all actions
 				do_action('wsf_actions_post', $form_object, $this->ws_form_submit, 'wsf_actions_post_complete', $action_id);
@@ -182,7 +182,7 @@
 			$ws_form_submit->id = self::api_get_id($parameters);
 
 			// Get field data
-			$submit = WS_Form_Common::get_query_var('submit', false, $parameters);
+			$submit = WS_Form_Common::get_query_var_nonce('submit', false, $parameters);
 			if(!$submit) { return false; }
 
 			// Serialize actions (We need to do this because the actions are sent to us as an array)
@@ -243,7 +243,7 @@
 			}
 
 			// Set nonce
-			$json_array['nonce'] = wp_create_nonce('wp_rest');
+			$json_array['x_wp_nonce'] = wp_create_nonce('wp_rest');
 
 			// Set error
 			$json_array['error'] = $this->ws_form_submit->error;
@@ -256,18 +256,17 @@
 			header('Content-Type: application/json');
 
 			// Push JSON response
-			$api_json_response = json_encode($json_array);
 			if(json_last_error() !== 0) {
 
 				// Set response code
 				header('HTTP/1.1 400 Bad Request', true, 400);
 
 				// Build error JSON
-				$api_json_response = json_encode([
+				$json_array = array(
 
 					'error' => 			true,
 					'error_message' =>	'JSON encoding error: ' . json_last_error_msg() . ' (' . json_last_error() . ')'
-				]);
+				);
 
 			} else {
 
@@ -297,7 +296,7 @@
 				}
 			}
 
-			echo $api_json_response;
+			echo wp_json_encode($json_array);
 
 			// Stop execution
 			exit;
@@ -429,12 +428,12 @@
 		public function api_get_form_id($parameters) {
 
 			// Public
-			$form_id = WS_Form_Common::get_query_var('wsf_form_id', false, $parameters);
+			$form_id = WS_Form_Common::get_query_var_nonce('wsf_form_id', false, $parameters);
 
 			// Admin
 			if($form_id === false) {
 
-				$form_id = WS_Form_Common::get_query_var('id', false, $parameters);
+				$form_id = WS_Form_Common::get_query_var_nonce('id', false, $parameters);
 			}
 
 			return absint($form_id);
@@ -443,18 +442,18 @@
 		// Get hash
 		public function api_get_hash($parameters) {
 
-			return WS_Form_Common::get_query_var('wsf_hash', '', $parameters, true);
+			return WS_Form_Common::get_query_var_nonce('wsf_hash', '', $parameters, true);
 		}
 
 		// Get hash
 		public function api_get_action_index($parameters) {
 
-			return WS_Form_Common::get_query_var('action_index', 0, $parameters);
+			return WS_Form_Common::get_query_var_nonce('action_index', 0, $parameters);
 		}
 
 		// Get submit ID
 		public function api_get_id($parameters) {
 
-			return absint(WS_Form_Common::get_query_var('submit_id', 0, $parameters));
+			return absint(WS_Form_Common::get_query_var_nonce('submit_id', 0, $parameters));
 		}
 	}

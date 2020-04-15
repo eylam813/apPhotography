@@ -789,8 +789,16 @@
 			var label_html_parsed = '';
 		}
 
-		// Hidden
-		var hidden = (!this.is_admin && this.get_object_meta_value(section, 'hidden_section', '') == 'on') ? ' style="display:none;"' : '';
+		if(!this.is_admin) {
+
+			// Disabled
+			var disabled_section = this.get_object_meta_value(section, 'disabled_section', '');
+			if(disabled_section == 'on') { attributes.push('disabled'); }
+
+			// Hidden
+			var hidden_section = this.get_object_meta_value(section, 'hidden_section', '');
+			if(hidden_section == 'on') { attributes.push('style="display:none;"'); }
+		}
 
 		// HTML
 		if(section.child_count == 0) {
@@ -809,7 +817,6 @@
 		var mask_values = {
 
 			'attributes': ((attributes.length > 0) ? ' ' : '') + attributes.join(' '),
-			'hidden': hidden,
 			'class': class_array.join(' '),
 			'id': this.form_id_prefix + 'section-' + section.id + (section_repeatable_index ? ('-repeat-' + section_repeatable_index) : ''),
 			'data_id': section.id,
@@ -832,9 +839,6 @@
 
 		var fields_html = '';
 
-		// Attributes
-		var attributes = [];
-
 		// Get current framework for tabs
 		var framework_type = this.is_admin ? ws_form_settings.framework_admin : $.WS_Form.settings_plugin.framework;
 		var framework = $.WS_Form.frameworks.types[framework_type];
@@ -842,13 +846,6 @@
 
 		var section_id = section.id;
 		var fields = section.fields;
-
-		// Disabled
-		if(!this.is_admin) {
-
-			var disabled_section = this.get_object_meta_value(section, 'disabled_section', '');
-			if(disabled_section == 'on') { attributes.push('disabled'); }
-		}
 
 		// Legend
 		var section_label = this.html_encode(section.label)
@@ -880,7 +877,7 @@
 
 		// Parse wrapper section
 		var mask = framework_fields['mask_wrapper'];
-		var mask_values = {'attributes': ((attributes.length > 0) ? ' ' : '') + attributes.join(' '), 'id': this.form_id_prefix + 'fields-' + section.id, 'data_id': section.id, 'fields': fields_html, 'label': label_html_parsed};
+		var mask_values = {'id': this.form_id_prefix + 'fields-' + section.id, 'data_id': section.id, 'fields': fields_html, 'label': label_html_parsed};
 		var fields_html_parsed = this.comment_html(this.language('comment_fields')) + this.mask_parse(mask, mask_values) + this.comment_html(this.language('comment_fields'), true);
 
 		return fields_html_parsed;
@@ -1409,6 +1406,29 @@
 								parsed_variable = this.get_query_var(variable_attribute_array[0]);
 								break;
 
+							case 'section_row_count' :
+
+								if(isNaN(variable_attribute_array[0])) {
+
+									this.error('error_parse_variable_syntax_error_section_id', variable_attribute_array[0], 'parse-variables');
+									return this.language('error_parse_variable_syntax_error_section_id', variable_attribute_array[0]);
+								}
+
+								var section_id = variable_attribute_array[0];
+
+								// Check section exists
+								if(typeof(this.section_data_cache[section_id]) === 'undefined') {
+
+									this.error('error_parse_variable_syntax_error_section_id', variable_attribute_array[0], 'parse-variables');
+									return this.language('error_parse_variable_syntax_error_section_id', variable_attribute_array[0]);
+								}
+
+								// Get section count
+								var sections = $('[data-repeatable][data-id="' + section_id + '"]', this.form_canvas_obj);
+								parsed_variable = sections.length ? sections.length : 0;
+
+								break;
+
 							case 'field' :
 							case 'ecommerce_field_price' :
 
@@ -1420,7 +1440,7 @@
 
 								var field_id = variable_attribute_array[0];
 
-								// Use default value
+								// Check field exists
 								if(typeof(this.field_data_cache[field_id]) === 'undefined') {
 
 									this.error('error_parse_variable_syntax_error_field_id', variable_attribute_array[0], 'parse-variables');
@@ -1458,7 +1478,7 @@
 								} else {
 
 									parsed_variable = this.get_object_meta_value(this.field_data_cache[field_id], 'default_value', '');
-									parsed_variable = this.parse_variables_process(parsed_variable, section_repeatable_inde, depth + 1);
+									parsed_variable = this.parse_variables_process(parsed_variable, section_repeatable_index, depth + 1);
 								}
 
 								if(parse_variable == 'ecommerce_field_price') {
@@ -1481,10 +1501,9 @@
 
 								var field_name = ws_form_settings.field_prefix + parseInt(field_id) + ((section_repeatable_index) ? '[' + section_repeatable_index + ']' : '');
 
-								var field_obj = $(field_name + '[] option:selected', this.form_canvas_obj);
+								var field_obj = $('[name="' + field_name + '[]"] option:selected', this.form_canvas_obj);
 								if(field_obj.length) {
 
-									// Use live value
 									parsed_variable = field_obj.text();
 								}
 
@@ -2320,7 +2339,7 @@
 
 			var class_field_form = this.get_object_meta_value(this.form, 'class_field', '', false, true);
 			var class_field = this.get_object_meta_value(field, 'class_field', '', false, true);
-			if(class_field_form != '') { class_field += ' ' + class_field_form; }
+			if(class_field_form != '') { class_field += ((class_field == '') ? '' : ' ') + class_field_form; }
 
 			// Full width class for buttons
 			var class_field_full_button_remove = this.get_object_meta_value(field, 'class_field_full_button_remove', '');

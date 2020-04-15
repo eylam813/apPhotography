@@ -204,6 +204,10 @@
 
 							return self::activate_error(__('Your license is not active for this URL.', 'ws-form'));
 
+						case 'license_not_activable' :
+
+							return self::activate_error(__('License not activable. You are entering the license key for the package you purchased rather than the license key for the plugin itself.', 'ws-form'));
+
 						case 'item_name_mismatch' :
 
 							return self::activate_error(sprintf(__('This appears to be an invalid license key for %s.', 'ws-form'), $this->name));

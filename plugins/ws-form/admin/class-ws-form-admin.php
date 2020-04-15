@@ -40,7 +40,6 @@
 
 			$this->plugin_name = $plugin_name;
 			$this->version = $version;
-			$this->form_id = intval(WS_Form_Common::get_query_var('id'));
 			$this->user_meta_hidden_columns = 'managews-form_page_ws-form-submitcolumnshidden';	// AJAX function is in helper API
 			$this->intro = WS_Form_Common::option_get('intro', false);
 
@@ -63,14 +62,14 @@
 				case $this->hook_suffix_form_add : 		
 
 					// CSS - Framework
-					wp_enqueue_style($this->plugin_name . '-css-layout', WS_Form_Common::get_api_path('helper/ws_form_css_admin'), array(), $this->version, 'all');
+					wp_enqueue_style($this->plugin_name . '-css-layout', WS_Form_Common::get_api_path('helper/ws_form_css_admin'), array(), $this->version . '.' . WS_FORM_EDITION, 'all');
 					break;
 
 				// Form - Edit
 				case $this->hook_suffix_form_edit :
 
 					// CSS - Framework
-					wp_enqueue_style($this->plugin_name . '-css-layout', WS_Form_Common::get_api_path('helper/ws_form_css_admin'), array(), $this->version, 'all');
+					wp_enqueue_style($this->plugin_name . '-css-layout', WS_Form_Common::get_api_path('helper/ws_form_css_admin'), array(), $this->version . '.' . WS_FORM_EDITION, 'all');
 
 					// CSS - Intro
 					if($this->intro) {
@@ -114,17 +113,23 @@
 			// Sidebar tab key
 			$sidebar_tab_key = WS_Form_Common::get_query_var('tab', false);
 
+			// WP NONCE
+			$x_wp_nonce = wp_create_nonce('wp_rest');
+
 			// Enqueued scripts settings
 			$ws_form_settings = array(
 
 				// Nonce
-				'nonce'						=>	wp_create_nonce('wp_rest'),
+				'nonce'						=> $x_wp_nonce,		// Backward compatibility for older add-ons (Will be removed eventually)
+				'x_wp_nonce'				=> $x_wp_nonce,
+				'wsf_nonce_field_name'		=> WS_FORM_POST_NONCE_FIELD_NAME,
+				'wsf_nonce'					=> wp_create_nonce(WS_FORM_POST_NONCE_ACTION_NAME),
 
 				// URL
-				'url'						=>	WS_Form_Common::get_api_path(),
+				'url'						=> WS_Form_Common::get_api_path(),
 
 				// Permalink
-				'permalink_custom'		=>	(get_option('permalink_structure') != ''),
+				'permalink_custom'			=> (get_option('permalink_structure') != ''),
 
 				// Admin framework
 				'framework_admin'			=> 'ws-form',
@@ -167,12 +172,12 @@
 			);
 
 			// Form class
-			wp_register_script($this->plugin_name . '-form-common', plugin_dir_url(__DIR__) . 'shared/js/ws-form.js', array('jquery'), $this->version, false);
+			wp_register_script($this->plugin_name . '-form-common', plugin_dir_url(__DIR__) . 'shared/js/ws-form.js', array('jquery'), $this->version, true);
 			wp_localize_script($this->plugin_name . '-form-common', 'ws_form_settings', $ws_form_settings);
 			wp_enqueue_script($this->plugin_name . '-form-common');
 
 			// Form class - Admin
-			wp_register_script($this->plugin_name, plugin_dir_url(__DIR__) . 'admin/js/ws-form-admin.js', array('jquery', $this->plugin_name . '-form-common'), $this->version, false);
+			wp_register_script($this->plugin_name, plugin_dir_url(__DIR__) . 'admin/js/ws-form-admin.js', array('jquery', $this->plugin_name . '-form-common'), $this->version, true);
 			wp_enqueue_script($this->plugin_name);
 
 			// Scripts by hook
@@ -220,7 +225,7 @@
 					// Intro
 					if($this->intro) {
 
-						wp_enqueue_script($this->plugin_name . '-intro', plugin_dir_url(__FILE__) . 'js/external/introjs/intro.min.js', false, $this->version, false);
+						wp_enqueue_script($this->plugin_name . '-intro', plugin_dir_url(__FILE__) . 'js/external/introjs/intro.min.js', false, $this->version, true);
 					}
 
 					break;
@@ -243,15 +248,28 @@
 				case 'post.php' : 
 				case 'post-new.php' : 
 
-					add_action('media_buttons', array($this, 'media_button'));
-					add_action('admin_footer', array($this, 'media_buttons_html'));
+					$post_type = WS_Form_Common::get_query_var('post_type', 'post');
+					$render_media_button = apply_filters('wsf_render_media_button', true, $post_type);
+					if($render_media_button) {
+
+						add_action('media_buttons', array($this, 'media_button'));
+						add_action('admin_footer', array($this, 'media_buttons_html'));
+					}
 					break;
 
 				// Dashboard
 				case 'index.php' :
 
 					// Chart
-					wp_enqueue_script($this->plugin_name . '-chart', plugin_dir_url(__FILE__) . 'js/external/chart/Chart.min.js', array('jquery'), $this->version, false);
+					wp_enqueue_script($this->plugin_name . '-chart', plugin_dir_url(__FILE__) . 'js/external/chart/Chart.min.js', array('jquery'), $this->version, true);
+					break;
+
+				// Plugins
+				case 'plugins.php' :
+
+					// Feedback
+					add_action('admin_footer', array($this, 'feedback'));
+					break;
 			}
 
 			// Enqueue admin count submit unread script
@@ -273,6 +291,226 @@
 			}
 		}
 
+		// Feedback
+		public function feedback() {
+?>
+<script>
+
+	(function($) {
+
+		'use strict';
+
+		var wsf_feedback_deactivate_url = false;
+
+		// Close modal
+		function wsf_feedback_modal_close() {
+
+			$('#wsf-feedback-modal').hide();
+			$('#wsf-feedback-modal-backdrop').hide();
+			$(document).keydown = null;
+
+			if(wsf_feedback_deactivate_url !== false) {
+
+				location.href = wsf_feedback_deactivate_url;
+			}
+		}
+
+		// On load
+		$(function() {
+
+			// Modal open
+			$('[data-slug="ws-form"] .deactivate a, [data-slug="ws-form-pro"] .deactivate a').click(function(e) {
+
+				e.preventDefault();
+
+				wsf_feedback_deactivate_url = $(this).attr('href');
+
+				// Show modal
+				$('#wsf-feedback-modal-backdrop').show();
+				$('#wsf-feedback-modal').show();
+				$('[data-action="wsf-feedback-submit"]').attr('disabled', false);
+
+				// Escape key
+				$(document).keydown(function(e) {
+
+					if(e.keyCode == 27) { 
+
+						// Close modal
+						wsf_feedback_modal_close();
+					}
+				});
+			});
+
+			// Click modal backdrop
+			$(document).on('click', '#wsf-feedback-modal-backdrop', function(e) {
+
+				// Close modal
+				wsf_feedback_modal_close();
+			});
+
+			// Click close button
+			$('[data-action="wsf-close"]').click(function() {
+
+				// Close modal
+				wsf_feedback_modal_close();
+			});
+
+			// Toggle fields
+			$('[name="wsf_feedback_reason"]').change(function() {
+
+				var feedback_reason_other = $('#wsf-feedback-reason-other').is(':checked');
+
+				if(feedback_reason_other) {
+
+					$('#wsf-feedback-reason-other-text').show().focus();
+
+				} else {
+
+					$('#wsf-feedback-reason-other-text').hide();
+				}
+
+				var feedback_reason_found_better_plugin = $('#wsf-feedback-reason-found-better-plugin').is(':checked');
+
+				if(feedback_reason_found_better_plugin) {
+
+					$('#wsf-feedback-reason-found-better-plugin-select').show().focus();
+
+				} else {
+
+					$('#wsf-feedback-reason-found-better-plugin-select').hide();
+				}
+
+				var feedback_reason_error = $('#wsf-feedback-reason-error').is(':checked');
+
+				if(feedback_reason_error) {
+
+					$('#wsf-feedback-reason-error-text').show();
+
+				} else {
+
+					$('#wsf-feedback-reason-error-text').hide();
+				}
+			});
+
+			// Submit
+			$('[data-action="wsf-feedback-submit"]').click(function() {
+
+				$(this).attr('disabled', '');
+
+				$.ajax({
+
+					url: '<?php echo esc_html(WS_Form_Common::get_api_path('helper/deactivate_feedback_submit/')); ?>',
+					data: {
+
+						'wsf_nonce_field_name' : '<?php echo WS_FORM_POST_NONCE_FIELD_NAME; ?>',
+						'wsf_nonce': '<?php echo wp_create_nonce(WS_FORM_POST_NONCE_ACTION_NAME); ?>',
+						'feedback_reason': $('[name="wsf_feedback_reason"]:checked').val(),
+						'feedback_reason_found_better_plugin': $('[name="wsf_feedback_reason_found_better_plugin"]').val(),
+						'feedback_reason_other': $('[name="wsf_feedback_reason_other"]').val(),
+					},
+					type: 'POST',
+					beforeSend: function(xhr) {
+
+						xhr.setRequestHeader('X-WP-Nonce', '<?php echo esc_html(wp_create_nonce('wp_rest')); ?>');
+					},
+					complete: function(data){
+
+						wsf_feedback_modal_close();
+					}
+				});
+			});
+
+			// Defaults
+			$('#wsf-feedback-reason-other-text').hide();
+			$('#wsf-feedback-reason-found-better-plugin-select').hide();
+			$('#wsf-feedback-reason-error-text').hide();
+		});
+
+	})(jQuery);
+
+</script>
+
+<!-- WS Form - Modal - Feedback -->
+<div id="wsf-feedback-modal-backdrop" class="wsf-modal-backdrop" style="display:none;"></div>
+
+<div id="wsf-feedback-modal" class="wsf-modal" style="display:none; margin-left:-200px; margin-top:-180px; width: 400px;">
+
+<div id="wsf-feedback">
+
+<!-- WS Form - Modal - Feedback - Header -->
+<div class="wsf-modal-title"><?php
+
+	echo WS_Form_Common::get_admin_icon('#002e5f', false); // phpcs:ignore
+
+?><?php esc_html_e('Feedback', 'ws-form'); ?></div>
+<div class="wsf-modal-close" data-action="wsf-close" title="<?php esc_attr_e('Close', 'ws-form'); ?>"></div>
+<!-- /WS Form - Modal - Feedback - Header -->
+
+<!-- WS Form - Modal - Feedback - Content -->
+<div class="wsf-modal-content">
+
+<form id="wsf-feedback-form">
+
+<fieldset>
+
+<p><?php echo esc_html(sprintf(__('We would greatly appreciate your feedback about why you are deactivating %s. Thank you for your help!', 'ws-form'), WS_FORM_NAME_PRESENTABLE)); ?></p>
+
+<label><input type="radio" name="wsf_feedback_reason" value="Upgraded" /> <?php echo esc_html(sprintf(__('I\'m upgrading to <a href="%s" target="_blank">WS Form PRO</a>', 'ws-form'), WS_Form_Common::get_plugin_website_url('', 'plugins_deactivate'))); ?></label>
+<label><input type="radio" name="wsf_feedback_reason" value="Temporary" /> <?php esc_html_e('Temporarily deactivating', 'ws-form'); ?></label>
+
+<label><input type="radio" id="wsf-feedback-reason-error" name="wsf_feedback_reason" value="Error" /> <?php esc_html_e('The plugin did not work', 'ws-form'); ?></label>
+
+<p id="wsf-feedback-reason-error-text"><em>Need help? <?php echo esc_html(sprintf(__('<a href="%s" target="_blank">Get Support</a>', 'ws-form'), WS_Form_Common::get_plugin_website_url('/support/', 'plugins_deactivate'))); ?></em></p>
+
+<label><input type="radio" name="wsf_feedback_reason" value="No Longer Need" /> <?php esc_html_e('I no longer need the plugin', 'ws-form'); ?></label>
+
+<label><input type="radio" id="wsf-feedback-reason-found-better-plugin" name="wsf_feedback_reason" value="Found Better Plugin" /> <?php esc_html_e('I found a better plugin', 'ws-form'); ?></label>
+
+<select id="wsf-feedback-reason-found-better-plugin-select" name="wsf_feedback_reason_found_better_plugin">
+<option value=""><?php esc_html_e('Select...', 'ws-form'); ?></option>
+<option value="Caldera Forms"><?php esc_html_e('Caldera Forms', 'ws-form'); ?></option>
+<option value="Contact Form 7"><?php esc_html_e('Contact Form 7', 'ws-form'); ?></option>
+<option value="Formidable Forms"><?php esc_html_e('Formidable Forms', 'ws-form'); ?></option>
+<option value="Gravity Forms"><?php esc_html_e('Gravity Forms', 'ws-form'); ?></option>
+<option value="Ninja Forms"><?php esc_html_e('Ninja Forms', 'ws-form'); ?></option>
+<option value="Visual Form Builder"><?php esc_html_e('Visual Form Builder', 'ws-form'); ?></option>
+<option value="weForms"><?php esc_html_e('weForms', 'ws-form'); ?></option>
+<option value="WPForms"><?php esc_html_e('WPForms', 'ws-form'); ?></option>
+<option value="Other"><?php esc_html_e('Other', 'ws-form'); ?></option>
+</select>
+
+<label><input type="radio" id="wsf-feedback-reason-other" name="wsf_feedback_reason" value="Other" /> <?php esc_html_e('Other', 'ws-form'); ?></label>
+
+<textarea id="wsf-feedback-reason-other-text" name="wsf_feedback_reason_other" placeholder="<?php esc_attr_e('Please specify...', 'ws-form'); ?>" rows="3"></textarea>
+
+</fieldset>
+
+</form>
+
+</div>
+<!-- /WS Form - Modal - Feedback - Content -->
+
+<!-- WS Form - Modal - Feedback - Buttons -->
+<div class="wsf-modal-buttons">
+
+<div id="wsf-modal-buttons-cancel">
+<a data-action="wsf-close"><?php esc_html_e('Skip &amp; Deactivate', 'ws-form'); ?></a>
+</div>
+
+<div id="wsf-modal-buttons-feedback-submit">
+<button class="button button-primary" data-action="wsf-feedback-submit"><?php esc_html_e('Submit &amp; Deactivate', 'ws-form'); ?></button>
+</div>
+
+</div>
+<!-- /WS Form - Modal - Feedback - Buttons -->
+
+</div>
+
+</div>
+<!-- /WS Form - Modal - Feedback -->
+<?php
+		}
+
 		// Customize register
 		public function customize_register($wp_customize) {
 
@@ -286,7 +524,11 @@
 		public function media_button() {
 
 			// Build add form button
-?><button class="button wsf-button-add-form"><span class="wsf-button-add-form-icon"><?php echo WS_Form_Common::get_admin_icon('#888888', false); ?></span><?php _e('Add WS Form', 'ws-form'); ?></button><?php
+?><button class="button wsf-button-add-form"><span class="wsf-button-add-form-icon"><?php
+
+	echo WS_Form_Common::get_admin_icon('#888888', false);	// phpcs:ignore
+
+?></span><?php esc_html_e('Add WS Form', 'ws-form'); ?></button><?php
 
 		}
 
@@ -329,7 +571,7 @@
 						var id = $('#wsf-post-add-form-id').val();
 
 						// Build shortcode
-						var shortcode = '[<?php echo WS_FORM_SHORTCODE; ?> id="' + id + '"]';
+						var shortcode = '[<?php echo esc_html(WS_FORM_SHORTCODE); ?> id="' + id + '"]';
 
 						// Insert into editor
 						wp.media.editor.insert(shortcode);
@@ -341,7 +583,7 @@
 
 					case 'wsf-add' :
 
-						location.href = '<?php echo WS_Form_Common::get_admin_url('ws-form-add'); ?>';
+						location.href = '<?php echo esc_html(WS_Form_Common::get_admin_url('ws-form-add')); ?>';
 
 						// Close modal
 						wsf_add_form_modal_close();
@@ -390,8 +632,12 @@
 <div id="wsf-add-form">
 
 <!-- WS Form - Modal - Add Form - Header -->
-<div class="wsf-modal-title"><?php _e('Add WS Form', 'ws-form'); ?></div>
-<div class="wsf-modal-close" data-action="wsf-close" title="<?php _e('Close', 'ws-form'); ?>"></div>
+<div class="wsf-modal-title"><?php
+
+	echo WS_Form_Common::get_admin_icon('#002e5f', false);	// phpcs:ignore
+
+?><?php esc_html_e('Add WS Form', 'ws-form'); ?></div>
+<div class="wsf-modal-close" data-action="wsf-close" title="<?php esc_attr_e('Close', 'ws-form'); ?>"></div>
 <!-- /WS Form - Modal - Add Form - Header -->
 
 <!-- WS Form - Modal - Add Form - Content -->
@@ -406,13 +652,12 @@
 
 	if($forms) {
 ?>
-<p><?php _e('Select the form you want to add...', 'ws-form'); ?></p>
-
+<label for="wsf-post-add-form-id"><?php esc_html_e('Select the form you want to add...', 'ws-form'); ?></label>
 <select id="wsf-post-add-form-id">
 <?php
 		foreach($forms as $form) {
 
-?><option value="<?php echo $form['id']; ?>"><?php echo $form['label']; ?> (ID: <?php echo $form['id']; ?>)</option>
+?><option value="<?php echo esc_attr($form['id']); ?>"><?php echo esc_html($form['label']); ?> (ID: <?php echo esc_html($form['id']); ?>)</option>
 <?php
 		}
 ?>
@@ -420,8 +665,8 @@
 <?php
 	} else {
 ?>
-<p><?php _e("You haven't created any forms yet.", 'ws-form'); ?></p>
-<p><a href="<?php echo WS_Form_Common::get_admin_url('ws-form-add'); ?>"><?php _e('Click here to create a form', 'ws-form'); ?></a></p>
+<p><?php esc_html_e("You haven't created any forms yet.", 'ws-form'); ?></p>
+<p><a href="<?php echo esc_attr(WS_Form_Common::get_admin_url('ws-form-add')); ?>"><?php esc_html_e('Click here to create a form', 'ws-form'); ?></a></p>
 <?php
 	}
 ?>
@@ -434,7 +679,7 @@
 <div class="wsf-modal-buttons">
 
 <div id="wsf-modal-buttons-cancel">
-<a data-action="wsf-close"><?php _e('Cancel', 'ws-form'); ?></a>
+<a data-action="wsf-close"><?php esc_html_e('Cancel', 'ws-form'); ?></a>
 </div>
 
 <div id="wsf-modal-buttons-add-form">
@@ -442,11 +687,11 @@
 
 	if($forms) {
 ?>
-<button class="button button-primary" data-action="wsf-inject"><?php _e('Insert WS Form', 'ws-form'); ?></button>
+<button class="button button-primary" data-action="wsf-inject"><?php esc_html_e('Insert WS Form', 'ws-form'); ?></button>
 <?php
 	} else {
 ?>
-<button class="button button-primary" data-action="wsf-add"><?php _e('Add WS Form', 'ws-form'); ?></button>
+<button class="button button-primary" data-action="wsf-add"><?php esc_html_e('Add WS Form', 'ws-form'); ?></button>
 <?php
 	}
 ?>
@@ -576,9 +821,10 @@
 		// Default hidden submit columns
 		public function ws_form_default_hidden_columns($hidden, $screen) {
 
+			$form_id = WS_Form_Common::get_query_var('id');
 			if(!$screen) { return $hidden; }
 			if(!isset($screen->id)) { return $hidden; }
-			if($this->form_id == 0) { return $hidden; }
+			if($form_id == 0) { return $hidden; }
 
 			// Process hidden columns by screen ID
 			switch($screen->id) {
@@ -586,7 +832,7 @@
 				case 'ws-form_page_ws-form-submit' :
 
 					$ws_form_submit = new WS_Form_Submit;
-					$ws_form_submit->form_id = $this->form_id;
+					$ws_form_submit->form_id = $form_id;
 					$submit_fields = $ws_form_submit->db_get_submit_fields();
 
 					foreach($submit_fields as $id => $field) {
@@ -697,7 +943,7 @@
 		public function block_render($attributes, $content) {
 
 			// Do not render on preview
-			if(isset($_GET['wsf_preview_form_id'])) { return ''; }
+			if(isset($_GET['wsf_preview_form_id'])) { return ''; }	// phpcs:ignore
 
 			// Do not render if form ID is not set
 			if(!isset($attributes['form_id'])) { return ''; }
@@ -710,8 +956,18 @@
 			return sprintf('[%s id="%u"]', WS_FORM_SHORTCODE, $form_id);
 		}
 
+		// Plugins loaded
+		public function plugins_loaded() {
+
+			// Run plugins loaded
+			do_action('wsf_plugins_loaded');
+		}
+
 		// Form processing
-		public function wp_loaded() {
+		public function init() {
+
+			// Register block
+			self::register_block();
 
 			// AJAX handler for hidden column changes (Form ID specific)
 	        add_action('wp_ajax_ws_form_hidden_columns', array($this, 'ws_form_hidden_columns'), 1);
@@ -719,7 +975,7 @@
 			add_filter('set-screen-option', array($this, 'ws_form_set_screen_option'), 10, 3);
 
 			// Get current page
-			$page = WS_Form_Common::get_query_var('page');
+ 			$page = WS_Form_Common::get_query_var('page');
 			if($page === '') { return true; }
 
 			// Do on specific WS Form pages
@@ -730,16 +986,17 @@
 
 					if(!WS_Form_Common::can_user('read_form')) { break; }
 
-					// Read action
-					$action = WS_Form_Common::get_query_var('action');
-					if($action == '-1') { $action = WS_Form_Common::get_query_var('action2'); }
+					// Read form ID and action
+					$this->form_id = intval(WS_Form_Common::get_query_var_nonce('id', '', false, false, true, 'POST'));
+					$action = WS_Form_Common::get_query_var_nonce('action', '', false, false, true, 'POST');
+					if($action == '-1') { $action = WS_Form_Common::get_query_var_nonce('action2'); }
 
 					// Process action
 					switch($action) {
 
 						case 'wsf-add-blank' : 		self::form_add_blank(); break;
-						case 'wsf-add-wizard' : 	self::form_add_wizard(WS_Form_Common::get_query_var('id')); break;
-						case 'wsf-add-action' : 	self::form_add_action(WS_Form_Common::get_query_var('action_id'), WS_Form_Common::get_query_var('list_id'), WS_Form_Common::get_query_var('list_sub_id', false)); break;
+						case 'wsf-add-wizard' : 	self::form_add_wizard(WS_Form_Common::get_query_var_nonce('id')); break;
+						case 'wsf-add-action' : 	self::form_add_action(WS_Form_Common::get_query_var_nonce('action_id'), WS_Form_Common::get_query_var_nonce('list_id'), WS_Form_Common::get_query_var_nonce('list_sub_id', false)); break;
 						case 'wsf-clone' : 			self::form_clone($this->form_id); break;
 						case 'wsf-delete' : 		self::form_delete($this->form_id); self::redirect('ws-form', false, self::get_filter_query()); break;
 						case 'wsf-export' : 		self::form_export($this->form_id); break;
@@ -749,10 +1006,10 @@
 						case '-1':
 
 							// Check for delete_all
-							if(WS_Form_Common::get_query_var('delete_all') != '') {
+							if(WS_Form_Common::get_query_var_nonce('delete_all') != '') {
 
 								// Empty trash
-								if(WS_Form_Common::get_query_var('delete_all')) { self::form_trash_delete(); }
+								if(WS_Form_Common::get_query_var_nonce('delete_all')) { self::form_trash_delete(); }
 							}
 							break;
 					}
@@ -764,10 +1021,11 @@
 
 					if(!WS_Form_Common::can_user('read_submission')) { break; }
 
-					// Read form ID and action
-					$submit_id = intval(WS_Form_Common::get_query_var('submit_id'));
-					$action = WS_Form_Common::get_query_var('action');
-					if($action == '-1') { $action = WS_Form_Common::get_query_var('action2'); }
+					// Read form ID, submit ID and action
+					$this->form_id = intval(WS_Form_Common::get_query_var_nonce('id', '', false, false, true, 'POST'));
+					$submit_id = intval(WS_Form_Common::get_query_var_nonce('submit_id', '', false, false, true, 'POST'));
+					$action = WS_Form_Common::get_query_var_nonce('action', '', false, false, true, 'POST');
+					if($action == '-1') { $action = WS_Form_Common::get_query_var_nonce('action2'); }
 
 					// Process action
 					switch($action) {
@@ -797,10 +1055,10 @@
 						case '-1':
 
 							// Check for delete_all
-							if(WS_Form_Common::get_query_var('delete_all') != '') {
+							if(WS_Form_Common::get_query_var_nonce('delete_all') != '') {
 
 								// Empty trash
-								if(WS_Form_Common::get_query_var($this->form_id, 'delete_all')) { self::submit_trash_delete(); }
+								if(WS_Form_Common::get_query_var_nonce($this->form_id, 'delete_all')) { self::submit_trash_delete(); }
 							}
 							break;
 					}
@@ -842,7 +1100,7 @@
 				case 'ws-form-settings' :
 
 					// Read form ID and action
-					$action = WS_Form_Common::get_query_var('action');
+					$action = WS_Form_Common::get_query_var_nonce('action', '', false, false, true, 'POST');
 
 					switch($action) {
 
@@ -852,7 +1110,7 @@
 							$options = WS_Form_Config::get_options();
 
 							// Get current tab
-							$tabCurrent = WS_Form_Common::get_query_var('tab', 'appearance');
+							$tabCurrent = WS_Form_Common::get_query_var_nonce('tab', 'appearance');
 							if($tabCurrent == 'setup') { $tabCurrent = 'appearance'; }				// Backward compatibility
 
 							// File upload checks
@@ -925,6 +1183,7 @@
 
 						define('DISABLE_NAG_NOTICES', true);
 					}
+
 					break;
 			}
 
@@ -1046,7 +1305,7 @@
 		// Form - Bulk
 		public function form_bulk($method = '') {
 
-			$ids = WS_Form_Common::get_query_var('bulk-ids');
+			$ids = WS_Form_Common::get_query_var_nonce('bulk-ids');
 
 			if(!$ids || (count($ids) == 0)) { return false; }
 
@@ -1165,7 +1424,7 @@
 		// Submit - Bulk
 		public function submit_bulk($method = '') {
 
-			$ids = WS_Form_Common::get_query_var('bulk-ids');
+			$ids = WS_Form_Common::get_query_var_nonce('bulk-ids');
 
 			if(!$ids || (count($ids) == 0)) { return false; }
 
@@ -1318,7 +1577,7 @@
 					if(!$condition_result) { continue; }
 				}
 
-				$value = WS_Form_Common::get_query_var($field);
+				$value = WS_Form_Common::get_query_var_nonce($field);
 
 				// Process fields
 				switch($field) {

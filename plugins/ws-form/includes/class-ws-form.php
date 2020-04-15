@@ -152,12 +152,12 @@ final class WS_Form {
 		$plugin_admin = new WS_Form_Admin($this->get_plugin_name(), $this->get_version());
 
 		// Actions
-		$this->loader->add_action('init', $plugin_admin, 'register_block');
+		$this->loader->add_action('plugins_loaded', $plugin_admin, 'plugins_loaded', 10);
+		$this->loader->add_action('init', $plugin_admin, 'init');
 		$this->loader->add_action('enqueue_block_editor_assets', $plugin_admin, 'enqueue_block_editor_assets');
-		$this->loader->add_action('wp_loaded', $plugin_admin, 'wp_loaded');
+		$this->loader->add_action('admin_menu', $plugin_admin, 'admin_menu');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles', 9999);	// Make sure we're overriding other styles
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
-		$this->loader->add_action('admin_menu', $plugin_admin, 'admin_menu');
 		$this->loader->add_action('admin_notices', 'WS_Form_Common', 'admin_messages_render');
 		$this->loader->add_action('customize_register', $plugin_admin, 'customize_register');
 		$this->loader->add_action('switch_theme', $plugin_admin, 'switch_theme');
@@ -174,8 +174,7 @@ final class WS_Form {
 
 		$this->loader->add_action('init', $this->plugin_public, 'init');
 		$this->loader->add_action('wp', $this->plugin_public, 'wp');
-		$this->loader->add_action('wp_enqueue_scripts', $this->plugin_public, 'enqueue_styles');
-		$this->loader->add_action('wp_enqueue_scripts', $this->plugin_public, 'enqueue_scripts');
+		$this->loader->add_action('wp_enqueue_scripts', $this->plugin_public, 'enqueue');
 		$this->loader->add_action('wp_footer', $this->plugin_public, 'wp_footer', 1000);
 	}
 

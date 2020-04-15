@@ -6,7 +6,7 @@ select[multiple] {
 	pointer-events: none;
 }
 
-.wsf-tab-disabled.tab-title>a {
+.wsf-tab-disabled.tab-title > a {
 	color: #cacaca;
     cursor: not-allowed;
 }

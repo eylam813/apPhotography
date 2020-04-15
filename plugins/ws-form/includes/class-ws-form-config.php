@@ -23,8 +23,8 @@
 		public static function get_config($parameters = false, $field_types = false) {
 
 			// Determine if this is an admin or public API request
-			$is_admin = (WS_Form_Common::get_query_var('form_is_admin', 'false', $parameters) == 'true');
-			$form_id = WS_Form_Common::get_query_var('form_id', 0, $parameters);
+			$is_admin = (WS_Form_Common::get_query_var('form_is_admin', 'false') == 'true');
+			$form_id = WS_Form_Common::get_query_var('form_id', 0);
 
 			// Standard response
 			$config = array();
@@ -448,9 +448,9 @@
 							'datagrid_column_value'	=>	'datalist_field_value',
 
 							// Fields
-							'mask_field'									=>	'<input type="tel" id="#id" name="#name" value="#value"#attributes />#data#invalid_feedback#help',
-							'mask_field_attributes'				=>	array('class', 'disabled', 'readonly', 'min_length', 'max_length', 'pattern_tel', 'list', 'required', 'placeholder', 'aria_describedby', 'aria_labelledby', 'aria_label', 'input_mask', 'custom_attributes'),
-							'mask_field_label'						=>	'<label id="#label_id" for="#id"#attributes>#label</label>',
+							'mask_field'					=>	'<input type="tel" id="#id" name="#name" value="#value"#attributes />#data#invalid_feedback#help',
+							'mask_field_attributes'			=>	array('class', 'disabled', 'readonly', 'min_length', 'max_length', 'pattern_tel', 'list', 'required', 'placeholder', 'aria_describedby', 'aria_labelledby', 'aria_label', 'input_mask', 'custom_attributes'),
+							'mask_field_label'				=>	'<label id="#label_id" for="#id"#attributes>#label</label>',
 							'mask_field_label_attributes'	=>	array('class'),
 
 							'fieldsets'	=>	array(
@@ -458,13 +458,13 @@
 								// Tab: Basic
 								'basic'	=>	array(
 
-									'label'				=>	__('Basic', 'ws-form'),
+									'label'			=>	__('Basic', 'ws-form'),
 									'meta_keys'		=>	array('label_render', 'label_position', 'label_column_width', 'required', 'hidden', 'default_value_tel', 'placeholder', 'help_count_char'),
 
 									'fieldsets'		=>	array(
 
 										array(
-											'label'			=>	__('Accessibility', 'ws-form'),
+											'label'		=>	__('Accessibility', 'ws-form'),
 											'meta_keys'	=>	array('aria_label')
 										),
 
@@ -478,7 +478,7 @@
 								// Tab: Advanced
 								'advanced'		=>	array(
 
-									'label'			=>	__('Advanced', 'ws-form'),
+									'label'		=>	__('Advanced', 'ws-form'),
 
 									'fieldsets'	=>	array(
 
@@ -488,12 +488,12 @@
 										),
 
 										array(
-											'label'			=>	__('Classes', 'ws-form'),
+											'label'		=>	__('Classes', 'ws-form'),
 											'meta_keys'	=> array('class_field_wrapper', 'class_field')
 										),
 
 										array(
-											'label'			=>	__('Restrictions', 'ws-form'),
+											'label'		=>	__('Restrictions', 'ws-form'),
 											'meta_keys'	=> array('disabled','readonly', 'min_length', 'max_length', 'input_mask', 'pattern_tel')
 										),
 
@@ -503,7 +503,7 @@
 										),
 
 										array(
-											'label'			=>	__('Validation', 'ws-form'),
+											'label'		=>	__('Validation', 'ws-form'),
 											'meta_keys'	=>	array('invalid_feedback_render', 'invalid_feedback')
 										),
 
@@ -517,7 +517,7 @@
 								// Datalist
 								'datalist'	=> array(
 
-									'label'			=>	__('Datalist', 'ws-form'),
+									'label'		=>	__('Datalist', 'ws-form'),
 									'meta_keys'	=> array('data_grid_datalist', 'datalist_field_text', 'datalist_field_value')
 								)
 							)
@@ -1371,6 +1371,53 @@
 					)
 				),
 
+				'section' => array(
+
+					'label'	=> 'Repeatable Sections',
+					'types' => array(
+
+						'section_add' => array (
+
+							'label'						=>	__('Add', 'ws-form'),
+							'pro_required'				=>	!WS_Form_Common::is_edition('pro'),
+							'icon'						=>	'plus',
+							'kb_url'					=>	'/knowledgebase/section_add/',
+						),
+
+						'section_delete' => array (
+
+							'label'						=>	__('Remove', 'ws-form'),
+							'pro_required'				=>	!WS_Form_Common::is_edition('pro'),
+							'icon'						=>	'minus',
+							'kb_url'					=>	'/knowledgebase/section_delete/',
+						),
+
+						'section_up' => array (
+
+							'label'						=>	__('Move Up', 'ws-form'),
+							'pro_required'				=>	!WS_Form_Common::is_edition('pro'),
+							'icon'						=>	'up',
+							'kb_url'					=>	'/knowledgebase/section_move_up/',
+						),
+
+
+						'section_down' => array (
+
+							'label'						=>	__('Move Down', 'ws-form'),
+							'pro_required'				=>	!WS_Form_Common::is_edition('pro'),
+							'icon'						=>	'down',
+							'kb_url'					=>	'/knowledgebase/section_move_down/',
+						),
+
+						'section_icons' => array (
+
+							'label'				=>	__('Icons', 'ws-form'),
+							'pro_required'		=>	!WS_Form_Common::is_edition('pro'),
+							'kb_url'			=>	'/knowledgebase/section_icons/',
+							'icon'				=>	'section-icons',
+						),
+					)
+				),
 
 				'ecommerce' => array(
 
@@ -1533,6 +1580,10 @@
 				)
 			);
 
+			// Apply filter
+			$field_types = apply_filters('wsf_config_field_types', $field_types);
+
+			// Add icons and compatibility links
 			if(!$public) {
 
 				foreach($field_types as $group_key => $group) {
@@ -1541,9 +1592,12 @@
 
 					foreach($types as $field_key => $field_type) {
 
-						// Set icons
+						// Set icons (If not already an SVG)
 						$field_icon = isset($field_type['icon']) ? $field_type['icon'] : $field_key;
-						$field_types[$group_key]['types'][$field_key]['icon'] = self::get_icon_16_svg($field_icon);
+						if(strpos($field_icon, '<svg') === false) {
+
+							$field_types[$group_key]['types'][$field_key]['icon'] = self::get_icon_16_svg($field_icon);
+						}
 
 						// Set compatibility
 						if(isset($field_type['compatibility_id'])) {
@@ -1554,9 +1608,6 @@
 					}
 				}
 			}
-
-			// Apply filter
-			$field_types = apply_filters('wsf_config_field_types', $field_types);
 
 			// Cache
 			self::$field_types[$public] = $field_types;
@@ -1767,13 +1818,29 @@
 							'description'	=>	__('Small font size used on the form.')
 						),
 
-						'skin_font_weight'	=> array(
+						'skin_font_weight'	=>	array(
 
 							'label'			=>	__('Font Weight', 'ws-form'),
-							'type'			=>	'text',
+							'type'			=>	'select',
 							'default'		=>	'inherit',
+							'choices'		=>	array(
+
+								'inherit'	=>	__('Inherit', 'ws-form'),
+								'normal'	=>	__('Normal', 'ws-form'),
+								'bold'		=>	__('Bold', 'ws-form'),
+								'100'		=>	__('100', 'ws-form'),
+								'200'		=>	__('200', 'ws-form'),
+								'300'		=>	__('300', 'ws-form'),
+								'400'		=>	__('400 (Normal)', 'ws-form'),
+								'500'		=>	__('500', 'ws-form'),
+								'600'		=>	__('600', 'ws-form'),
+								'700'		=>	__('700 (Bold)', 'ws-form'),
+								'800'		=>	__('800', 'ws-form'),
+								'900'		=>	__('900', 'ws-form')
+							),
 							'description'	=>	__('Font weight used throughout the form.')
 						),
+
 
 						'skin_line_height'	=> array(
 
@@ -1970,12 +2037,40 @@
 									'condition'	=>	array('framework' => 'ws-form')
 								),
 
+								'css_minify'	=>	array(
+
+									'label'		=>	__('Minify CSS', 'ws-form'),
+									'type'		=>	'checkbox',
+									'help'		=>	__('Should the WS Form CSS be minified to improve page speed?', 'ws-form'),
+									'default'	=>	'',
+									'condition'	=>	array('framework' => 'ws-form')
+								),
+
+								'css_inline'	=>	array(
+
+									'label'		=>	__('Inline CSS', 'ws-form'),
+									'type'		=>	'checkbox',
+									'help'		=>	__('Should the WS Form CSS be rendered inline to improve page speed?', 'ws-form'),
+									'default'	=>	'',
+									'condition'	=>	array('framework' => 'ws-form')
+								),
+
 								'css_cache_duration'	=>	array(
 
 									'label'		=>	__('CSS Cache Duration', 'ws-form'),
 									'type'		=>	'number',
-									'help'		=>	__('Expires header duration in seconds.', 'ws-form'),
-									'default'	=>	86400,
+									'help'		=>	__('Expires header duration in seconds for WS Form CSS.', 'ws-form'),
+									'default'	=>	31536000,
+									'public'	=>	true,
+									'condition'	=>	array('framework' => 'ws-form')
+								),
+
+								'comments_css'	=>	array(
+
+									'label'		=>	__('CSS Comments', 'ws-form'),
+									'type'		=>	'checkbox',
+									'help'		=>	__('Should WS Form CSS include comments?', 'ws-form'),
+									'default'	=>	false,
 									'public'	=>	true,
 									'condition'	=>	array('framework' => 'ws-form')
 								),
@@ -1984,19 +2079,9 @@
 
 									'label'		=>	__('HTML Comments', 'ws-form'),
 									'type'		=>	'checkbox',
-									'help'		=>	__('Should form HTML include comments?', 'ws-form'),
+									'help'		=>	__('Should WS Form HTML include comments?', 'ws-form'),
 									'default'	=>	false,
 									'public'	=>	true
-								),
-
-								'comments_css'	=>	array(
-
-									'label'		=>	__('CSS Comments', 'ws-form'),
-									'type'		=>	'checkbox',
-									'help'		=>	__('Should form CSS include comments?', 'ws-form'),
-									'default'	=>	false,
-									'public'	=>	true,
-									'condition'	=>	array('framework' => 'ws-form')
 								)
 							)
 						)
@@ -2094,15 +2179,6 @@
 							'heading'	=>	__('API', 'ws-form'),
 							'fields'	=>	array(
 
-								'ajax_nonce' => array(
-
-									'label'		=>	__('Enable nonce', 'ws-form'),
-									'type'		=>	'checkbox',
-									'help'		=>	__('Check this setting to enable user specific server side functions, e.g. #user_email. In order for nonce to work efficiently, any WordPress pages containing forms should not be cached or have short cache periods.', 'ws-form'),
-									'default'	=>	false,
-									'public'	=>	true
-								),
-
 								'ajax_http_method_override' => array(
 
 									'label'		=>	__('Use X-HTTP-Method-Override for API Requests', 'ws-form'),
@@ -2121,7 +2197,7 @@
 
 								'disable_form_stats'			=>	array(
 
-									'label'		=>	__('Disable statistics', 'ws-form'),
+									'label'		=>	__('Disable Statistics', 'ws-form'),
 									'type'		=>	'checkbox',
 									'default'	=>	false,
 									'help'		=>	__('If checked, WS Form will stop gathering statistical data about forms.', 'ws-form'),
@@ -2129,7 +2205,7 @@
 
 								'disable_count_submit_unread'	=>	array(
 
-									'label'		=>	__('Disable unread submission bubbles', 'ws-form'),
+									'label'		=>	__('Disable Unread Submission Bubbles', 'ws-form'),
 									'type'		=>	'checkbox',
 									'default'	=>	false
 								)
@@ -5542,27 +5618,27 @@
 
 				case 'bp-100' :
 
-					$return_value = '<path fill="#444" d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 12H3V4h18v10z"></path>';
+					$return_value = '<path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 12H3V4h18v10z"></path>';
 					break;
 
 				case 'bp-125' :
 
-					$return_value = '<path fill="#444" d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"></path>';
+					$return_value = '<path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"></path>';
 					break;
 
 				case 'bp-25' :
 
-					$return_value = '<path fill="#444" d="M15.5 1h-8C6.12 1 5 2.12 5 3.5v17C5 21.88 6.12 23 7.5 23h8c1.38 0 2.5-1.12 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zm-4 21c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5-4H7V4h9v14z"></path>';
+					$return_value = '<path d="M15.5 1h-8C6.12 1 5 2.12 5 3.5v17C5 21.88 6.12 23 7.5 23h8c1.38 0 2.5-1.12 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zm-4 21c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5-4H7V4h9v14z"></path>';
 					break;
 
 				case 'bp-50' :
 
-					$return_value = '<path fill="#444" d="M18.5 0h-14C3.12 0 2 1.12 2 2.5v19C2 22.88 3.12 24 4.5 24h14c1.38 0 2.5-1.12 2.5-2.5v-19C21 1.12 19.88 0 18.5 0zm-7 23c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7.5-4H4V3h15v16z"></path>';
+					$return_value = '<path d="M18.5 0h-14C3.12 0 2 1.12 2 2.5v19C2 22.88 3.12 24 4.5 24h14c1.38 0 2.5-1.12 2.5-2.5v-19C21 1.12 19.88 0 18.5 0zm-7 23c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7.5-4H4V3h15v16z"></path>';
 					break;
 
 				case 'bp-75' :
 
-					$return_value = '<path fill="#444" d="M20 18c1.1 0 1.99-.9 1.99-2L22 5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2H0c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2h-4zM4 5h16v11H4V5zm8 14c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path>';
+					$return_value = '<path d="M20 18c1.1 0 1.99-.9 1.99-2L22 5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2H0c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2h-4zM4 5h16v11H4V5zm8 14c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path>';
 					break;
 			}
 
@@ -5580,17 +5656,17 @@
 
 				case 'actions' :
 
-					$return_value = '<path fill="#444" d="M7.99 0l-7.010 9.38 6.020-0.42-4.96 7.040 12.96-10-7.010 0.47 7.010-6.47h-7.010z"></path>';
+					$return_value = '<path d="M7.99 0l-7.010 9.38 6.020-0.42-4.96 7.040 12.96-10-7.010 0.47 7.010-6.47h-7.010z"></path>';
 					break;
 
 				case 'asterisk' :
 
-					$return_value = '<path fill="#444" d="M15.9 5.7l-2-3.4-3.9 2.2v-4.5h-4v4.5l-4-2.2-2 3.4 3.9 2.3-3.9 2.3 2 3.4 4-2.2v4.5h4v-4.5l3.9 2.2 2-3.4-4-2.3z"></path>';
+					$return_value = '<path d="M15.9 5.7l-2-3.4-3.9 2.2v-4.5h-4v4.5l-4-2.2-2 3.4 3.9 2.3-3.9 2.3 2 3.4 4-2.2v4.5h4v-4.5l3.9 2.2 2-3.4-4-2.3z"></path>';
 					break;
 
 				case 'button' :
 
-					$return_value = '<path d="M15 12h-14c-0.6 0-1-0.4-1-1v-6c0-0.6 0.4-1 1-1h14c0.6 0 1 0.4 1 1v6c0 0.6-0.4 1-1 1z" fill="#444"></path>';
+					$return_value = '<path d="M15 12h-14c-0.6 0-1-0.4-1-1v-6c0-0.6 0.4-1 1-1h14c0.6 0 1 0.4 1 1v6c0 0.6-0.4 1-1 1z"></path>';
 					break;
 
 				case 'calculator' :
@@ -5600,62 +5676,62 @@
 
 				case 'check' :
 
-					$return_value = '<path fill="#444" d="M7.3 14.2l-7.1-5.2 1.7-2.4 4.8 3.5 6.6-8.5 2.3 1.8z"></path>';
+					$return_value = '<path d="M7.3 14.2l-7.1-5.2 1.7-2.4 4.8 3.5 6.6-8.5 2.3 1.8z"></path>';
 					break;
 
 				case 'checkbox' :
 
-					$return_value = '<path d="M14 6.2v7.8h-12v-12h10.5l1-1h-12.5v14h14v-9.8z" fill="#444"></path><path d="M7.9 10.9l-4.2-4.2 1.5-1.4 2.7 2.8 6.7-6.7 1.4 1.4z" fill="#444"></path>';
+					$return_value = '<path d="M14 6.2v7.8h-12v-12h10.5l1-1h-12.5v14h14v-9.8z"></path><path d="M7.9 10.9l-4.2-4.2 1.5-1.4 2.7 2.8 6.7-6.7 1.4 1.4z"></path>';
 					break;
 
 				case 'clear' :
 
-					$return_value = '<path fill="#444" d="M8.1 14l6.4-7.2c0.6-0.7 0.6-1.8-0.1-2.5l-2.7-2.7c-0.3-0.4-0.8-0.6-1.3-0.6h-1.8c-0.5 0-1 0.2-1.4 0.6l-6.7 7.6c-0.6 0.7-0.6 1.9 0.1 2.5l2.7 2.7c0.3 0.4 0.8 0.6 1.3 0.6h11.4v-1h-7.9zM6.8 13.9c0 0 0-0.1 0 0l-2.7-2.7c-0.4-0.4-0.4-0.9 0-1.3l3.4-3.9h-1l-3 3.3c-0.6 0.7-0.6 1.7 0.1 2.4l2.3 2.3h-1.3c-0.2 0-0.4-0.1-0.6-0.2l-2.8-2.8c-0.3-0.3-0.3-0.8 0-1.1l3.5-3.9h1.8l3.5-4h1l-3.5 4 3.1 3.7-3.5 4c-0.1 0.1-0.2 0.1-0.3 0.2z"></path>';
+					$return_value = '<path d="M8.1 14l6.4-7.2c0.6-0.7 0.6-1.8-0.1-2.5l-2.7-2.7c-0.3-0.4-0.8-0.6-1.3-0.6h-1.8c-0.5 0-1 0.2-1.4 0.6l-6.7 7.6c-0.6 0.7-0.6 1.9 0.1 2.5l2.7 2.7c0.3 0.4 0.8 0.6 1.3 0.6h11.4v-1h-7.9zM6.8 13.9c0 0 0-0.1 0 0l-2.7-2.7c-0.4-0.4-0.4-0.9 0-1.3l3.4-3.9h-1l-3 3.3c-0.6 0.7-0.6 1.7 0.1 2.4l2.3 2.3h-1.3c-0.2 0-0.4-0.1-0.6-0.2l-2.8-2.8c-0.3-0.3-0.3-0.8 0-1.1l3.5-3.9h1.8l3.5-4h1l-3.5 4 3.1 3.7-3.5 4c-0.1 0.1-0.2 0.1-0.3 0.2z"></path>';
 					break;
 
 				case 'clone' :
 
-					$return_value = '<path d="M6 0v3h3z" fill="#444"></path><path d="M9 4h-4v-4h-5v12h9z" fill="#444"></path><path d="M13 4v3h3z" fill="#444"></path><path d="M12 4h-2v9h-3v3h9v-8h-4z" fill="#444"></path>';
+					$return_value = '<path d="M6 0v3h3z"></path><path d="M9 4h-4v-4h-5v12h9z"></path><path d="M13 4v3h3z"></path><path d="M12 4h-2v9h-3v3h9v-8h-4z"></path>';
 					break;
 
 				case 'close-circle' :
 
-					$return_value = '<path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z" fill="#444"></path><polygon fill="#FFFFFF" points="12.2 10.8 10.8 12.2 8 9.4 5.2 12.2 3.8 10.8 6.6 8 3.8 5.2 5.2 3.8 8 6.6 10.8 3.8 12.2 5.2 9.4 8 12.2 10.8"></polygon>';
+					$return_value = '<path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z"></path><polygon fill="#FFFFFF" points="12.2 10.8 10.8 12.2 8 9.4 5.2 12.2 3.8 10.8 6.6 8 3.8 5.2 5.2 3.8 8 6.6 10.8 3.8 12.2 5.2 9.4 8 12.2 10.8"></polygon>';
 					break;
 
 				case 'color' :
 
-					$return_value = '<path d="M15 1c-1.8-1.8-3.7-0.7-4.6 0.1-0.4 0.4-0.7 0.9-0.7 1.5v0c0 1.1-1.1 1.8-2.1 1.5l-0.1-0.1-0.7 0.8 0.7 0.7-6 6-0.8 2.3-0.7 0.7 1.5 1.5 0.8-0.8 2.3-0.8 6-6 0.7 0.7 0.7-0.6-0.1-0.2c-0.3-1 0.4-2.1 1.5-2.1v0c0.6 0 1.1-0.2 1.4-0.6 0.9-0.9 2-2.8 0.2-4.6zM3.9 13.6l-2 0.7-0.2 0.1 0.1-0.2 0.7-2 5.8-5.8 1.5 1.5-5.9 5.7z" fill="#444"></path>';
+					$return_value = '<path d="M15 1c-1.8-1.8-3.7-0.7-4.6 0.1-0.4 0.4-0.7 0.9-0.7 1.5v0c0 1.1-1.1 1.8-2.1 1.5l-0.1-0.1-0.7 0.8 0.7 0.7-6 6-0.8 2.3-0.7 0.7 1.5 1.5 0.8-0.8 2.3-0.8 6-6 0.7 0.7 0.7-0.6-0.1-0.2c-0.3-1 0.4-2.1 1.5-2.1v0c0.6 0 1.1-0.2 1.4-0.6 0.9-0.9 2-2.8 0.2-4.6zM3.9 13.6l-2 0.7-0.2 0.1 0.1-0.2 0.7-2 5.8-5.8 1.5 1.5-5.9 5.7z"></path>';
 					break;
 
 				case 'conditional' :
 
-					$return_value = '<path fill="#444" d="M14 13v-1c0-0.2 0-4.1-2.8-5.4-2.2-1-2.2-3.5-2.2-3.6v-3h-2v3c0 0.1 0 2.6-2.2 3.6-2.8 1.3-2.8 5.2-2.8 5.4v1h-2l3 3 3-3h-2v-1c0 0 0-2.8 1.7-3.6 1.1-0.5 1.8-1.3 2.3-2 0.5 0.8 1.2 1.5 2.3 2 1.7 0.8 1.7 3.6 1.7 3.6v1h-2l3 3 3-3h-2z" transform="translate(8.000000, 8.000000) rotate(-180.000000) translate(-8.000000, -8.000000)"></path>';
+					$return_value = '<path d="M14 13v-1c0-0.2 0-4.1-2.8-5.4-2.2-1-2.2-3.5-2.2-3.6v-3h-2v3c0 0.1 0 2.6-2.2 3.6-2.8 1.3-2.8 5.2-2.8 5.4v1h-2l3 3 3-3h-2v-1c0 0 0-2.8 1.7-3.6 1.1-0.5 1.8-1.3 2.3-2 0.5 0.8 1.2 1.5 2.3 2 1.7 0.8 1.7 3.6 1.7 3.6v1h-2l3 3 3-3h-2z" transform="translate(8.000000, 8.000000) rotate(-180.000000) translate(-8.000000, -8.000000)"></path>';
 					break;
 
 				case 'contract' :
 
-					$return_value = '<path fill="#444" d="M12 0h-12v12l1-1v-10h10z"></path><path fill="#444" d="M4 16h12v-12l-1 1v10h-10z"></path><path fill="#444" d="M7 9h-5l1.8 1.8-3.8 3.8 1.4 1.4 3.8-3.8 1.8 1.8z"></path><path fill="#444" d="M16 1.4l-1.4-1.4-3.8 3.8-1.8-1.8v5h5l-1.8-1.8z"></path>';
+					$return_value = '<path d="M12 0h-12v12l1-1v-10h10z"></path><path d="M4 16h12v-12l-1 1v10h-10z"></path><path d="M7 9h-5l1.8 1.8-3.8 3.8 1.4 1.4 3.8-3.8 1.8 1.8z"></path><path d="M16 1.4l-1.4-1.4-3.8 3.8-1.8-1.8v5h5l-1.8-1.8z"></path>';
 					break;
 
 				case 'datetime' :
 
-					$return_value = '<path d="M3 0h1v3h-1v-3z" fill="#444"></path><path d="M11 0h1v3h-1v-3z" fill="#444"></path><path d="M6.6 14h-5.6v-8h13v0.6c0.4 0.2 0.7 0.4 1 0.7v-6.3h-2v3h-3v-3h-5v3h-3v-3h-2v14h7.3c-0.3-0.3-0.5-0.6-0.7-1z" fill="#444"></path><path d="M14 12h-3v-3h1v2h2z" fill="#444"></path><path d="M11.5 8c1.9 0 3.5 1.6 3.5 3.5s-1.6 3.5-3.5 3.5-3.5-1.6-3.5-3.5 1.6-3.5 3.5-3.5zM11.5 7c-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5 4.5-2 4.5-4.5-2-4.5-4.5-4.5v0z" fill="#444"></path>';
+					$return_value = '<path d="M3 0h1v3h-1v-3z"></path><path d="M11 0h1v3h-1v-3z"></path><path d="M6.6 14h-5.6v-8h13v0.6c0.4 0.2 0.7 0.4 1 0.7v-6.3h-2v3h-3v-3h-5v3h-3v-3h-2v14h7.3c-0.3-0.3-0.5-0.6-0.7-1z"></path><path d="M14 12h-3v-3h1v2h2z"></path><path d="M11.5 8c1.9 0 3.5 1.6 3.5 3.5s-1.6 3.5-3.5 3.5-3.5-1.6-3.5-3.5 1.6-3.5 3.5-3.5zM11.5 7c-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5 4.5-2 4.5-4.5-2-4.5-4.5-4.5v0z"></path>';
 					break;
 
 				case 'delete' :
 
-					$return_value = '<path d="M13 3s0-0.51-2-0.8v-0.7c-0.017-0.832-0.695-1.5-1.53-1.5-0 0-0 0-0 0h-3c-0.815 0.017-1.47 0.682-1.47 1.5 0 0 0 0 0 0v0.7c-0.765 0.068-1.452 0.359-2.007 0.806l-0.993-0.006v1h12v-1h-1zM6 1.5c0.005-0.274 0.226-0.495 0.499-0.5l3.001-0c0 0 0.001 0 0.001 0 0.282 0 0.513 0.22 0.529 0.499l0 0.561c-0.353-0.042-0.763-0.065-1.178-0.065-0.117 0-0.233 0.002-0.349 0.006-0.553-0-2.063-0-2.503 0.070v-0.57z" fill="#444"></path><path d="M2 5v1h1v9c1.234 0.631 2.692 1 4.236 1 0.002 0 0.003 0 0.005 0h1.52c0.001 0 0.003 0 0.004 0 1.544 0 3.002-0.369 4.289-1.025l-0.054-8.975h1v-1h-12zM6 13.92q-0.51-0.060-1-0.17v-6.75h1v6.92zM9 14h-2v-7h2v7zM11 13.72c-0.267 0.070-0.606 0.136-0.95 0.184l-0.050-6.904h1v6.72z" fill="#444"></path>';
+					$return_value = '<path d="M13 3s0-0.51-2-0.8v-0.7c-0.017-0.832-0.695-1.5-1.53-1.5-0 0-0 0-0 0h-3c-0.815 0.017-1.47 0.682-1.47 1.5 0 0 0 0 0 0v0.7c-0.765 0.068-1.452 0.359-2.007 0.806l-0.993-0.006v1h12v-1h-1zM6 1.5c0.005-0.274 0.226-0.495 0.499-0.5l3.001-0c0 0 0.001 0 0.001 0 0.282 0 0.513 0.22 0.529 0.499l0 0.561c-0.353-0.042-0.763-0.065-1.178-0.065-0.117 0-0.233 0.002-0.349 0.006-0.553-0-2.063-0-2.503 0.070v-0.57z"></path><path d="M2 5v1h1v9c1.234 0.631 2.692 1 4.236 1 0.002 0 0.003 0 0.005 0h1.52c0.001 0 0.003 0 0.004 0 1.544 0 3.002-0.369 4.289-1.025l-0.054-8.975h1v-1h-12zM6 13.92q-0.51-0.060-1-0.17v-6.75h1v6.92zM9 14h-2v-7h2v7zM11 13.72c-0.267 0.070-0.606 0.136-0.95 0.184l-0.050-6.904h1v6.72z"></path>';
 					break;
 
 				case 'disabled' :
 
-					$return_value = '<path fill="#444" d="M8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM8 2c1.3 0 2.5 0.4 3.5 1.1l-8.4 8.4c-0.7-1-1.1-2.2-1.1-3.5 0-3.3 2.7-6 6-6zM8 14c-1.3 0-2.5-0.4-3.5-1.1l8.4-8.4c0.7 1 1.1 2.2 1.1 3.5 0 3.3-2.7 6-6 6z"></path>';
+					$return_value = '<path d="M8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM8 2c1.3 0 2.5 0.4 3.5 1.1l-8.4 8.4c-0.7-1-1.1-2.2-1.1-3.5 0-3.3 2.7-6 6-6zM8 14c-1.3 0-2.5-0.4-3.5-1.1l8.4-8.4c0.7 1 1.1 2.2 1.1 3.5 0 3.3-2.7 6-6 6z"></path>';
 					break;
 
 				case 'divider' :
 
-					$return_value = '<path fill="#444" d="M0 7.38h16v1.44H0z"/>';
+					$return_value = '<path d="M0 7.38h16v1.44H0z"/>';
 					break;
 
 				case 'down' :
@@ -5665,112 +5741,112 @@
 
 				case 'download' :
 
-					$return_value = '<path fill="#444" d="M0 14h16v2h-16v-2z"></path><path fill="#444" d="M8 13l5-5h-3v-8h-4v8h-3z"></path>';
+					$return_value = '<path d="M0 14h16v2h-16v-2z"></path><path d="M8 13l5-5h-3v-8h-4v8h-3z"></path>';
 					break;
 
 				case 'edit' :
 
-					$return_value = '<path d="M16 9v-2l-1.7-0.6c-0.2-0.6-0.4-1.2-0.7-1.8l0.8-1.6-1.4-1.4-1.6 0.8c-0.5-0.3-1.1-0.6-1.8-0.7l-0.6-1.7h-2l-0.6 1.7c-0.6 0.2-1.2 0.4-1.7 0.7l-1.6-0.8-1.5 1.5 0.8 1.6c-0.3 0.5-0.5 1.1-0.7 1.7l-1.7 0.6v2l1.7 0.6c0.2 0.6 0.4 1.2 0.7 1.8l-0.8 1.6 1.4 1.4 1.6-0.8c0.5 0.3 1.1 0.6 1.8 0.7l0.6 1.7h2l0.6-1.7c0.6-0.2 1.2-0.4 1.8-0.7l1.6 0.8 1.4-1.4-0.8-1.6c0.3-0.5 0.6-1.1 0.7-1.8l1.7-0.6zM8 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z" fill="#444"></path><path d="M10.6 7.9c0 1.381-1.119 2.5-2.5 2.5s-2.5-1.119-2.5-2.5c0-1.381 1.119-2.5 2.5-2.5s2.5 1.119 2.5 2.5z" fill="#444"></path>';
+					$return_value = '<path d="M16 9v-2l-1.7-0.6c-0.2-0.6-0.4-1.2-0.7-1.8l0.8-1.6-1.4-1.4-1.6 0.8c-0.5-0.3-1.1-0.6-1.8-0.7l-0.6-1.7h-2l-0.6 1.7c-0.6 0.2-1.2 0.4-1.7 0.7l-1.6-0.8-1.5 1.5 0.8 1.6c-0.3 0.5-0.5 1.1-0.7 1.7l-1.7 0.6v2l1.7 0.6c0.2 0.6 0.4 1.2 0.7 1.8l-0.8 1.6 1.4 1.4 1.6-0.8c0.5 0.3 1.1 0.6 1.8 0.7l0.6 1.7h2l0.6-1.7c0.6-0.2 1.2-0.4 1.8-0.7l1.6 0.8 1.4-1.4-0.8-1.6c0.3-0.5 0.6-1.1 0.7-1.8l1.7-0.6zM8 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"></path><path d="M10.6 7.9c0 1.381-1.119 2.5-2.5 2.5s-2.5-1.119-2.5-2.5c0-1.381 1.119-2.5 2.5-2.5s2.5 1.119 2.5 2.5z"></path>';
 					break;
 
 				case 'email' :
 
-					$return_value = '<path d="M0 3h16v2.4l-8 4-8-4z" fill="#444"></path><path d="M0 14l5.5-4.8 2.5 1.4 2.5-1.4 5.5 4.8z" fill="#444"></path><path d="M4.6 8.8l-4.6-2.3v6.5z" fill="#444"></path><path d="M11.4 8.8l4.6-2.3v6.5z" fill="#444"></path>';
+					$return_value = '<path d="M0 3h16v2.4l-8 4-8-4z"></path><path d="M0 14l5.5-4.8 2.5 1.4 2.5-1.4 5.5 4.8z"></path><path d="M4.6 8.8l-4.6-2.3v6.5z"></path><path d="M11.4 8.8l4.6-2.3v6.5z"></path>';
 					break;
 
 				case 'exchange' :
 
-					$return_value = '<path fill="#444" d="M16 5v2h-13v2l-3-3 3-3v2z"></path><path fill="#444" d="M0 12v-2h13v-2l3 3-3 3v-2z"></path>';
+					$return_value = '<path d="M16 5v2h-13v2l-3-3 3-3v2z"></path><path d="M0 12v-2h13v-2l3 3-3 3v-2z"></path>';
 					break;
 
 				case 'expand' :
 
-					$return_value = '<path fill="#444" d="M11 2h-9v9l1-1v-7h7z"></path><path fill="#444" d="M5 14h9v-9l-1 1v7h-7z"></path><path fill="#444" d="M16 0h-5l1.8 1.8-4.5 4.5 1.4 1.4 4.5-4.5 1.8 1.8z"></path><path fill="#444" d="M7.7 9.7l-1.4-1.4-4.5 4.5-1.8-1.8v5h5l-1.8-1.8z"></path>';
+					$return_value = '<path d="M11 2h-9v9l1-1v-7h7z"></path><path d="M5 14h9v-9l-1 1v7h-7z"></path><path d="M16 0h-5l1.8 1.8-4.5 4.5 1.4 1.4 4.5-4.5 1.8 1.8z"></path><path d="M7.7 9.7l-1.4-1.4-4.5 4.5-1.8-1.8v5h5l-1.8-1.8z"></path>';
 					break;
 
 				case 'file' :
 
-					$return_value = '<path d="M2.7 15.3c-0.7 0-1.4-0.3-1.9-0.8-0.9-0.9-1.2-2.5 0-3.7l8.9-8.9c1.4-1.4 3.8-1.4 5.2 0s1.4 3.8 0 5.2l-7.4 7.4c-0.2 0.2-0.5 0.2-0.7 0s-0.2-0.5 0-0.7l7.4-7.4c1-1 1-2.7 0-3.7s-2.7-1-3.7 0l-8.9 8.9c-0.8 0.8-0.6 1.7 0 2.2 0.6 0.6 1.5 0.8 2.2 0l8.9-8.9c0.2-0.2 0.2-0.5 0-0.7s-0.5-0.2-0.7 0l-7.4 7.4c-0.2 0.2-0.5 0.2-0.7 0s-0.2-0.5 0-0.7l7.4-7.4c0.6-0.6 1.6-0.6 2.2 0s0.6 1.6 0 2.2l-8.9 8.9c-0.6 0.4-1.3 0.7-1.9 0.7z" fill="#444"></path>';
+					$return_value = '<path d="M2.7 15.3c-0.7 0-1.4-0.3-1.9-0.8-0.9-0.9-1.2-2.5 0-3.7l8.9-8.9c1.4-1.4 3.8-1.4 5.2 0s1.4 3.8 0 5.2l-7.4 7.4c-0.2 0.2-0.5 0.2-0.7 0s-0.2-0.5 0-0.7l7.4-7.4c1-1 1-2.7 0-3.7s-2.7-1-3.7 0l-8.9 8.9c-0.8 0.8-0.6 1.7 0 2.2 0.6 0.6 1.5 0.8 2.2 0l8.9-8.9c0.2-0.2 0.2-0.5 0-0.7s-0.5-0.2-0.7 0l-7.4 7.4c-0.2 0.2-0.5 0.2-0.7 0s-0.2-0.5 0-0.7l7.4-7.4c0.6-0.6 1.6-0.6 2.2 0s0.6 1.6 0 2.2l-8.9 8.9c-0.6 0.4-1.3 0.7-1.9 0.7z"></path>';
 					break;
 
 				case 'file-code' :
 
-					$return_value = '<path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path fill="#444" d="M6.2 13h-0.7l-2-2.5 2-2.5h0.7l-2 2.5z"></path><path fill="#444" d="M9.8 13h0.7l2-2.5-2-2.5h-0.7l2 2.5z"></path><path fill="#444" d="M6.7 14h0.6l2.1-7h-0.8z"></path>';
+					$return_value = '<path d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path d="M6.2 13h-0.7l-2-2.5 2-2.5h0.7l-2 2.5z"></path><path d="M9.8 13h0.7l2-2.5-2-2.5h-0.7l2 2.5z"></path><path d="M6.7 14h0.6l2.1-7h-0.8z"></path>';
 					break;
 
 				case 'file-default' :
 
-					$return_value = '<path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path>';
+					$return_value = '<path d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path>';
 					break;
 
 				case 'file-font' :
 
-					$return_value = '<path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path fill="#444" d="M5 7v2h2v5h2v-5h2v-2z"></path>';
+					$return_value = '<path d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path d="M5 7v2h2v5h2v-5h2v-2z"></path>';
 					break;
 
 				case 'file-movie' :
 
-					$return_value = '<path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path fill="#444" d="M10 10v-2h-6v5h6v-2l2 2v-5z"></path>';
+					$return_value = '<path d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path d="M10 10v-2h-6v5h6v-2l2 2v-5z"></path>';
 					break;
 
 				case 'file-picture' :
 
-					$return_value = '<path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path fill="#444" d="M4 11.5v2.5h8v-1.7c0 0 0.1-1.3-1.3-1.5-1.3-0.2-1.5 0.4-2.5 0.5-0.8 0-0.6-1.3-2.2-1.3-1.2 0-2 1.5-2 1.5z"></path><path fill="#444" d="M12 8.5c0 0.828-0.672 1.5-1.5 1.5s-1.5-0.672-1.5-1.5c0-0.828 0.672-1.5 1.5-1.5s1.5 0.672 1.5 1.5z"></path>';
+					$return_value = '<path d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path d="M4 11.5v2.5h8v-1.7c0 0 0.1-1.3-1.3-1.5-1.3-0.2-1.5 0.4-2.5 0.5-0.8 0-0.6-1.3-2.2-1.3-1.2 0-2 1.5-2 1.5z"></path><path d="M12 8.5c0 0.828-0.672 1.5-1.5 1.5s-1.5-0.672-1.5-1.5c0-0.828 0.672-1.5 1.5-1.5s1.5 0.672 1.5 1.5z"></path>';
 					break;
 
 				case 'file-presentation' :
 
-					$return_value = '<path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM13 15h-10v-14h6v4h4v10zM10 4v-3l3 3h-3z"></path><path fill="#444" d="M9 6h-2v1h-3v6h2v1h1v-1h2v1h1v-1h2v-6h-3v-1zM11 8v4h-6v-4h6z"></path><path fill="#444" d="M7 9v2l2-1z"></path>';
+					$return_value = '<path d="M10 0h-8v16h12v-12l-4-4zM13 15h-10v-14h6v4h4v10zM10 4v-3l3 3h-3z"></path><path d="M9 6h-2v1h-3v6h2v1h1v-1h2v1h1v-1h2v-6h-3v-1zM11 8v4h-6v-4h6z"></path><path d="M7 9v2l2-1z"></path>';
 					break;
 
 				case 'file-sound' :
 
-					$return_value = '<path fill="#444" d="M11.4 10.5c0 1.2-0.4 2.2-1 3l0.4 0.5c0.7-0.9 1.2-2.1 1.2-3.5s-0.5-2.6-1.2-3.5l-0.4 0.5c0.6 0.8 1 1.9 1 3z"></path><path fill="#444" d="M9.9 8l-0.4 0.5c0.4 0.5 0.7 1.2 0.7 2s-0.3 1.5-0.7 2l0.4 0.5c0.5-0.6 0.8-1.5 0.8-2.5s-0.3-1.8-0.8-2.5z"></path><path fill="#444" d="M9.1 9l-0.4 0.5c0.2 0.3 0.3 0.6 0.3 1s-0.1 0.7-0.3 1l0.4 0.5c0.3-0.4 0.5-0.9 0.5-1.5s-0.2-1.1-0.5-1.5z"></path><path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path fill="#444" d="M6 9h-2v3h2l2 2v-7z"></path>';
+					$return_value = '<path d="M11.4 10.5c0 1.2-0.4 2.2-1 3l0.4 0.5c0.7-0.9 1.2-2.1 1.2-3.5s-0.5-2.6-1.2-3.5l-0.4 0.5c0.6 0.8 1 1.9 1 3z"></path><path d="M9.9 8l-0.4 0.5c0.4 0.5 0.7 1.2 0.7 2s-0.3 1.5-0.7 2l0.4 0.5c0.5-0.6 0.8-1.5 0.8-2.5s-0.3-1.8-0.8-2.5z"></path><path d="M9.1 9l-0.4 0.5c0.2 0.3 0.3 0.6 0.3 1s-0.1 0.7-0.3 1l0.4 0.5c0.3-0.4 0.5-0.9 0.5-1.5s-0.2-1.1-0.5-1.5z"></path><path d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path d="M6 9h-2v3h2l2 2v-7z"></path>';
 					break;
 
 				case 'file-table' :
 
-					$return_value = '<path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path fill="#444" d="M4 7v6h8v-6h-8zM6 12h-1v-1h1v1zM6 10h-1v-1h1v1zM9 12h-2v-1h2v1zM9 10h-2v-1h2v1zM11 12h-1v-1h1v1zM11 10h-1v-1h1v1z"></path>';
+					$return_value = '<path d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path d="M4 7v6h8v-6h-8zM6 12h-1v-1h1v1zM6 10h-1v-1h1v1zM9 12h-2v-1h2v1zM9 10h-2v-1h2v1zM11 12h-1v-1h1v1zM11 10h-1v-1h1v1z"></path>';
 					break;
 
 				case 'file-text' :
 
-					$return_value = '<path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path fill="#444" d="M4 7h8v1h-8v-1z"></path><path fill="#444" d="M4 9h8v1h-8v-1z"></path><path fill="#444" d="M4 11h8v1h-8v-1z"></path>';
+					$return_value = '<path d="M10 0h-8v16h12v-12l-4-4zM9 5h4v10h-10v-14h6v4zM10 4v-3l3 3h-3z"></path><path d="M4 7h8v1h-8v-1z"></path><path d="M4 9h8v1h-8v-1z"></path><path d="M4 11h8v1h-8v-1z"></path>';
 					break;
 
 				case 'file-zip' :
 
-					$return_value = '<path fill="#444" d="M10 0h-8v16h12v-12l-4-4zM9 15h-4v-2.8l0.7-2.2h2.4l0.9 2.2v2.8zM13 15h-3v-3l-1-3h-2v-1h-2v1l-1 3v3h-1v-14h4v1h2v1h-2v1h2v1h4v10zM10 4v-3l3 3h-3z"></path><path fill="#444" d="M5 6h2v1h-2v-1z"></path><path fill="#444" d="M5 2h2v1h-2v-1z"></path><path fill="#444" d="M5 4h2v1h-2v-1z"></path><path fill="#444" d="M7 5h2v1h-2v-1z"></path><path fill="#444" d="M7 7h2v1h-2v-1z"></path><path fill="#444" d="M6 12h2v2h-2v-2z"></path>';
+					$return_value = '<path d="M10 0h-8v16h12v-12l-4-4zM9 15h-4v-2.8l0.7-2.2h2.4l0.9 2.2v2.8zM13 15h-3v-3l-1-3h-2v-1h-2v1l-1 3v3h-1v-14h4v1h2v1h-2v1h2v1h4v10zM10 4v-3l3 3h-3z"></path><path d="M5 6h2v1h-2v-1z"></path><path d="M5 2h2v1h-2v-1z"></path><path d="M5 4h2v1h-2v-1z"></path><path d="M7 5h2v1h-2v-1z"></path><path d="M7 7h2v1h-2v-1z"></path><path d="M6 12h2v2h-2v-2z"></path>';
 					break;
 
 				case 'first' :
 
-					$return_value = '<path fill="#444" d="M14 15v-14l-10 7z"></path><path fill="#444" d="M2 1h2v14h-2v-14z"></path>';
+					$return_value = '<path d="M14 15v-14l-10 7z"></path><path d="M2 1h2v14h-2v-14z"></path>';
 					break;
 
 				case 'group' :
 
-					$return_value = '<path fill="#444" d="M14 4v-2h-14v12h16v-10h-2zM10 3h3v1h-3v-1zM6 3h3v1h-3v-1zM15 13h-14v-10h4v2h10v8z"></path>';
+					$return_value = '<path d="M14 4v-2h-14v12h16v-10h-2zM10 3h3v1h-3v-1zM6 3h3v1h-3v-1zM15 13h-14v-10h4v2h10v8z"></path>';
 					break;
 
 				case 'hidden' :
 
-					$return_value = '<path d="M12.9 5.2l-0.8 0.8c1.7 0.9 2.5 2.3 2.8 3-0.7 0.9-2.8 3.1-7 3.1-0.7 0-1.2-0.1-1.8-0.2l-0.8 0.8c0.8 0.3 1.7 0.4 2.6 0.4 5.7 0 8.1-4 8.1-4s-0.6-2.4-3.1-3.9z" fill="#444"></path><path d="M12 7.1c0-0.3 0-0.6-0.1-0.8l-4.8 4.7c0.3 0 0.6 0.1 0.9 0.1 2.2 0 4-1.8 4-4z" fill="#444"></path><path d="M15.3 0l-4.4 4.4c-0.8-0.2-1.8-0.4-2.9-0.4-6.7 0-8 5.1-8 5.1s1 1.8 3.3 3l-3.3 3.2v0.7h0.7l15.3-15.3v-0.7h-0.7zM4 11.3c-1.6-0.7-2.5-1.8-2.9-2.3 0.3-0.7 1.1-2.2 3.1-3.2-0.1 0.4-0.2 0.8-0.2 1.3 0 1.1 0.5 2.2 1.3 2.9l-1.3 1.3zM6.2 7.9l-1 0.2c0 0-0.3-0.5-0.3-1.2 0-0.8 0.4-1.5 0.4-1.5 0.5-0.3 1.3-0.3 1.3-0.3s-0.5 0.9-0.5 1.7c-0.1 0.7 0.1 1.1 0.1 1.1z" fill="#444"></path>';
+					$return_value = '<path d="M12.9 5.2l-0.8 0.8c1.7 0.9 2.5 2.3 2.8 3-0.7 0.9-2.8 3.1-7 3.1-0.7 0-1.2-0.1-1.8-0.2l-0.8 0.8c0.8 0.3 1.7 0.4 2.6 0.4 5.7 0 8.1-4 8.1-4s-0.6-2.4-3.1-3.9z"></path><path d="M12 7.1c0-0.3 0-0.6-0.1-0.8l-4.8 4.7c0.3 0 0.6 0.1 0.9 0.1 2.2 0 4-1.8 4-4z"></path><path d="M15.3 0l-4.4 4.4c-0.8-0.2-1.8-0.4-2.9-0.4-6.7 0-8 5.1-8 5.1s1 1.8 3.3 3l-3.3 3.2v0.7h0.7l15.3-15.3v-0.7h-0.7zM4 11.3c-1.6-0.7-2.5-1.8-2.9-2.3 0.3-0.7 1.1-2.2 3.1-3.2-0.1 0.4-0.2 0.8-0.2 1.3 0 1.1 0.5 2.2 1.3 2.9l-1.3 1.3zM6.2 7.9l-1 0.2c0 0-0.3-0.5-0.3-1.2 0-0.8 0.4-1.5 0.4-1.5 0.5-0.3 1.3-0.3 1.3-0.3s-0.5 0.9-0.5 1.7c-0.1 0.7 0.1 1.1 0.1 1.1z"></path>';
 					break;
 
 				case 'html' :
 
-					$return_value = '<path d="M5.2 14l4.5-12h1.1l-4.5 12z" fill="#444"></path><path d="M11.1 13h1.2l3.7-5-3.7-5h-1.3l3.8 5z" fill="#444"></path><path d="M4.9 13h-1.2l-3.7-5 3.7-5h1.3l-3.8 5z" fill="#444"></path>';
+					$return_value = '<path d="M5.2 14l4.5-12h1.1l-4.5 12z"></path><path d="M11.1 13h1.2l3.7-5-3.7-5h-1.3l3.8 5z"></path><path d="M4.9 13h-1.2l-3.7-5 3.7-5h1.3l-3.8 5z"></path>';
 					break;
 
 				case 'info-circle' :
 
-					$return_value = '<path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z" fill="#444"></path><polygon fill="#FFFFFF" points="9 13 7 13 7 6 9 6"></polygon><polygon fill="#FFFFFF" points="9 5 7 5 7 3 9 3"></polygon>';
+					$return_value = '<path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z"></path><polygon fill="#FFFFFF" points="9 13 7 13 7 6 9 6"></polygon><polygon fill="#FFFFFF" points="9 5 7 5 7 3 9 3"></polygon>';
 					break;
 
 				case 'last' :
 
-					$return_value = '<path fill="#444" d="M2 1v14l10-7z"></path><path fill="#444" d="M12 1h2v14h-2v-14z"></path>';
+					$return_value = '<path d="M2 1v14l10-7z"></path><path d="M12 1h2v14h-2v-14z"></path>';
 					break;
 
 				case 'legal' :
@@ -5780,22 +5856,22 @@
 
 				case 'markup-circle' :
 
-					$return_value = '<path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM6.3 6.2L3.3 8l3 1.8v1.9L1.9 8.8V7.2l4.3-2.9v1.9zM7.6 13h-.9L8.3 3h.9L7.6 13zm2-1.3V9.8l3-1.8-3-1.8V4.3L14 7.2v1.6l-4.4 2.9z" fill="#444"/>';
+					$return_value = '<path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM6.3 6.2L3.3 8l3 1.8v1.9L1.9 8.8V7.2l4.3-2.9v1.9zM7.6 13h-.9L8.3 3h.9L7.6 13zm2-1.3V9.8l3-1.8-3-1.8V4.3L14 7.2v1.6l-4.4 2.9z"/>';
 					break;
 
 				case 'menu' :
 
-					$return_value = '<path d="M0 1h16v3h-16v-3z" fill="#444"></path><path d="M0 6h16v3h-16v-3z" fill="#444"></path><path d="M0 11h16v3h-16v-3z" fill="#444"></path>';
+					$return_value = '<path d="M0 1h16v3h-16v-3z"></path><path d="M0 6h16v3h-16v-3z"></path><path d="M0 11h16v3h-16v-3z"></path>';
 					break;
 
 				case 'minus' :
 
-                    $return_value = '<path fill="#444" d="M2 7h12v2h-12v-2z"></path>';
+                    $return_value = '<path d="M2 7h12v2h-12v-2z"></path>';
                     break;
 
 				case 'minus-circle' :
 
-					$return_value = '<path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z" fill="#444"></path><polygon fill="#FFFFFF" points="13 9 3 9 3 7 13 7"></polygon>';
+					$return_value = '<path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z"></path><polygon fill="#FFFFFF" points="13 9 3 9 3 7 13 7"></polygon>';
 					break;
 
 				case 'next' :
@@ -5805,22 +5881,22 @@
 
 				case 'number' :
 
-					$return_value = '<path d="M15 6v-2h-2.6l0.6-2.8-2-0.4-0.7 3.2h-3l0.7-2.8-2-0.4-0.7 3.2h-3.3v2h2.9l-0.9 4h-3v2h2.6l-0.6 2.8 2 0.4 0.7-3.2h3l-0.7 2.8 2 0.4 0.7-3.2h3.3v-2h-2.9l0.9-4h3zM9 10h-3l1-4h3l-1 4z" fill="#444"></path>';
+					$return_value = '<path d="M15 6v-2h-2.6l0.6-2.8-2-0.4-0.7 3.2h-3l0.7-2.8-2-0.4-0.7 3.2h-3.3v2h2.9l-0.9 4h-3v2h2.6l-0.6 2.8 2 0.4 0.7-3.2h3l-0.7 2.8 2 0.4 0.7-3.2h3.3v-2h-2.9l0.9-4h3zM9 10h-3l1-4h3l-1 4z"></path>';
 					break;
 
 				case 'password' :
 
-					$return_value = '<path d="M16 5c0-0.6-0.4-1-1-1h-14c-0.6 0-1 0.4-1 1v6c0 0.6 0.4 1 1 1h14c0.6 0 1-0.4 1-1v-6zM15 11h-14v-6h14v6z" fill="#444"></path><path d="M6 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z" fill="#444"></path><path d="M9 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z" fill="#444"></path><path d="M12 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z" fill="#444"></path>';
+					$return_value = '<path d="M16 5c0-0.6-0.4-1-1-1h-14c-0.6 0-1 0.4-1 1v6c0 0.6 0.4 1 1 1h14c0.6 0 1-0.4 1-1v-6zM15 11h-14v-6h14v6z"></path><path d="M6 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z"></path><path d="M9 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z"></path><path d="M12 8c0 0.552-0.448 1-1 1s-1-0.448-1-1c0-0.552 0.448-1 1-1s1 0.448 1 1z"></path>';
 					break;
 
 				case 'plus' :
 
-					$return_value = '<path fill="#444" d="M14 7h-5v-5h-2v5h-5v2h5v5h2v-5h5v-2z"></path>';
+					$return_value = '<path d="M14 7h-5v-5h-2v5h-5v2h5v5h2v-5h5v-2z"></path>';
 					break;
 
 				case 'plus-circle' :
 
-					$return_value = '<path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z" fill="#444"></path><polygon fill="#FFFFFF" points="13 9 9 9 9 13 7 13 7 9 3 9 3 7 7 7 7 3 9 3 9 7 13 7"></polygon>';
+					$return_value = '<path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z"></path><polygon fill="#FFFFFF" points="13 9 9 9 9 13 7 13 7 9 3 9 3 7 7 7 7 3 9 3 9 7 13 7"></polygon>';
 					break;
 
 				case 'previous' :
@@ -5835,12 +5911,12 @@
 
 				case 'progress' :
 
-					$return_value = '<path d="M0 5v6h16v-6h-16zM15 10h-14v-4h14v4z" fill="#444"></path><path d="M2 7h7v2h-7v-2z" fill="#444"></path>';
+					$return_value = '<path d="M0 5v6h16v-6h-16zM15 10h-14v-4h14v4z"></path><path d="M2 7h7v2h-7v-2z"></path>';
 					break;
 
 				case 'publish' :
 
-					$return_value = '<path fill="#444" d="M14.1 10.9c0-0.2 0-0.4 0-0.6 0-2.4-1.9-4.3-4.2-4.3-0.3 0-0.6 0-0.9 0.1v-2.1h2l-3-4-3 4h2v1.5c-0.4-0.2-0.9-0.3-1.3-0.3-1.6 0-2.9 1.2-2.9 2.8 0 0.3 0.1 0.6 0.2 0.9-1.6 0.2-3 1.8-3 3.5 0 1.9 1.5 3.6 3.3 3.6h10.3c1.4 0 2.4-1.4 2.4-2.6s-0.8-2.2-1.9-2.5zM13.6 15h-10.3c-1.2 0-2.3-1.2-2.3-2.5s1.1-2.5 2.3-2.5c0.1 0 0.3 0 0.4 0l1.3 0.3-0.8-1.2c-0.2-0.3-0.4-0.7-0.4-1.1 0-1 0.8-1.8 1.8-1.8 0.5 0 1 0.2 1.3 0.6v3.2h2v-2.8c0.3-0.1 0.6-0.1 0.9-0.1 1.8 0 3.2 1.5 3.2 3.3 0 0.3 0 0.6-0.1 0.9l-0.2 0.6h0.8c0.7 0 1.4 0.7 1.4 1.5 0.1 0.7-0.5 1.6-1.3 1.6z"></path>';
+					$return_value = '<path d="M14.1 10.9c0-0.2 0-0.4 0-0.6 0-2.4-1.9-4.3-4.2-4.3-0.3 0-0.6 0-0.9 0.1v-2.1h2l-3-4-3 4h2v1.5c-0.4-0.2-0.9-0.3-1.3-0.3-1.6 0-2.9 1.2-2.9 2.8 0 0.3 0.1 0.6 0.2 0.9-1.6 0.2-3 1.8-3 3.5 0 1.9 1.5 3.6 3.3 3.6h10.3c1.4 0 2.4-1.4 2.4-2.6s-0.8-2.2-1.9-2.5zM13.6 15h-10.3c-1.2 0-2.3-1.2-2.3-2.5s1.1-2.5 2.3-2.5c0.1 0 0.3 0 0.4 0l1.3 0.3-0.8-1.2c-0.2-0.3-0.4-0.7-0.4-1.1 0-1 0.8-1.8 1.8-1.8 0.5 0 1 0.2 1.3 0.6v3.2h2v-2.8c0.3-0.1 0.6-0.1 0.9-0.1 1.8 0 3.2 1.5 3.2 3.3 0 0.3 0 0.6-0.1 0.9l-0.2 0.6h0.8c0.7 0 1.4 0.7 1.4 1.5 0.1 0.7-0.5 1.6-1.3 1.6z"></path>';
 					break;
 
 				case 'quantity' :
@@ -5850,52 +5926,52 @@
 
 				case 'question-circle' :
 
-					$return_value = '<path fill="#444" d="M8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM8.9 13h-2v-2h2v2zM11 8.1c-0.4 0.4-0.8 0.6-1.2 0.7-0.6 0.4-0.8 0.2-0.8 1.2h-2c0-2 1.2-2.6 2-3 0.3-0.1 0.5-0.2 0.7-0.4 0.1-0.1 0.3-0.3 0.1-0.7-0.2-0.5-0.8-1-1.7-1-1.4 0-1.6 1.2-1.7 1.5l-2-0.3c0.1-1.1 1-3.2 3.6-3.2 1.6 0 3 0.9 3.6 2.2 0.4 1.1 0.2 2.2-0.6 3z"></path>';
+					$return_value = '<path d="M8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM8.9 13h-2v-2h2v2zM11 8.1c-0.4 0.4-0.8 0.6-1.2 0.7-0.6 0.4-0.8 0.2-0.8 1.2h-2c0-2 1.2-2.6 2-3 0.3-0.1 0.5-0.2 0.7-0.4 0.1-0.1 0.3-0.3 0.1-0.7-0.2-0.5-0.8-1-1.7-1-1.4 0-1.6 1.2-1.7 1.5l-2-0.3c0.1-1.1 1-3.2 3.6-3.2 1.6 0 3 0.9 3.6 2.2 0.4 1.1 0.2 2.2-0.6 3z"></path>';
 					break;
 
 				case 'radio' :
 
-					$return_value = '<path d="M8 4c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z" fill="#444"></path><path d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z" fill="#444"></path>';
+					$return_value = '<path d="M8 4c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"></path><path d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z"></path>';
 					break;
 
 				case 'range' :
 
-					$return_value = '<path d="M16 6h-3.6c-0.7-1.2-2-2-3.4-2s-2.8 0.8-3.4 2h-5.6v4h5.6c0.7 1.2 2 2 3.4 2s2.8-0.8 3.4-2h3.6v-4zM1 9v-2h4.1c0 0.3-0.1 0.7-0.1 1s0.1 0.7 0.1 1h-4.1zM9 11c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3c0 1.7-1.3 3-3 3z" fill="#444"></path>';
+					$return_value = '<path d="M16 6h-3.6c-0.7-1.2-2-2-3.4-2s-2.8 0.8-3.4 2h-5.6v4h5.6c0.7 1.2 2 2 3.4 2s2.8-0.8 3.4-2h3.6v-4zM1 9v-2h4.1c0 0.3-0.1 0.7-0.1 1s0.1 0.7 0.1 1h-4.1zM9 11c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3c0 1.7-1.3 3-3 3z"></path>';
 					break;
 
 				case 'rating' :
 
-					$return_value = '<path d="M12.9 15.8c-1.6-1.2-3.2-2.5-4.9-3.7-1.6 1.3-3.3 2.5-4.9 3.7 0 0-.1 0-.1-.1.6-2 1.2-4 1.9-6C3.3 8.4 1.7 7.2 0 5.9h6C6.7 3.9 7.3 2 8 0h.1c.7 1.9 1.3 3.9 2 5.9H16V6c-1.6 1.3-3.2 2.5-4.9 3.8.6 1.9 1.3 3.9 1.8 6 .1-.1 0 0 0 0z" fill="#444"></path>';
+					$return_value = '<path d="M12.9 15.8c-1.6-1.2-3.2-2.5-4.9-3.7-1.6 1.3-3.3 2.5-4.9 3.7 0 0-.1 0-.1-.1.6-2 1.2-4 1.9-6C3.3 8.4 1.7 7.2 0 5.9h6C6.7 3.9 7.3 2 8 0h.1c.7 1.9 1.3 3.9 2 5.9H16V6c-1.6 1.3-3.2 2.5-4.9 3.8.6 1.9 1.3 3.9 1.8 6 .1-.1 0 0 0 0z"></path>';
 					break;
 
 				case 'readonly' :
 
-					$return_value = '<path fill="#444" d="M12 8v-3.1c0-2.2-1.6-3.9-3.8-3.9h-0.3c-2.1 0-3.9 1.7-3.9 3.9v3.1h-1l0.1 5c0 0-0.1 3 4.9 3s5-3 5-3v-5h-1zM9 14h-1v-2c-0.6 0-1-0.4-1-1s0.4-1 1-1 1 0.4 1 1v3zM10 8h-4v-3.1c0-1.1 0.9-1.9 1.9-1.9h0.3c1 0 1.8 0.8 1.8 1.9v3.1z"></path>';
+					$return_value = '<path d="M12 8v-3.1c0-2.2-1.6-3.9-3.8-3.9h-0.3c-2.1 0-3.9 1.7-3.9 3.9v3.1h-1l0.1 5c0 0-0.1 3 4.9 3s5-3 5-3v-5h-1zM9 14h-1v-2c-0.6 0-1-0.4-1-1s0.4-1 1-1 1 0.4 1 1v3zM10 8h-4v-3.1c0-1.1 0.9-1.9 1.9-1.9h0.3c1 0 1.8 0.8 1.8 1.9v3.1z"></path>';
 					break;
 
 				case 'recaptcha' :
 
-					$return_value = '<path fill="#444" d="M15.9745091,7.99272727 C15.9741867,7.87818182 15.9714864,7.76424242 15.9663679,7.65086869 L15.9663679,1.18662626 L14.1837649,2.97369697 C12.7247952,1.18339394 10.5053073,0.039959596 8.01941638,0.039959596 C5.43236486,0.039959596 3.13388304,1.27793939 1.68095879,3.19511111 L4.6029285,6.15511111 C4.88928153,5.62420202 5.29606001,5.16820202 5.78654789,4.82379798 C6.29666335,4.42472727 7.0194579,4.09842424 8.01933578,4.09842424 C8.14012396,4.09842424 8.23334487,4.11256566 8.30186002,4.13923232 C9.54065427,4.23725253 10.6144479,4.92262626 11.2468025,5.91741414 L9.17845093,7.99094949 C11.7981479,7.98064646 14.7575994,7.97458586 15.9743479,7.99232323" id="Shape"></path><path fill="#444" d="M7.97274547,0.0404040404 C7.85848638,0.0407272727 7.74483184,0.0434343434 7.63174153,0.0485656566 L1.1836597,0.0485656566 L2.96626273,1.83563636 C1.18043546,3.29826263 0.0398596971,5.52331313 0.0398596971,8.01543434 C0.0398596971,10.6089697 1.27474455,12.9132121 3.18712334,14.3697778 L6.13972335,11.4404848 C5.61014153,11.1534141 5.15528153,10.7456162 4.8117385,10.253899 C4.41366547,9.74250505 4.08817819,9.01789899 4.08817819,8.01551515 C4.08817819,7.89442424 4.10228425,7.8009697 4.12888425,7.73228283 C4.2266594,6.49038384 4.91031971,5.41389899 5.90262062,4.7799596 L7.97097214,6.85349495 C7.96069487,4.22723232 7.95464941,1.26036364 7.97234244,0.0405656566" id="Shape"></path><path fill="#444" d="M0.0403030304,8.01535354 C0.0406254546,8.12989899 0.0433257577,8.24383838 0.0484442425,8.35721212 L0.0484442425,14.8214545 L1.83104728,13.0343838 C3.29001698,14.8246869 5.50950486,15.9681212 7.99539578,15.9681212 C10.5824473,15.9681212 12.8809291,14.7301414 14.3338534,12.8129697 L11.4118837,9.8529697 C11.1255306,10.3838788 10.7187521,10.8398788 10.2282643,11.1842828 C9.71814881,11.5833535 8.99535426,11.9096566 7.99547638,11.9096566 C7.8746882,11.9096566 7.78146729,11.8955152 7.71295214,11.8688485 C6.47415789,11.7708283 5.40036426,11.0854545 4.76800971,10.0906667 L6.83636123,8.01713131 C4.21666425,8.02743434 1.25721273,8.03349495 0.0404642425,8.01575758" id="Shape"></path>';
+					$return_value = '<path d="M15.9745091,7.99272727 C15.9741867,7.87818182 15.9714864,7.76424242 15.9663679,7.65086869 L15.9663679,1.18662626 L14.1837649,2.97369697 C12.7247952,1.18339394 10.5053073,0.039959596 8.01941638,0.039959596 C5.43236486,0.039959596 3.13388304,1.27793939 1.68095879,3.19511111 L4.6029285,6.15511111 C4.88928153,5.62420202 5.29606001,5.16820202 5.78654789,4.82379798 C6.29666335,4.42472727 7.0194579,4.09842424 8.01933578,4.09842424 C8.14012396,4.09842424 8.23334487,4.11256566 8.30186002,4.13923232 C9.54065427,4.23725253 10.6144479,4.92262626 11.2468025,5.91741414 L9.17845093,7.99094949 C11.7981479,7.98064646 14.7575994,7.97458586 15.9743479,7.99232323" id="Shape"></path><path d="M7.97274547,0.0404040404 C7.85848638,0.0407272727 7.74483184,0.0434343434 7.63174153,0.0485656566 L1.1836597,0.0485656566 L2.96626273,1.83563636 C1.18043546,3.29826263 0.0398596971,5.52331313 0.0398596971,8.01543434 C0.0398596971,10.6089697 1.27474455,12.9132121 3.18712334,14.3697778 L6.13972335,11.4404848 C5.61014153,11.1534141 5.15528153,10.7456162 4.8117385,10.253899 C4.41366547,9.74250505 4.08817819,9.01789899 4.08817819,8.01551515 C4.08817819,7.89442424 4.10228425,7.8009697 4.12888425,7.73228283 C4.2266594,6.49038384 4.91031971,5.41389899 5.90262062,4.7799596 L7.97097214,6.85349495 C7.96069487,4.22723232 7.95464941,1.26036364 7.97234244,0.0405656566" id="Shape"></path><path d="M0.0403030304,8.01535354 C0.0406254546,8.12989899 0.0433257577,8.24383838 0.0484442425,8.35721212 L0.0484442425,14.8214545 L1.83104728,13.0343838 C3.29001698,14.8246869 5.50950486,15.9681212 7.99539578,15.9681212 C10.5824473,15.9681212 12.8809291,14.7301414 14.3338534,12.8129697 L11.4118837,9.8529697 C11.1255306,10.3838788 10.7187521,10.8398788 10.2282643,11.1842828 C9.71814881,11.5833535 8.99535426,11.9096566 7.99547638,11.9096566 C7.8746882,11.9096566 7.78146729,11.8955152 7.71295214,11.8688485 C6.47415789,11.7708283 5.40036426,11.0854545 4.76800971,10.0906667 L6.83636123,8.01713131 C4.21666425,8.02743434 1.25721273,8.03349495 0.0404642425,8.01575758" id="Shape"></path>';
 					break;
 
 				case 'redo' :
 
-					$return_value = '<path fill="#444" d="M16 7v-4l-1.1 1.1c-1.3-2.5-3.9-4.1-6.9-4.1-4.4 0-8 3.6-8 8s3.6 8 8 8c2.4 0 4.6-1.1 6-2.8l-1.5-1.3c-1.1 1.3-2.7 2.1-4.5 2.1-3.3 0-6-2.7-6-6s2.7-6 6-6c2.4 0 4.5 1.5 5.5 3.5l-1.5 1.5h4z"></path><text class="count" fill="#444" font-size="7" line-spacing="7" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"></text>';
+					$return_value = '<path d="M16 7v-4l-1.1 1.1c-1.3-2.5-3.9-4.1-6.9-4.1-4.4 0-8 3.6-8 8s3.6 8 8 8c2.4 0 4.6-1.1 6-2.8l-1.5-1.3c-1.1 1.3-2.7 2.1-4.5 2.1-3.3 0-6-2.7-6-6s2.7-6 6-6c2.4 0 4.5 1.5 5.5 3.5l-1.5 1.5h4z"></path><text class="count" font-size="7" line-spacing="7" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"></text>';
 					break;
 
 				case 'reload' :
 
-					$return_value = '<path fill="#444" d="M2.6,5.6 C3.5,3.5 5.6,2 8,2 C11,2 13.4,4.2 13.9,7 L15.9,7 C15.4,3.1 12.1,0 8,0 C5,0 2.4,1.6 1.1,4.1 L-8.8817842e-16,3 L-8.8817842e-16,7 L4,7 L2.6,5.6 L2.6,5.6 Z" id="Shape" transform="translate(7.950000, 3.500000) scale(-1, 1) translate(-7.950000, -3.500000) "></path><path fill="#444" d="M16,9 L11.9,9 L13.4,10.4 C12.5,12.5 10.4,14 7.9,14 C5,14 2.5,11.8 2,9 L0,9 C0.5,12.9 3.9,16 7.9,16 C10.9,16 13.5,14.3 14.9,11.9 L16,13 L16,9 Z" id="Shape" transform="translate(8.000000, 12.500000) scale(-1, 1) translate(-8.000000, -12.500000) "></path>';
+					$return_value = '<path d="M2.6,5.6 C3.5,3.5 5.6,2 8,2 C11,2 13.4,4.2 13.9,7 L15.9,7 C15.4,3.1 12.1,0 8,0 C5,0 2.4,1.6 1.1,4.1 L-8.8817842e-16,3 L-8.8817842e-16,7 L4,7 L2.6,5.6 L2.6,5.6 Z" id="Shape" transform="translate(7.950000, 3.500000) scale(-1, 1) translate(-7.950000, -3.500000) "></path><path d="M16,9 L11.9,9 L13.4,10.4 C12.5,12.5 10.4,14 7.9,14 C5,14 2.5,11.8 2,9 L0,9 C0.5,12.9 3.9,16 7.9,16 C10.9,16 13.5,14.3 14.9,11.9 L16,13 L16,9 Z" id="Shape" transform="translate(8.000000, 12.500000) scale(-1, 1) translate(-8.000000, -12.500000) "></path>';
 					break;
 
 				case 'reset' :
 
-					$return_value = '<path fill="#444" d="M8 0c-3 0-5.6 1.6-6.9 4.1l-1.1-1.1v4h4l-1.5-1.5c1-2 3.1-3.5 5.5-3.5 3.3 0 6 2.7 6 6s-2.7 6-6 6c-1.8 0-3.4-0.8-4.5-2.1l-1.5 1.3c1.4 1.7 3.6 2.8 6 2.8 4.4 0 8-3.6 8-8s-3.6-8-8-8z"></path>';
+					$return_value = '<path d="M8 0c-3 0-5.6 1.6-6.9 4.1l-1.1-1.1v4h4l-1.5-1.5c1-2 3.1-3.5 5.5-3.5 3.3 0 6 2.7 6 6s-2.7 6-6 6c-1.8 0-3.4-0.8-4.5-2.1l-1.5 1.3c1.4 1.7 3.6 2.8 6 2.8 4.4 0 8-3.6 8-8s-3.6-8-8-8z"></path>';
 					break;
 
 				case 'save' :
 
-					$return_value = '<path d="M15.791849,4.41655721 C15.6529844,4.08336982 15.4862083,3.8193958 15.2916665,3.625 L12.3749634,0.708260362 C12.1806771,0.513974022 11.916703,0.347234384 11.5833697,0.208260362 C11.2502188,0.0694322825 10.9445781,0 10.666849,0 L1.00003637,0 C0.722343724,0 0.486171803,0.0971614127 0.291703035,0.291630181 C0.0972342664,0.485989492 0.000109339408,0.722124927 0.000109339408,0.999963514 L0.000109339408,15.0002189 C0.000109339408,15.2781305 0.0972342664,15.5142659 0.291703035,15.7086617 C0.486171803,15.902948 0.722343724,16.0002189 1.00003637,16.0002189 L15.0002553,16.0002189 C15.2782033,16.0002189 15.5143023,15.902948 15.7086981,15.7086617 C15.9029844,15.5142659 16.0001093,15.2781305 16.0001093,15.0002189 L16.0001093,5.3334063 C16.0001093,5.05553123 15.9307135,4.75 15.791849,4.41655721 Z M6.66684898,1.66655721 C6.66684898,1.57629159 6.69986853,1.49832166 6.76587116,1.43220957 C6.83180082,1.36638938 6.90995318,1.3334063 7.0002188,1.3334063 L9.00032825,1.3334063 C9.09037496,1.3334063 9.16849083,1.3663164 9.23445698,1.43220957 C9.30060554,1.49832166 9.33358862,1.57629159 9.33358862,1.66655721 L9.33358862,4.99996351 C9.33358862,5.09037507 9.30038663,5.16845447 9.23445698,5.23445709 C9.16849083,5.30024081 9.09037496,5.33326036 9.00032825,5.33326036 L7.0002188,5.33326036 C6.90995318,5.33326036 6.83176433,5.30035026 6.76587116,5.23445709 C6.69986853,5.16834501 6.66684898,5.09037507 6.66684898,4.99996351 L6.66684898,1.66655721 Z M12.0003647,14.6669221 L4.00003637,14.6669221 L4.00003637,10.6667761 L12.0003647,10.6667761 L12.0003647,14.6669221 Z M14.6672503,14.6669221 L13.3336251,14.6669221 L13.3333697,14.6669221 L13.3333697,10.3334063 C13.3333697,10.0554947 13.2362083,9.81950525 13.0418125,9.62496351 C12.8474167,9.43056772 12.6112813,9.33329685 12.3336251,9.33329685 L3.66673952,9.33329685 C3.38893742,9.33329685 3.1527655,9.43056772 2.95829673,9.62496351 C2.76393742,9.81935931 2.66670303,10.0554947 2.66670303,10.3334063 L2.66670303,14.6669221 L1.33333322,14.6669221 L1.33333322,1.33326036 L2.66666655,1.33326036 L2.66666655,5.66670315 C2.66666655,5.94454174 2.76379148,6.18056772 2.95826024,6.37503649 C3.15272901,6.5693958 3.38890093,6.66666667 3.66670303,6.66666667 L9.66699492,6.66666667 C9.94465108,6.66666667 10.1810419,6.5693958 10.3751823,6.37503649 C10.5694687,6.18067717 10.666849,5.94454174 10.666849,5.66670315 L10.666849,1.33326036 C10.7709792,1.33326036 10.9063046,1.36792177 11.0731537,1.43735406 C11.2399663,1.50674985 11.3579611,1.57618214 11.4273933,1.64561442 L14.3547138,4.57286194 C14.4241096,4.64229422 14.4935784,4.76222271 14.5629742,4.93228255 C14.6326254,5.10248832 14.6672138,5.23620841 14.6672138,5.3334063 L14.6672138,14.6669221 L14.6672503,14.6669221 Z" fill="#444"></path>';
+					$return_value = '<path d="M15.791849,4.41655721 C15.6529844,4.08336982 15.4862083,3.8193958 15.2916665,3.625 L12.3749634,0.708260362 C12.1806771,0.513974022 11.916703,0.347234384 11.5833697,0.208260362 C11.2502188,0.0694322825 10.9445781,0 10.666849,0 L1.00003637,0 C0.722343724,0 0.486171803,0.0971614127 0.291703035,0.291630181 C0.0972342664,0.485989492 0.000109339408,0.722124927 0.000109339408,0.999963514 L0.000109339408,15.0002189 C0.000109339408,15.2781305 0.0972342664,15.5142659 0.291703035,15.7086617 C0.486171803,15.902948 0.722343724,16.0002189 1.00003637,16.0002189 L15.0002553,16.0002189 C15.2782033,16.0002189 15.5143023,15.902948 15.7086981,15.7086617 C15.9029844,15.5142659 16.0001093,15.2781305 16.0001093,15.0002189 L16.0001093,5.3334063 C16.0001093,5.05553123 15.9307135,4.75 15.791849,4.41655721 Z M6.66684898,1.66655721 C6.66684898,1.57629159 6.69986853,1.49832166 6.76587116,1.43220957 C6.83180082,1.36638938 6.90995318,1.3334063 7.0002188,1.3334063 L9.00032825,1.3334063 C9.09037496,1.3334063 9.16849083,1.3663164 9.23445698,1.43220957 C9.30060554,1.49832166 9.33358862,1.57629159 9.33358862,1.66655721 L9.33358862,4.99996351 C9.33358862,5.09037507 9.30038663,5.16845447 9.23445698,5.23445709 C9.16849083,5.30024081 9.09037496,5.33326036 9.00032825,5.33326036 L7.0002188,5.33326036 C6.90995318,5.33326036 6.83176433,5.30035026 6.76587116,5.23445709 C6.69986853,5.16834501 6.66684898,5.09037507 6.66684898,4.99996351 L6.66684898,1.66655721 Z M12.0003647,14.6669221 L4.00003637,14.6669221 L4.00003637,10.6667761 L12.0003647,10.6667761 L12.0003647,14.6669221 Z M14.6672503,14.6669221 L13.3336251,14.6669221 L13.3333697,14.6669221 L13.3333697,10.3334063 C13.3333697,10.0554947 13.2362083,9.81950525 13.0418125,9.62496351 C12.8474167,9.43056772 12.6112813,9.33329685 12.3336251,9.33329685 L3.66673952,9.33329685 C3.38893742,9.33329685 3.1527655,9.43056772 2.95829673,9.62496351 C2.76393742,9.81935931 2.66670303,10.0554947 2.66670303,10.3334063 L2.66670303,14.6669221 L1.33333322,14.6669221 L1.33333322,1.33326036 L2.66666655,1.33326036 L2.66666655,5.66670315 C2.66666655,5.94454174 2.76379148,6.18056772 2.95826024,6.37503649 C3.15272901,6.5693958 3.38890093,6.66666667 3.66670303,6.66666667 L9.66699492,6.66666667 C9.94465108,6.66666667 10.1810419,6.5693958 10.3751823,6.37503649 C10.5694687,6.18067717 10.666849,5.94454174 10.666849,5.66670315 L10.666849,1.33326036 C10.7709792,1.33326036 10.9063046,1.36792177 11.0731537,1.43735406 C11.2399663,1.50674985 11.3579611,1.57618214 11.4273933,1.64561442 L14.3547138,4.57286194 C14.4241096,4.64229422 14.4935784,4.76222271 14.5629742,4.93228255 C14.6326254,5.10248832 14.6672138,5.23620841 14.6672138,5.3334063 L14.6672138,14.6669221 L14.6672503,14.6669221 Z"></path>';
 					break;
 
 				case 'search' :
@@ -5915,67 +5991,67 @@
 
 				case 'select' :
 
-					$return_value = '<path d="M15 4h-14c-0.6 0-1 0.4-1 1v6c0 0.6 0.4 1 1 1h14c0.6 0 1-0.4 1-1v-6c0-0.6-0.4-1-1-1zM10 11h-9v-6h9v6zM13 8.4l-2-1.4h4l-2 1.4z" fill="#444"></path>';
+					$return_value = '<path d="M15 4h-14c-0.6 0-1 0.4-1 1v6c0 0.6 0.4 1 1 1h14c0.6 0 1-0.4 1-1v-6c0-0.6-0.4-1-1-1zM10 11h-9v-6h9v6zM13 8.4l-2-1.4h4l-2 1.4z"></path>';
 					break;
 
 				case 'settings' :
 
-					$return_value = '<path d="M16 9v-2l-1.7-0.6c-0.2-0.6-0.4-1.2-0.7-1.8l0.8-1.6-1.4-1.4-1.6 0.8c-0.5-0.3-1.1-0.6-1.8-0.7l-0.6-1.7h-2l-0.6 1.7c-0.6 0.2-1.2 0.4-1.7 0.7l-1.6-0.8-1.5 1.5 0.8 1.6c-0.3 0.5-0.5 1.1-0.7 1.7l-1.7 0.6v2l1.7 0.6c0.2 0.6 0.4 1.2 0.7 1.8l-0.8 1.6 1.4 1.4 1.6-0.8c0.5 0.3 1.1 0.6 1.8 0.7l0.6 1.7h2l0.6-1.7c0.6-0.2 1.2-0.4 1.8-0.7l1.6 0.8 1.4-1.4-0.8-1.6c0.3-0.5 0.6-1.1 0.7-1.8l1.7-0.6zM8 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z" fill="#444"></path><path d="M10.6 7.9c0 1.381-1.119 2.5-2.5 2.5s-2.5-1.119-2.5-2.5c0-1.381 1.119-2.5 2.5-2.5s2.5 1.119 2.5 2.5z" fill="#444"></path>';
+					$return_value = '<path d="M16 9v-2l-1.7-0.6c-0.2-0.6-0.4-1.2-0.7-1.8l0.8-1.6-1.4-1.4-1.6 0.8c-0.5-0.3-1.1-0.6-1.8-0.7l-0.6-1.7h-2l-0.6 1.7c-0.6 0.2-1.2 0.4-1.7 0.7l-1.6-0.8-1.5 1.5 0.8 1.6c-0.3 0.5-0.5 1.1-0.7 1.7l-1.7 0.6v2l1.7 0.6c0.2 0.6 0.4 1.2 0.7 1.8l-0.8 1.6 1.4 1.4 1.6-0.8c0.5 0.3 1.1 0.6 1.8 0.7l0.6 1.7h2l0.6-1.7c0.6-0.2 1.2-0.4 1.8-0.7l1.6 0.8 1.4-1.4-0.8-1.6c0.3-0.5 0.6-1.1 0.7-1.8l1.7-0.6zM8 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"></path><path d="M10.6 7.9c0 1.381-1.119 2.5-2.5 2.5s-2.5-1.119-2.5-2.5c0-1.381 1.119-2.5 2.5-2.5s2.5 1.119 2.5 2.5z"></path>';
 					break;
 
 				case 'signature' :
 
-					$return_value = '<path d="m 19.642,6.173 q -0.396,-0.275 -0.903,-0.275 -0.507,0 -0.892,0.297 -2.191,1.641 -2.951,4.173 -0.418,1.354 -0.297,2.345 1.938,-0.562 3.546,-1.795 Q 19.764,9.674 20.248,7.78 20.347,7.328 20.182,6.888 20.017,6.448 19.642,6.172 z M 1.011,18.131 h 21.967 v 1.652 H 1.011 v -1.652 z m 2.94,-6.21 1.883,-1.883 1.123,1.123 -1.883,1.894 1.894,1.894 L 5.845,16.072 3.94,14.178 2.123,16.006 1.011,14.883 2.817,13.055 1,11.227 2.123,10.104 z M 23,15.808 v 0.617 l -1.619,0.011 q 0.077,-0.914 -0.077,-1.013 -0.595,-0.385 -2.555,0.319 l -0.562,0.198 q -1.189,0.385 -2.533,0.077 -1.343,-0.308 -2.081,-1.376 -1.795,0.319 -4.922,0.22 v -1.652 q 2.896,0.066 4.327,-0.154 -0.231,-1.497 0.286,-3.215 0.518,-1.718 1.597,-3.127 1.079,-1.431 2.444,-2.136 1.663,-0.881 3.369,0.396 0.925,0.683 1.211,1.96 0.132,0.595 -0.088,1.475 -0.22,0.881 -0.87,1.85 -0.639,0.98 -1.509,1.718 -1.707,1.453 -3.975,2.191 1.145,0.672 2.588,0.077 0.716,-0.286 1.475,-0.44 h 0.011 q 1.442,-0.242 2.191,0.011 0.958,0.33 1.167,1.101 0.121,0.462 0.121,0.892 z" fill="#444"></path>';
+					$return_value = '<path d="m 19.642,6.173 q -0.396,-0.275 -0.903,-0.275 -0.507,0 -0.892,0.297 -2.191,1.641 -2.951,4.173 -0.418,1.354 -0.297,2.345 1.938,-0.562 3.546,-1.795 Q 19.764,9.674 20.248,7.78 20.347,7.328 20.182,6.888 20.017,6.448 19.642,6.172 z M 1.011,18.131 h 21.967 v 1.652 H 1.011 v -1.652 z m 2.94,-6.21 1.883,-1.883 1.123,1.123 -1.883,1.894 1.894,1.894 L 5.845,16.072 3.94,14.178 2.123,16.006 1.011,14.883 2.817,13.055 1,11.227 2.123,10.104 z M 23,15.808 v 0.617 l -1.619,0.011 q 0.077,-0.914 -0.077,-1.013 -0.595,-0.385 -2.555,0.319 l -0.562,0.198 q -1.189,0.385 -2.533,0.077 -1.343,-0.308 -2.081,-1.376 -1.795,0.319 -4.922,0.22 v -1.652 q 2.896,0.066 4.327,-0.154 -0.231,-1.497 0.286,-3.215 0.518,-1.718 1.597,-3.127 1.079,-1.431 2.444,-2.136 1.663,-0.881 3.369,0.396 0.925,0.683 1.211,1.96 0.132,0.595 -0.088,1.475 -0.22,0.881 -0.87,1.85 -0.639,0.98 -1.509,1.718 -1.707,1.453 -3.975,2.191 1.145,0.672 2.588,0.077 0.716,-0.286 1.475,-0.44 h 0.011 q 1.442,-0.242 2.191,0.011 0.958,0.33 1.167,1.101 0.121,0.462 0.121,0.892 z"></path>';
 					break;
 
 				case 'sort' :
 
-					$return_value = '<path fill="#444" d="M11 7h-6l3-4z"></path><path fill="#444" d="M5 9h6l-3 4z"></path>';
+					$return_value = '<path d="M11 7h-6l3-4z"></path><path d="M5 9h6l-3 4z"></path>';
 					break;
 
 				case 'spacer' :
 
-					$return_value = '<path fill="#444" d="M7 7h1v1h-1v-1z"></path><path fill="#444" d="M5 7h1v1h-1v-1z"></path><path fill="#444" d="M3 7h1v1h-1v-1z"></path><path fill="#444" d="M1 7h1v1h-1v-1z"></path><path fill="#444" d="M6 6h1v1h-1v-1z"></path><path fill="#444" d="M4 6h1v1h-1v-1z"></path><path fill="#444" d="M2 6h1v1h-1v-1z"></path><path fill="#444" d="M0 6h1v1h-1v-1z"></path><path fill="#444" d="M7 5h1v1h-1v-1z"></path><path fill="#444" d="M5 5h1v1h-1v-1z"></path><path fill="#444" d="M3 5h1v1h-1v-1z"></path><path fill="#444" d="M1 5h1v1h-1v-1z"></path><path fill="#444" d="M6 4h1v1h-1v-1z"></path><path fill="#444" d="M4 4h1v1h-1v-1z"></path><path fill="#444" d="M2 4h1v1h-1v-1z"></path><path fill="#444" d="M0 4h1v1h-1v-1z"></path><path fill="#444" d="M7 3h1v1h-1v-1z"></path><path fill="#444" d="M5 3h1v1h-1v-1z"></path><path fill="#444" d="M3 3h1v1h-1v-1z"></path><path fill="#444" d="M1 3h1v1h-1v-1z"></path><path fill="#444" d="M6 2h1v1h-1v-1z"></path><path fill="#444" d="M4 2h1v1h-1v-1z"></path><path fill="#444" d="M2 2h1v1h-1v-1z"></path><path fill="#444" d="M0 2h1v1h-1v-1z"></path><path fill="#444" d="M7 1h1v1h-1v-1z"></path><path fill="#444" d="M5 1h1v1h-1v-1z"></path><path fill="#444" d="M3 1h1v1h-1v-1z"></path><path fill="#444" d="M1 1h1v1h-1v-1z"></path><path fill="#444" d="M6 0h1v1h-1v-1z"></path><path fill="#444" d="M4 0h1v1h-1v-1z"></path><path fill="#444" d="M2 0h1v1h-1v-1z"></path><path fill="#444" d="M0 0h1v1h-1v-1z"></path><path fill="#444" d="M15 7h1v1h-1v-1z"></path><path fill="#444" d="M13 7h1v1h-1v-1z"></path><path fill="#444" d="M11 7h1v1h-1v-1z"></path><path fill="#444" d="M9 7h1v1h-1v-1z"></path><path fill="#444" d="M14 6h1v1h-1v-1z"></path><path fill="#444" d="M12 6h1v1h-1v-1z"></path><path fill="#444" d="M10 6h1v1h-1v-1z"></path><path fill="#444" d="M8 6h1v1h-1v-1z"></path><path fill="#444" d="M15 5h1v1h-1v-1z"></path><path fill="#444" d="M13 5h1v1h-1v-1z"></path><path fill="#444" d="M11 5h1v1h-1v-1z"></path><path fill="#444" d="M9 5h1v1h-1v-1z"></path><path fill="#444" d="M14 4h1v1h-1v-1z"></path><path fill="#444" d="M12 4h1v1h-1v-1z"></path><path fill="#444" d="M10 4h1v1h-1v-1z"></path><path fill="#444" d="M8 4h1v1h-1v-1z"></path><path fill="#444" d="M15 3h1v1h-1v-1z"></path><path fill="#444" d="M13 3h1v1h-1v-1z"></path><path fill="#444" d="M11 3h1v1h-1v-1z"></path><path fill="#444" d="M9 3h1v1h-1v-1z"></path><path fill="#444" d="M14 2h1v1h-1v-1z"></path><path fill="#444" d="M12 2h1v1h-1v-1z"></path><path fill="#444" d="M10 2h1v1h-1v-1z"></path><path fill="#444" d="M8 2h1v1h-1v-1z"></path><path fill="#444" d="M15 1h1v1h-1v-1z"></path><path fill="#444" d="M13 1h1v1h-1v-1z"></path><path fill="#444" d="M11 1h1v1h-1v-1z"></path><path fill="#444" d="M9 1h1v1h-1v-1z"></path><path fill="#444" d="M14 0h1v1h-1v-1z"></path><path fill="#444" d="M12 0h1v1h-1v-1z"></path><path fill="#444" d="M10 0h1v1h-1v-1z"></path><path fill="#444" d="M8 0h1v1h-1v-1z"></path><path fill="#444" d="M7 15h1v1h-1v-1z"></path><path fill="#444" d="M5 15h1v1h-1v-1z"></path><path fill="#444" d="M3 15h1v1h-1v-1z"></path><path fill="#444" d="M1 15h1v1h-1v-1z"></path><path fill="#444" d="M6 14h1v1h-1v-1z"></path><path fill="#444" d="M4 14h1v1h-1v-1z"></path><path fill="#444" d="M2 14h1v1h-1v-1z"></path><path fill="#444" d="M0 14h1v1h-1v-1z"></path><path fill="#444" d="M7 13h1v1h-1v-1z"></path><path fill="#444" d="M5 13h1v1h-1v-1z"></path><path fill="#444" d="M3 13h1v1h-1v-1z"></path><path fill="#444" d="M1 13h1v1h-1v-1z"></path><path fill="#444" d="M6 12h1v1h-1v-1z"></path><path fill="#444" d="M4 12h1v1h-1v-1z"></path><path fill="#444" d="M2 12h1v1h-1v-1z"></path><path fill="#444" d="M0 12h1v1h-1v-1z"></path><path fill="#444" d="M7 11h1v1h-1v-1z"></path><path fill="#444" d="M5 11h1v1h-1v-1z"></path><path fill="#444" d="M3 11h1v1h-1v-1z"></path><path fill="#444" d="M1 11h1v1h-1v-1z"></path><path fill="#444" d="M6 10h1v1h-1v-1z"></path><path fill="#444" d="M4 10h1v1h-1v-1z"></path><path fill="#444" d="M2 10h1v1h-1v-1z"></path><path fill="#444" d="M0 10h1v1h-1v-1z"></path><path fill="#444" d="M7 9h1v1h-1v-1z"></path><path fill="#444" d="M5 9h1v1h-1v-1z"></path><path fill="#444" d="M3 9h1v1h-1v-1z"></path><path fill="#444" d="M1 9h1v1h-1v-1z"></path><path fill="#444" d="M6 8h1v1h-1v-1z"></path><path fill="#444" d="M4 8h1v1h-1v-1z"></path><path fill="#444" d="M2 8h1v1h-1v-1z"></path><path fill="#444" d="M0 8h1v1h-1v-1z"></path><path fill="#444" d="M15 15h1v1h-1v-1z"></path><path fill="#444" d="M13 15h1v1h-1v-1z"></path><path fill="#444" d="M11 15h1v1h-1v-1z"></path><path fill="#444" d="M9 15h1v1h-1v-1z"></path><path fill="#444" d="M14 14h1v1h-1v-1z"></path><path fill="#444" d="M12 14h1v1h-1v-1z"></path><path fill="#444" d="M10 14h1v1h-1v-1z"></path><path fill="#444" d="M8 14h1v1h-1v-1z"></path><path fill="#444" d="M15 13h1v1h-1v-1z"></path><path fill="#444" d="M13 13h1v1h-1v-1z"></path><path fill="#444" d="M11 13h1v1h-1v-1z"></path><path fill="#444" d="M9 13h1v1h-1v-1z"></path><path fill="#444" d="M14 12h1v1h-1v-1z"></path><path fill="#444" d="M12 12h1v1h-1v-1z"></path><path fill="#444" d="M10 12h1v1h-1v-1z"></path><path fill="#444" d="M8 12h1v1h-1v-1z"></path><path fill="#444" d="M15 11h1v1h-1v-1z"></path><path fill="#444" d="M13 11h1v1h-1v-1z"></path><path fill="#444" d="M11 11h1v1h-1v-1z"></path><path fill="#444" d="M9 11h1v1h-1v-1z"></path><path fill="#444" d="M14 10h1v1h-1v-1z"></path><path fill="#444" d="M12 10h1v1h-1v-1z"></path><path fill="#444" d="M10 10h1v1h-1v-1z"></path><path fill="#444" d="M8 10h1v1h-1v-1z"></path><path fill="#444" d="M15 9h1v1h-1v-1z"></path><path fill="#444" d="M13 9h1v1h-1v-1z"></path><path fill="#444" d="M11 9h1v1h-1v-1z"></path><path fill="#444" d="M9 9h1v1h-1v-1z"></path><path fill="#444" d="M14 8h1v1h-1v-1z"></path><path fill="#444" d="M12 8h1v1h-1v-1z"></path><path fill="#444" d="M10 8h1v1h-1v-1z"></path><path fill="#444" d="M8 8h1v1h-1v-1z"></path>';
+					$return_value = '<path d="M7 7h1v1h-1v-1z"></path><path d="M5 7h1v1h-1v-1z"></path><path d="M3 7h1v1h-1v-1z"></path><path d="M1 7h1v1h-1v-1z"></path><path d="M6 6h1v1h-1v-1z"></path><path d="M4 6h1v1h-1v-1z"></path><path d="M2 6h1v1h-1v-1z"></path><path d="M0 6h1v1h-1v-1z"></path><path d="M7 5h1v1h-1v-1z"></path><path d="M5 5h1v1h-1v-1z"></path><path d="M3 5h1v1h-1v-1z"></path><path d="M1 5h1v1h-1v-1z"></path><path d="M6 4h1v1h-1v-1z"></path><path d="M4 4h1v1h-1v-1z"></path><path d="M2 4h1v1h-1v-1z"></path><path d="M0 4h1v1h-1v-1z"></path><path d="M7 3h1v1h-1v-1z"></path><path d="M5 3h1v1h-1v-1z"></path><path d="M3 3h1v1h-1v-1z"></path><path d="M1 3h1v1h-1v-1z"></path><path d="M6 2h1v1h-1v-1z"></path><path d="M4 2h1v1h-1v-1z"></path><path d="M2 2h1v1h-1v-1z"></path><path d="M0 2h1v1h-1v-1z"></path><path d="M7 1h1v1h-1v-1z"></path><path d="M5 1h1v1h-1v-1z"></path><path d="M3 1h1v1h-1v-1z"></path><path d="M1 1h1v1h-1v-1z"></path><path d="M6 0h1v1h-1v-1z"></path><path d="M4 0h1v1h-1v-1z"></path><path d="M2 0h1v1h-1v-1z"></path><path d="M0 0h1v1h-1v-1z"></path><path d="M15 7h1v1h-1v-1z"></path><path d="M13 7h1v1h-1v-1z"></path><path d="M11 7h1v1h-1v-1z"></path><path d="M9 7h1v1h-1v-1z"></path><path d="M14 6h1v1h-1v-1z"></path><path d="M12 6h1v1h-1v-1z"></path><path d="M10 6h1v1h-1v-1z"></path><path d="M8 6h1v1h-1v-1z"></path><path d="M15 5h1v1h-1v-1z"></path><path d="M13 5h1v1h-1v-1z"></path><path d="M11 5h1v1h-1v-1z"></path><path d="M9 5h1v1h-1v-1z"></path><path d="M14 4h1v1h-1v-1z"></path><path d="M12 4h1v1h-1v-1z"></path><path d="M10 4h1v1h-1v-1z"></path><path d="M8 4h1v1h-1v-1z"></path><path d="M15 3h1v1h-1v-1z"></path><path d="M13 3h1v1h-1v-1z"></path><path d="M11 3h1v1h-1v-1z"></path><path d="M9 3h1v1h-1v-1z"></path><path d="M14 2h1v1h-1v-1z"></path><path d="M12 2h1v1h-1v-1z"></path><path d="M10 2h1v1h-1v-1z"></path><path d="M8 2h1v1h-1v-1z"></path><path d="M15 1h1v1h-1v-1z"></path><path d="M13 1h1v1h-1v-1z"></path><path d="M11 1h1v1h-1v-1z"></path><path d="M9 1h1v1h-1v-1z"></path><path d="M14 0h1v1h-1v-1z"></path><path d="M12 0h1v1h-1v-1z"></path><path d="M10 0h1v1h-1v-1z"></path><path d="M8 0h1v1h-1v-1z"></path><path d="M7 15h1v1h-1v-1z"></path><path d="M5 15h1v1h-1v-1z"></path><path d="M3 15h1v1h-1v-1z"></path><path d="M1 15h1v1h-1v-1z"></path><path d="M6 14h1v1h-1v-1z"></path><path d="M4 14h1v1h-1v-1z"></path><path d="M2 14h1v1h-1v-1z"></path><path d="M0 14h1v1h-1v-1z"></path><path d="M7 13h1v1h-1v-1z"></path><path d="M5 13h1v1h-1v-1z"></path><path d="M3 13h1v1h-1v-1z"></path><path d="M1 13h1v1h-1v-1z"></path><path d="M6 12h1v1h-1v-1z"></path><path d="M4 12h1v1h-1v-1z"></path><path d="M2 12h1v1h-1v-1z"></path><path d="M0 12h1v1h-1v-1z"></path><path d="M7 11h1v1h-1v-1z"></path><path d="M5 11h1v1h-1v-1z"></path><path d="M3 11h1v1h-1v-1z"></path><path d="M1 11h1v1h-1v-1z"></path><path d="M6 10h1v1h-1v-1z"></path><path d="M4 10h1v1h-1v-1z"></path><path d="M2 10h1v1h-1v-1z"></path><path d="M0 10h1v1h-1v-1z"></path><path d="M7 9h1v1h-1v-1z"></path><path d="M5 9h1v1h-1v-1z"></path><path d="M3 9h1v1h-1v-1z"></path><path d="M1 9h1v1h-1v-1z"></path><path d="M6 8h1v1h-1v-1z"></path><path d="M4 8h1v1h-1v-1z"></path><path d="M2 8h1v1h-1v-1z"></path><path d="M0 8h1v1h-1v-1z"></path><path d="M15 15h1v1h-1v-1z"></path><path d="M13 15h1v1h-1v-1z"></path><path d="M11 15h1v1h-1v-1z"></path><path d="M9 15h1v1h-1v-1z"></path><path d="M14 14h1v1h-1v-1z"></path><path d="M12 14h1v1h-1v-1z"></path><path d="M10 14h1v1h-1v-1z"></path><path d="M8 14h1v1h-1v-1z"></path><path d="M15 13h1v1h-1v-1z"></path><path d="M13 13h1v1h-1v-1z"></path><path d="M11 13h1v1h-1v-1z"></path><path d="M9 13h1v1h-1v-1z"></path><path d="M14 12h1v1h-1v-1z"></path><path d="M12 12h1v1h-1v-1z"></path><path d="M10 12h1v1h-1v-1z"></path><path d="M8 12h1v1h-1v-1z"></path><path d="M15 11h1v1h-1v-1z"></path><path d="M13 11h1v1h-1v-1z"></path><path d="M11 11h1v1h-1v-1z"></path><path d="M9 11h1v1h-1v-1z"></path><path d="M14 10h1v1h-1v-1z"></path><path d="M12 10h1v1h-1v-1z"></path><path d="M10 10h1v1h-1v-1z"></path><path d="M8 10h1v1h-1v-1z"></path><path d="M15 9h1v1h-1v-1z"></path><path d="M13 9h1v1h-1v-1z"></path><path d="M11 9h1v1h-1v-1z"></path><path d="M9 9h1v1h-1v-1z"></path><path d="M14 8h1v1h-1v-1z"></path><path d="M12 8h1v1h-1v-1z"></path><path d="M10 8h1v1h-1v-1z"></path><path d="M8 8h1v1h-1v-1z"></path>';
 					break;
 
 				case 'submit' :
 
-					$return_value = '<path fill="#444" d="M16 7.9l-6-4.9v3c-0.5 0-1.1 0-2 0-8 0-8 8-8 8s1-4 7.8-4c1.1 0 1.8 0 2.2 0v2.9l6-5z"></path>';
+					$return_value = '<path d="M16 7.9l-6-4.9v3c-0.5 0-1.1 0-2 0-8 0-8 8-8 8s1-4 7.8-4c1.1 0 1.8 0 2.2 0v2.9l6-5z"></path>';
 					break;
 
 				case 'table' :
 
-					$return_value = '<path fill="#444" d="M0 1v15h16v-15h-16zM5 15h-4v-2h4v2zM5 12h-4v-2h4v2zM5 9h-4v-2h4v2zM5 6h-4v-2h4v2zM10 15h-4v-2h4v2zM10 12h-4v-2h4v2zM10 9h-4v-2h4v2zM10 6h-4v-2h4v2zM15 15h-4v-2h4v2zM15 12h-4v-2h4v2zM15 9h-4v-2h4v2zM15 6h-4v-2h4v2z"></path>';
+					$return_value = '<path d="M0 1v15h16v-15h-16zM5 15h-4v-2h4v2zM5 12h-4v-2h4v2zM5 9h-4v-2h4v2zM5 6h-4v-2h4v2zM10 15h-4v-2h4v2zM10 12h-4v-2h4v2zM10 9h-4v-2h4v2zM10 6h-4v-2h4v2zM15 15h-4v-2h4v2zM15 12h-4v-2h4v2zM15 9h-4v-2h4v2zM15 6h-4v-2h4v2z"></path>';
 					break;
 
 				case 'tel' :
 
-					$return_value = '<path d="M12.2 10c-1.1-0.1-1.7 1.4-2.5 1.8-1.3 0.7-3.7-1.8-3.7-1.8s-2.5-2.4-1.9-3.7c0.5-0.8 2-1.4 1.9-2.5-0.1-1-2.3-4.6-3.4-3.6-2.4 2.2-2.6 3.1-2.6 4.9-0.1 3.1 3.9 7 3.9 7 0.4 0.4 3.9 4 7 3.9 1.8 0 2.7-0.2 4.9-2.6 1-1.1-2.5-3.3-3.6-3.4z" fill="#444"></path>';
+					$return_value = '<path d="M12.2 10c-1.1-0.1-1.7 1.4-2.5 1.8-1.3 0.7-3.7-1.8-3.7-1.8s-2.5-2.4-1.9-3.7c0.5-0.8 2-1.4 1.9-2.5-0.1-1-2.3-4.6-3.4-3.6-2.4 2.2-2.6 3.1-2.6 4.9-0.1 3.1 3.9 7 3.9 7 0.4 0.4 3.9 4 7 3.9 1.8 0 2.7-0.2 4.9-2.6 1-1.1-2.5-3.3-3.6-3.4z"></path>';
 					break;
 
 				case 'text' :
 
-					$return_value = '<path d="M16 5c0-0.6-0.4-1-1-1h-14c-0.6 0-1 0.4-1 1v6c0 0.6 0.4 1 1 1h14c0.6 0 1-0.4 1-1v-6zM15 11h-14v-6h14v6z" fill="#444"></path><path d="M2 6h1v4h-1v-4z" fill="#444"></path>';
+					$return_value = '<path d="M16 5c0-0.6-0.4-1-1-1h-14c-0.6 0-1 0.4-1 1v6c0 0.6 0.4 1 1 1h14c0.6 0 1-0.4 1-1v-6zM15 11h-14v-6h14v6z"></path><path d="M2 6h1v4h-1v-4z"></path>';
 					break;
 
 				case 'textarea' :
 
-					$return_value = '<path d="M2 2h1v4h-1v-4z" fill="#444"></path><path d="M1 0c-0.6 0-1 0.4-1 1v14c0 0.6 0.4 1 1 1h15v-16h-15zM13 15h-12v-14h12v14zM15 15v0h-1v-1h1v1zM15 13h-1v-10h1v10zM15 2h-1v-1h1v1z" fill="#444"></path>';
+					$return_value = '<path d="M2 2h1v4h-1v-4z"></path><path d="M1 0c-0.6 0-1 0.4-1 1v14c0 0.6 0.4 1 1 1h15v-16h-15zM13 15h-12v-14h12v14zM15 15v0h-1v-1h1v1zM15 13h-1v-10h1v10zM15 2h-1v-1h1v1z"></path>';
 					break;
 
 				case 'texteditor' :
 
-					$return_value = '<path fill="#444" d="M16 4c0 0 0-1-1-2s-1.9-1-1.9-1l-1.1 1.1v-2.1h-12v16h12v-8l4-4zM6.3 11.4l-0.6-0.6 0.3-1.1 1.5 1.5-1.2 0.2zM7.2 9.5l-0.6-0.6 5.2-5.2c0.2 0.1 0.4 0.3 0.6 0.5zM14.1 2.5l-0.9 1c-0.2-0.2-0.4-0.3-0.6-0.5l0.9-0.9c0.1 0.1 0.3 0.2 0.6 0.4zM11 15h-10v-14h10v2.1l-5.9 5.9-1.1 4.1 4.1-1.1 2.9-3v6z"></path>';
+					$return_value = '<path d="M16 4c0 0 0-1-1-2s-1.9-1-1.9-1l-1.1 1.1v-2.1h-12v16h12v-8l4-4zM6.3 11.4l-0.6-0.6 0.3-1.1 1.5 1.5-1.2 0.2zM7.2 9.5l-0.6-0.6 5.2-5.2c0.2 0.1 0.4 0.3 0.6 0.5zM14.1 2.5l-0.9 1c-0.2-0.2-0.4-0.3-0.6-0.5l0.9-0.9c0.1 0.1 0.3 0.2 0.6 0.4zM11 15h-10v-14h10v2.1l-5.9 5.9-1.1 4.1 4.1-1.1 2.9-3v6z"></path>';
 					break;
 
 				case 'tools' :
 
-					$return_value = '<path fill="#444" d="M10.3 8.2l-0.9 0.9 0.9 0.9-1.2 1.2 4.3 4.3c0.6 0.6 1.5 0.6 2.1 0s0.6-1.5 0-2.1l-5.2-5.2zM14.2 15c-0.4 0-0.8-0.3-0.8-0.8 0-0.4 0.3-0.8 0.8-0.8s0.8 0.3 0.8 0.8c0 0.5-0.3 0.8-0.8 0.8z"></path><path fill="#444" d="M3.6 8l0.9-0.6 1.5-1.7 0.9 0.9 0.9-0.9-0.1-0.1c0.2-0.5 0.3-1 0.3-1.6 0-2.2-1.8-4-4-4-0.6 0-1.1 0.1-1.6 0.3l2.9 2.9-2.1 2.1-2.9-2.9c-0.2 0.5-0.3 1-0.3 1.6 0 2.1 1.6 3.7 3.6 4z"></path><path fill="#444" d="M8 10.8l0.9-0.8-0.9-0.9 5.7-5.7 1.2-0.4 1.1-2.2-0.7-0.7-2.3 1-0.5 1.2-5.6 5.7-0.9-0.9-0.8 0.9c0 0 0.8 0.6-0.1 1.5-0.5 0.5-1.3-0.1-2.8 1.4-0.5 0.5-2.1 2.1-2.1 2.1s-0.6 1 0.6 2.2 2.2 0.6 2.2 0.6 1.6-1.6 2.1-2.1c1.4-1.4 0.9-2.3 1.3-2.7 0.9-0.9 1.6-0.2 1.6-0.2zM4.9 10.4l0.7 0.7-3.8 3.8-0.7-0.7z"></path>';
+					$return_value = '<path d="M10.3 8.2l-0.9 0.9 0.9 0.9-1.2 1.2 4.3 4.3c0.6 0.6 1.5 0.6 2.1 0s0.6-1.5 0-2.1l-5.2-5.2zM14.2 15c-0.4 0-0.8-0.3-0.8-0.8 0-0.4 0.3-0.8 0.8-0.8s0.8 0.3 0.8 0.8c0 0.5-0.3 0.8-0.8 0.8z"></path><path d="M3.6 8l0.9-0.6 1.5-1.7 0.9 0.9 0.9-0.9-0.1-0.1c0.2-0.5 0.3-1 0.3-1.6 0-2.2-1.8-4-4-4-0.6 0-1.1 0.1-1.6 0.3l2.9 2.9-2.1 2.1-2.9-2.9c-0.2 0.5-0.3 1-0.3 1.6 0 2.1 1.6 3.7 3.6 4z"></path><path d="M8 10.8l0.9-0.8-0.9-0.9 5.7-5.7 1.2-0.4 1.1-2.2-0.7-0.7-2.3 1-0.5 1.2-5.6 5.7-0.9-0.9-0.8 0.9c0 0 0.8 0.6-0.1 1.5-0.5 0.5-1.3-0.1-2.8 1.4-0.5 0.5-2.1 2.1-2.1 2.1s-0.6 1 0.6 2.2 2.2 0.6 2.2 0.6 1.6-1.6 2.1-2.1c1.4-1.4 0.9-2.3 1.3-2.7 0.9-0.9 1.6-0.2 1.6-0.2zM4.9 10.4l0.7 0.7-3.8 3.8-0.7-0.7z"></path>';
 					break;
 
 				case 'undo' :
 
-					$return_value = '<path fill="#444" d="M8 0c-3 0-5.6 1.6-6.9 4.1l-1.1-1.1v4h4l-1.5-1.5c1-2 3.1-3.5 5.5-3.5 3.3 0 6 2.7 6 6s-2.7 6-6 6c-1.8 0-3.4-0.8-4.5-2.1l-1.5 1.3c1.4 1.7 3.6 2.8 6 2.8 4.4 0 8-3.6 8-8s-3.6-8-8-8z"></path><text class="count" fill="#444" font-size="7" line-spacing="7" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"></text>';
+					$return_value = '<path d="M8 0c-3 0-5.6 1.6-6.9 4.1l-1.1-1.1v4h4l-1.5-1.5c1-2 3.1-3.5 5.5-3.5 3.3 0 6 2.7 6 6s-2.7 6-6 6c-1.8 0-3.4-0.8-4.5-2.1l-1.5 1.3c1.4 1.7 3.6 2.8 6 2.8 4.4 0 8-3.6 8-8s-3.6-8-8-8z"></path><text class="count" font-size="7" line-spacing="7" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"></text>';
 					break;
 
 				case 'up' :
@@ -5985,27 +6061,27 @@
 
 				case 'upload' :
 
-					$return_value = '<path fill="#444" d="M0 14h16v2h-16v-2z"></path><path fill="#444" d="M8 0l-5 5h3v8h4v-8h3z"></path>';
+					$return_value = '<path d="M0 14h16v2h-16v-2z"></path><path d="M8 0l-5 5h3v8h4v-8h3z"></path>';
 					break;
 
 				case 'url' :
 
-					$return_value = '<path d="M14.9 1.1c-1.4-1.4-3.7-1.4-5.1 0l-4.4 4.3c-1.4 1.5-1.4 3.7 0 5.2 0.1 0.1 0.3 0.2 0.4 0.3l1.5-1.5c-0.1-0.1-0.3-0.2-0.4-0.3-0.6-0.6-0.6-1.6 0-2.2l4.4-4.4c0.6-0.6 1.6-0.6 2.2 0s0.6 1.6 0 2.2l-1.3 1.3c0.4 0.8 0.5 1.7 0.4 2.5l2.3-2.3c1.5-1.4 1.5-3.7 0-5.1z" fill="#444"></path><path d="M10.2 5.1l-1.5 1.5c0 0 0.3 0.2 0.4 0.3 0.6 0.6 0.6 1.6 0 2.2l-4.4 4.4c-0.6 0.6-1.6 0.6-2.2 0s-0.6-1.6 0-2.2l1.3-1.3c-0.4-0.8-0.1-1.3-0.4-2.5l-2.3 2.3c-1.4 1.4-1.4 3.7 0 5.1s3.7 1.4 5.1 0l4.4-4.4c1.4-1.4 1.4-3.7 0-5.1-0.2-0.1-0.4-0.3-0.4-0.3z" fill="#444"></path>';
+					$return_value = '<path d="M14.9 1.1c-1.4-1.4-3.7-1.4-5.1 0l-4.4 4.3c-1.4 1.5-1.4 3.7 0 5.2 0.1 0.1 0.3 0.2 0.4 0.3l1.5-1.5c-0.1-0.1-0.3-0.2-0.4-0.3-0.6-0.6-0.6-1.6 0-2.2l4.4-4.4c0.6-0.6 1.6-0.6 2.2 0s0.6 1.6 0 2.2l-1.3 1.3c0.4 0.8 0.5 1.7 0.4 2.5l2.3-2.3c1.5-1.4 1.5-3.7 0-5.1z"></path><path d="M10.2 5.1l-1.5 1.5c0 0 0.3 0.2 0.4 0.3 0.6 0.6 0.6 1.6 0 2.2l-4.4 4.4c-0.6 0.6-1.6 0.6-2.2 0s-0.6-1.6 0-2.2l1.3-1.3c-0.4-0.8-0.1-1.3-0.4-2.5l-2.3 2.3c-1.4 1.4-1.4 3.7 0 5.1s3.7 1.4 5.1 0l4.4-4.4c1.4-1.4 1.4-3.7 0-5.1-0.2-0.1-0.4-0.3-0.4-0.3z"></path>';
 					break;
 
 				case 'visible' :
 
-					$return_value = '<path fill="#444" d="M8 3.9c-6.7 0-8 5.1-8 5.1s2.2 4.1 7.9 4.1 8.1-4 8.1-4-1.3-5.2-8-5.2zM5.3 5.4c0.5-0.3 1.3-0.3 1.3-0.3s-0.5 0.9-0.5 1.6c0 0.7 0.2 1.1 0.2 1.1l-1.1 0.2c0 0-0.3-0.5-0.3-1.2 0-0.8 0.4-1.4 0.4-1.4zM7.9 12.1c-4.1 0-6.2-2.3-6.8-3.2 0.3-0.7 1.1-2.2 3.1-3.2-0.1 0.4-0.2 0.8-0.2 1.3 0 2.2 1.8 4 4 4s4-1.8 4-4c0-0.5-0.1-0.9-0.2-1.3 2 0.9 2.8 2.5 3.1 3.2-0.7 0.9-2.8 3.2-7 3.2z"></path>';
+					$return_value = '<path d="M8 3.9c-6.7 0-8 5.1-8 5.1s2.2 4.1 7.9 4.1 8.1-4 8.1-4-1.3-5.2-8-5.2zM5.3 5.4c0.5-0.3 1.3-0.3 1.3-0.3s-0.5 0.9-0.5 1.6c0 0.7 0.2 1.1 0.2 1.1l-1.1 0.2c0 0-0.3-0.5-0.3-1.2 0-0.8 0.4-1.4 0.4-1.4zM7.9 12.1c-4.1 0-6.2-2.3-6.8-3.2 0.3-0.7 1.1-2.2 3.1-3.2-0.1 0.4-0.2 0.8-0.2 1.3 0 2.2 1.8 4 4 4s4-1.8 4-4c0-0.5-0.1-0.9-0.2-1.3 2 0.9 2.8 2.5 3.1 3.2-0.7 0.9-2.8 3.2-7 3.2z"></path>';
 					break;
 
 				case 'warning' :
 
-					$return_value = '<path fill="#444" d="M8 1l-8 14h16l-8-14zM8 13c-0.6 0-1-0.4-1-1s0.4-1 1-1 1 0.4 1 1c0 0.6-0.4 1-1 1zM7 10v-4h2v4h-2z"></path>';
+					$return_value = '<path d="M8 1l-8 14h16l-8-14zM8 13c-0.6 0-1-0.4-1-1s0.4-1 1-1 1 0.4 1 1c0 0.6-0.4 1-1 1zM7 10v-4h2v4h-2z"></path>';
 					break;
 
 				case 'wizard' :
 
-					$return_value = '<path fill="#444" d="M0 5h3v1h-3v-1z"></path><path fill="#444" d="M5 0h1v3h-1v-3z"></path><path fill="#444" d="M6 11h-1v-2.5l1 1z"></path><path fill="#444" d="M11 6h-1.5l-1-1h2.5z"></path><path fill="#444" d="M3.131 7.161l0.707 0.707-2.97 2.97-0.707-0.707 2.97-2.97z"></path><path fill="#444" d="M10.131 0.161l0.707 0.707-2.97 2.97-0.707-0.707 2.97-2.97z"></path><path fill="#444" d="M0.836 0.199l3.465 3.465-0.707 0.707-3.465-3.465 0.707-0.707z"></path><path fill="#444" d="M6.1 4.1l-2.1 2 9.8 9.9 2.2-2.1-9.9-9.8zM6.1 5.5l2.4 2.5-0.6 0.6-2.5-2.5 0.7-0.6z"></path>';
+					$return_value = '<path d="M0 5h3v1h-3v-1z"></path><path d="M5 0h1v3h-1v-3z"></path><path d="M6 11h-1v-2.5l1 1z"></path><path d="M11 6h-1.5l-1-1h2.5z"></path><path d="M3.131 7.161l0.707 0.707-2.97 2.97-0.707-0.707 2.97-2.97z"></path><path d="M10.131 0.161l0.707 0.707-2.97 2.97-0.707-0.707 2.97-2.97z"></path><path d="M0.836 0.199l3.465 3.465-0.707 0.707-3.465-3.465 0.707-0.707z"></path><path d="M6.1 4.1l-2.1 2 9.8 9.9 2.2-2.1-9.9-9.8zM6.1 5.5l2.4 2.5-0.6 0.6-2.5-2.5 0.7-0.6z"></path>';
 					break;
 
 				case 'woo' :
@@ -6015,13 +6091,13 @@
 
 				default :
 
-					$return_value = '<path fill="#444" d="M9 11h-3c0-3 1.6-4 2.7-4.6 0.4-0.2 0.7-0.4 0.9-0.6 0.5-0.5 0.3-1.2 0.2-1.4-0.3-0.7-1-1.4-2.3-1.4-2.1 0-2.5 1.9-2.5 2.3l-3-0.4c0.2-1.7 1.7-4.9 5.5-4.9 2.3 0 4.3 1.3 5.1 3.2 0.7 1.7 0.4 3.5-0.8 4.7-0.5 0.5-1.1 0.8-1.6 1.1-0.9 0.5-1.2 1-1.2 2z"></path><path fill="#444" d="M9.5 14c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z"></path>';
+					$return_value = '<path d="M9 11h-3c0-3 1.6-4 2.7-4.6 0.4-0.2 0.7-0.4 0.9-0.6 0.5-0.5 0.3-1.2 0.2-1.4-0.3-0.7-1-1.4-2.3-1.4-2.1 0-2.5 1.9-2.5 2.3l-3-0.4c0.2-1.7 1.7-4.9 5.5-4.9 2.3 0 4.3 1.3 5.1 3.2 0.7 1.7 0.4 3.5-0.8 4.7-0.5 0.5-1.1 0.8-1.6 1.1-0.9 0.5-1.2 1-1.2 2z"></path><path d="M9.5 14c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z"></path>';
 			}
 
 			// Apply filter
-			$return_value = apply_filters('wsf_config_icon_16_svg', '<svg height="16" width="16" viewBox="0 0 16 16">' . $return_value . '</svg>', $id);
+			$return_value = apply_filters('wsf_config_icon_16_svg', $return_value, $id);
 
-			return $return_value;
+			return '<svg height="16" width="16" viewBox="0 0 16 16">' . $return_value . '</svg>';
 		}
 
 
@@ -6181,7 +6257,7 @@
 							'public' => array(
 
 								'mask_wrapper'	=> '<div class="wsf-grid wsf-sections" id="#id" data-id="#data_id">#sections</div>',
-								'mask_single' 	=> '<div#attributes class="#class" id="#id" data-id="#data_id"#hidden>#section</div>',
+								'mask_single' 	=> '<fieldset#attributes class="#class" id="#id" data-id="#data_id">#section</fieldset>',
 								'class_single'	=> array('wsf-tile', 'wsf-section')
 							)
 						),
@@ -6214,8 +6290,7 @@
 									'mask_field_wrapper'			=>	'<div class="wsf-extra-small-#column_width_field wsf-tile">#field</div>',
 								),
 
-								// Flex within a fieldset doesn't work, so we embed a div within the fieldset to get it working
-								'mask_wrapper' 			=> '<fieldset#attributes>#label<div class="wsf-grid wsf-fields" id="#id" data-id="#data_id">#fields</div></fieldset>',
+								'mask_wrapper' 			=> '#label<div class="wsf-grid wsf-fields" id="#id" data-id="#data_id">#fields</div>',
 								'mask_wrapper_label'	=> '<legend>#label</legend>',
 								'mask_single' 			=> '<div class="#class" id="#id" data-id="#data_id" data-type="#type"#attributes>#field</div>',
 
@@ -6379,7 +6454,7 @@
 							'public' => array(
 
 								'mask_wrapper'	=> '<div class="row" id="#id" data-id="#data_id">#sections</div>',
-								'mask_single' 	=> '<div#attributes class="#class" id="#id" data-id="#data_id"#hidden>#section</div>',
+								'mask_single' 	=> '<fieldset#attributes class="#class" id="#id" data-id="#data_id">#section</fieldset>',
 								'class_single'	=> array('col')
 							)
 						),
@@ -6404,8 +6479,7 @@
 									'mask_field_wrapper'			=>	'<div class="col-xs-#column_width_field">#field</div>',
 								),
 
-								// Flex within a fieldset doesn't work, so we embed a div within the fieldset to get it working
-								'mask_wrapper' 		=> '<fieldset#attributes>#label<div class="row" id="#id" data-id="#data_id">#fields</div></fieldset>',
+								'mask_wrapper' 		=> '#label<div class="row" id="#id" data-id="#data_id">#fields</div>',
 								'mask_wrapper_label'	=> '<legend>#label</legend>',
 								'mask_single' 		=> '<div class="#class" id="#id" data-id="#data_id" data-type="#type"#attributes>#field</div>',
 
@@ -6585,7 +6659,7 @@
 							'public' => array(
 
 								'mask_wrapper'	=> '<div class="row" id="#id" data-id="#data_id">#sections</div>',
-								'mask_single' 	=> '<div#attributes class="#class" id="#id" data-id="#data_id"#hidden>#section</div>',
+								'mask_single' 	=> '<fieldset#attributes class="#class" id="#id" data-id="#data_id">#section</fieldset>',
 							)
 						),
 
@@ -6609,8 +6683,7 @@
 									'mask_field_wrapper'			=>	'<div class="col-#column_width_field">#field</div>',
 								),
 
-								// Flex within a fieldset doesn't work, so we embed a div within the fieldset to get it working
-								'mask_wrapper' 		=> '<fieldset#attributes>#label<div class="row" id="#id" data-id="#data_id">#fields</div></fieldset>',
+								'mask_wrapper' 		=> '#label<div class="row" id="#id" data-id="#data_id">#fields</div>',
 								'mask_wrapper_label'	=> '<legend>#label</legend>',
 								'mask_single' 		=> '<div class="#class" id="#id" data-id="#data_id" data-type="#type"#attributes>#field</div>',
 
@@ -6807,7 +6880,7 @@
 							'public' => array(
 
 								'mask_wrapper'	=> '<div class="row" id="#id" data-id="#data_id">#sections</div>',
-								'mask_single' 	=> '<div#attributes class="#class" id="#id" data-id="#data_id"#hidden>#section</div>',
+								'mask_single' 	=> '<fieldset#attributes class="#class" id="#id" data-id="#data_id">#section</fieldset>',
 							)
 						),
 
@@ -6831,8 +6904,7 @@
 									'mask_field_wrapper'			=>	'<div class="col-#column_width_field">#field</div>',
 								),
 
-								// Flex within a fieldset doesn't work, so we embed a div within the fieldset to get it working
-								'mask_wrapper' 		=> '<fieldset#attributes>#label<div class="row" id="#id" data-id="#data_id">#fields</div></fieldset>',
+								'mask_wrapper' 		=> '#label<div class="row" id="#id" data-id="#data_id">#fields</div>',
 								'mask_wrapper_label'	=> '<legend>#label</legend>',
 								'mask_single' 		=> '<div class="#class" id="#id" data-id="#data_id" data-type="#type"#attributes>#field</div>',
 
@@ -7014,7 +7086,7 @@
 							'public' => array(
 
 								'mask_wrapper'	=> '<div class="row" id="#id" data-id="#data_id">#sections</div>',
-								'mask_single' 	=> '<div#attributes class="#class" id="#id" data-id="#data_id"#hidden>#section</div>',
+								'mask_single' 	=> '<fieldset#attributes class="#class" id="#id" data-id="#data_id">#section</fieldset>',
 								'class_single'	=> array('columns')
 							)
 						),
@@ -7046,8 +7118,7 @@
 									'class_field_label'						=>	array('middle'),
 								),
 
-								// Flex within a fieldset doesn't work, so we embed a div within the fieldset to get it working
-								'mask_wrapper' 			=> '<fieldset#attributes>#label<div class="row" id="#id" data-id="#data_id">#fields</div></fieldset>',
+								'mask_wrapper' 			=> '#label<div class="row" id="#id" data-id="#data_id">#fields</div>',
 								'mask_wrapper_label'	=> '<legend>#label</legend>',
 								'mask_single' 			=> '<div class="#class" id="#id" data-id="#data_id" data-type="#type"#attributes>#field</div>',
 								'mask_field_label'		=>	'<label id="#label_id" for="#id"#attributes>#label#field</label>',
@@ -7220,7 +7291,7 @@
 							'public' => array(
 
 								'mask_wrapper'	=> '<div class="row" id="#id" data-id="#data_id">#sections</div>',
-								'mask_single' 	=> '<div#attributes class="#class" id="#id" data-id="#data_id"#hidden>#section</div>',
+								'mask_single' 	=> '<fieldset#attributes class="#class" id="#id" data-id="#data_id">#section</fieldset>',
 								'class_single'	=> array('columns')
 							)
 						),
@@ -7252,8 +7323,7 @@
 									'class_field_label'				=>	array('middle'),
 								),
 
-								// Flex within a fieldset doesn't work, so we embed a div within the fieldset to get it working
-								'mask_wrapper' 			=> '<fieldset#attributes>#label<div class="row" id="#id" data-id="#data_id">#fields</div></fieldset>',
+								'mask_wrapper' 			=> '#label<div class="row" id="#id" data-id="#data_id">#fields</div>',
 								'mask_wrapper_label'	=> '<legend>#label</legend>',
 								'mask_single' 			=> '<div class="#class" id="#id" data-id="#data_id" data-type="#type"#attributes>#field</div>',
 								'mask_field_label'		=>	'<label id="#label_id" for="#id"#attributes>#label#field</label>',
@@ -7431,7 +7501,7 @@
 							'public' => array(
 
 								'mask_wrapper'	=> '<div class="grid-x grid-margin-x" id="#id" data-id="#data_id">#sections</div>',
-								'mask_single' 	=> '<div#attributes class="#class" id="#id" data-id="#data_id"#hidden>#section</div>',
+								'mask_single' 	=> '<fieldset#attributes class="#class" id="#id" data-id="#data_id">#section</fieldset>',
 
 								'class_single'	=> array('cell')
 							)
@@ -7464,8 +7534,7 @@
 									'class_field_label'				=>	array('middle'),
 								),
 
-								// Flex within a fieldset doesn't work, so we embed a div within the fieldset to get it working
-								'mask_wrapper' 			=> '<fieldset#attributes>#label<div class="grid-x grid-margin-x" id="#id" data-id="#data_id">#fields</div></fieldset>',
+								'mask_wrapper' 			=> '#label<div class="grid-x grid-margin-x" id="#id" data-id="#data_id">#fields</div>',
 								'mask_wrapper_label'	=> '<legend>#label</legend>',
 								'mask_single' 			=> '<div class="#class" id="#id" data-id="#data_id" data-type="#type"#attributes>#field</div>',
 								'mask_field_label'		=> '<label id="#label_id" for="#id"#attributes>#label#field</label>',
@@ -7810,6 +7879,27 @@
 						'skin_border_radius'		=>	array('label' => __('Border - Style', 'ws-form'), 'kb_slug' => 'customize-appearance', 'value' => WS_Form_Common::option_get('skin_border_radius'))
 					)
 				),
+				// Section
+				'section' 	=> array(
+
+					'label'		=> __('Section', 'ws-form'),
+
+					'variables'	=> array(
+
+						'section_row_count'	=>	array(
+
+							'label' => __('Section Row Count', 'ws-form'),
+
+							'attributes' => array(
+
+								array('id' => 'id', 'required' => true),
+							),
+
+							'description' => __('This variable returns the total number of rows in a repeatable section.', 'ws-form')
+						),
+					)
+				),
+
 				// Field
 				'field' 	=> array(
 

@@ -22,9 +22,10 @@
 
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
-<div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'apphotography' ); ?></a>
 
+<div id="page" class="site grid-container">
+	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'apphotography' ); ?></a>
+<div class="large-2">
 	<header id="masthead" class="site-header">
 		<div class="site-branding">
 			<?php
@@ -65,6 +66,7 @@
 								<?php } ?>
 								</div>
 						</div>
-	</header><!-- #masthead -->
-
-	<div id="content" class="site-content">
+						
+										</header><!-- #masthead -->
+										</div><!--large-2-->
+	<div id="content" class="site-content large-10">

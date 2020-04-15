@@ -12,10 +12,11 @@
  * @package apPhotography
  */
 
-get_header();
-?>
+get_header(); 
 
-	<div id="primary" class="content-area">
+?>
+	<div class="grid-x">
+	<div id="primary" class="content-area large-10">
 		<main id="main" class="site-main">
 	<div class="grid-container">
 	
@@ -35,11 +36,11 @@ get_header();
 
 		endwhile; // End of the loop.
 		?>
-		</div><!--large-10-->
+		</div> <!--large-10 -->
 		</div><!--grid-x-->
 			</div><!--grid-container-->
 		</main><!-- #main -->
 	</div><!-- #primary -->
-
+	</div>
 <?php
 get_footer();

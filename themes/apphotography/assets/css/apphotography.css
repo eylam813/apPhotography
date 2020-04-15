@@ -94,9 +94,15 @@ h6 {
 #ap-content-wrapper {
     background-color: papayawhip;
     margin: 0 auto;
+    position: relative;
     /* display: flex;
     flex-direction: column;
     align-items: stretch; */
+}
+
+.left-feature-image {
+    background-position: center center;
+    background-size: cover;
 }
 
 

@@ -92,3 +92,12 @@ h6 {
 #ap-content {
     background-color: papayawhip;
 }
+
+
+@media only screen and (max-width: 768px) { 
+    #ap-wrapper {
+        background-color: rgb(252, 242, 255);
+        /* max-width: fit-content; */
+    }
+
+}

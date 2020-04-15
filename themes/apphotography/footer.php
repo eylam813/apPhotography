@@ -15,6 +15,17 @@
 
 	<footer id="colophon" class="site-footer">
 		<div class="site-info">
+		<?php
+						// loading the menu
+						wp_nav_menu(array(
+							'theme_location' => 'menu',
+							'menu_id'        => 'primary-menu',
+							'container'		 => 'ul',
+							'container_class' => 'menu',
+
+						));
+						?>
+			Alex Pino &copy;
 			<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'apphotography' ) ); ?>">
 				<?php
 				/* translators: %s: CMS name, i.e. WordPress. */
@@ -26,6 +37,8 @@
 				/* translators: 1: Theme name, 2: Theme author. */
 				printf( esc_html__( 'Theme: %1$s by %2$s.', 'apphotography' ), 'apphotography', '<a href="http://underscores.me/">Underscores.me</a>' );
 				?>
+
+
 		</div><!-- .site-info -->
 	</footer><!-- #colophon -->
 </div><!-- #page -->

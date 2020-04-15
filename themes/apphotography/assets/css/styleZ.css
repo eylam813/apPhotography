@@ -88,8 +88,9 @@ header {
 .social-media {
     align-self: flex-end;
 }
-
-/* body{
+.blogCard{
     display: flex;
-    flex-direction: row;
-} */
+}
+.blogBtn{
+    align-self: flex-end;
+}

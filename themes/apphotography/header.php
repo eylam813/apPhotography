@@ -24,6 +24,7 @@
 <?php wp_body_open(); ?>
 
 <div id="page" class="site grid-container">
+	<div class="grid-x">
 	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'apphotography' ); ?></a>
 <div class="large-2">
 	<header id="masthead" class="site-header">
@@ -66,7 +67,7 @@
 								<?php } ?>
 								</div>
 						</div>
-						
+										</div>
 										</header><!-- #masthead -->
 										</div><!--large-2-->
 	<div id="content" class="site-content">

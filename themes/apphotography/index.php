@@ -26,10 +26,10 @@ get_header();
 						// loading header if page is not the homepage
 						if (is_home() && !is_front_page()) :
 					?>
-							<header class="large-12 medium-12 small-12">
+							<!-- <header class="large-12 medium-12 small-12"> -->
 								<h1 class="page-title screen-reader-text"><?php single_post_title(); ?></h1>
 								<hr class="blogHr">
-							</header>
+							<!-- </header> -->
 							<!-- blog grid box -->
 						<?php
 						endif;

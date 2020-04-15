@@ -62,13 +62,12 @@ header {
     flex-direction: column;
     height: 100%;
     width: 20%;
-    position: fixed;
+    /* position: fixed; */
     z-index: 99;
-    top: 0;
-    left: 0;
-    overflow-x: hidden;
+    /* top: 0;
+    left: 0; */
+    /* overflow-x: hidden; */
     padding-top: 60px;
-    /* background-color: white; */
 }
 
 #primary-menu a {

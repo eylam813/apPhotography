@@ -14,16 +14,14 @@
 
 get_header(); 
 
-?>
-	<div class="grid-x">
-	<div id="primary" class="content-area large-10">
-		<main id="main" class="site-main">
-	<div class="grid-container">
-	
-		<div class="grid-x">
-		
-		<div class="large-10">
-		<?php 
+
+	<div class="content-area">
+	<!-- <div id="primary" class="content-area"> -->
+		<main >
+		<!-- <main id="main" class="site-main"> -->
+
+		<?php
+
 		while ( have_posts() ) :
 			the_post();
 

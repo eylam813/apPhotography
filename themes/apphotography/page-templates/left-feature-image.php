@@ -26,7 +26,7 @@
 
         <!-- <section class="ap-main-content-wrapper large-9 medium-9 small-12 grid-x"> -->
             
-                <div id="ap-primary" class="ap-content-area">
+                <div id="ap-primary" class="ap-content-area cell">
                 <!-- <div id="primary" class="content-area"> -->
                     <div class="grid-x">
                         <main id="ap-main" class="ap-site-main ap-main-content-wrapper">
@@ -35,12 +35,15 @@
                             <?php
                             while ( have_posts() ) :
                                 ?>
-                                <div class="large-3 medium-3 small-12">
+                                <div class="ap-left-feature-image large-3 medium-3 small-12">
                                     <?php the_post_thumbnail(); ?>
                                 </div>
-
-                                <?php
+                                <div class="ap-left-feature-content large-9 meduium-9 small-12">
                                 
+                                <div class="entry-content-page">
+                                <?php   //the_content(); ?> <!-- Page Content -->
+                                </div><!-- .entry-content-page -->
+                                <?php
                                 the_post();
 
                                 get_template_part( 'template-parts/content', 'page' );
@@ -52,6 +55,7 @@
 
                             endwhile; // End of the loop.
                             ?>
+                            </div>
                         </main><!-- #main -->
                     </div>  <!--.ap-main-content-wrapper-->
                 </div><!-- #primary -->

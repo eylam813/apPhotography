@@ -91,8 +91,12 @@ h6 {
 }
 
 /* CONTENT */
-#ap-content {
+#ap-content-wrapper {
     background-color: papayawhip;
+    margin: 0 auto;
+    /* display: flex;
+    flex-direction: column;
+    align-items: stretch; */
 }
 
 

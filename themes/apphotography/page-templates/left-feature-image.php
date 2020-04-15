@@ -18,18 +18,19 @@
 ?>
     <!-- <section class="grid-x ap-whole-page"> -->
         <!-- header -->
-        <header class="large-3 medium-3 small-12 grid-x">
+        <!-- <header class="large-3 medium-3 small-12 grid-x"> -->
             <?php
                 get_header();
             ?>
-        </header>
+        <!-- </header> -->
 
         <!-- <section class="ap-main-content-wrapper large-9 medium-9 small-12 grid-x"> -->
             
                 <div id="ap-primary" class="ap-content-area">
                 <!-- <div id="primary" class="content-area"> -->
                     <div class="grid-x">
-                        <main id="main" class="site-main ap-main-content-wrapper large-9 medium-9 small-12 grid-x">
+                        <main id="ap-main" class="ap-site-main ap-main-content-wrapper">
+                        <!-- <main id="main" class="site-main ap-main-content-wrapper"> -->
 
                             <?php
                             while ( have_posts() ) :

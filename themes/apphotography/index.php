@@ -20,16 +20,15 @@ get_header();
 	<!-- container for blogs page  -->
 	<div class="grid-container">
 			<div class="grid-x">
-			<div class="large-8 medium-12 small-12 grid-x align-justify blog-posts-box">
+			<div class="large-10 medium-12 small-12 grid-x align-justify blog-posts-box">
 					<?php
 					if (have_posts()) :
 						// loading header if page is not the homepage
 						if (is_home() && !is_front_page()) :
 					?>
-							<!-- <header class="large-12 medium-12 small-12"> -->
+							<!-- <section class="large-12 medium-12 small-12">
 								<h1 class="page-title screen-reader-text"><?php single_post_title(); ?></h1>
-								<hr class="blogHr">
-							<!-- </header> -->
+							</section> -->
 							<!-- blog grid box -->
 						<?php
 						endif;

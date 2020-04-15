@@ -29,7 +29,7 @@
 
 	<header>
 	<!-- <header id="masthead" class="site-header"> -->
-		<div >
+		<div id="logo">
 		<!-- <div class="site-branding"> -->
 
 			<?php

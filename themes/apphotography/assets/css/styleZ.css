@@ -61,13 +61,9 @@ header {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 20%;
-    /* position: fixed; */
+    /* width: 20%; */
     z-index: 99;
-    /* top: 0;
-    left: 0; */
-    /* overflow-x: hidden; */
-    padding-top: 60px;
+    padding: 60px 5px 0 5px;
 }
 
 #primary-menu a {
@@ -83,7 +79,9 @@ header {
 #primary-menu ul {
     list-style: none;
 }
-
+#logo{
+    width: 100%;
+}
 .social-media {
     align-self: flex-end;
 }
@@ -92,4 +90,9 @@ header {
 }
 .blogBtn{
     align-self: flex-end;
+}
+#ap-wrapper{
+background: #ffffff;
+box-shadow:  9px 9px 18px #f5f5f5, 
+            -9px -9px 18px #ffffff;
 }

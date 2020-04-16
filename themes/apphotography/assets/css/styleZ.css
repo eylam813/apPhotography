@@ -1,4 +1,4 @@
-:root{
+:root {
     --dark-green: #003C44;
     --slate-grey: #6C888D;
     --outer-space: #404C56;
@@ -54,4 +54,69 @@
 
 .has-white-background-color {
     background-color: var(--white);
+}
+
+h1,h2,h3,h4,h5,h6{
+    color: var(--dark-green);
+}
+/* ******************** Nav Styling ******************** */
+header {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* width: 20%; */
+    z-index: 99;
+    padding: 60px 5px 0 5px;
+}
+
+#primary-menu a {
+    color: var(--dark-green);
+    font-weight: 500;
+    font-size: 18px;
+}
+
+#primary-menu a:hover {
+    font-weight: 600;
+}
+
+#primary-menu ul {
+    list-style: none;
+}
+#logo{
+    width: 100%;
+}
+.social-media {
+    align-self: flex-end;
+}
+#ap-wrapper{
+    background: #ffffff;
+    box-shadow:  9px 9px 18px #f5f5f5, 
+                -9px -9px 18px #ffffff;
+    }
+#ap-content{
+    display: flex;
+    justify-content: center;
+}
+/* ******************** Blog Styling ******************** */
+.blogCard{
+    display: flex;
+}
+.blogBtn{
+    align-self: flex-end;
+}
+.blogSection{
+    display: flex;
+    justify-content: center;
+}
+
+/* ******************** Informative Styling ******************** */
+.infoPage{
+    background-image: url("../img/trees.png"); /* The image used */
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    padding: 20px 20% 0 20%;
+}
+.infoPage h1{
+    text-align: center;
 }

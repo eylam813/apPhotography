@@ -77,3 +77,39 @@ h6 {
 .has-white-background-color {
     background-color: var(--white);
 }
+
+
+
+/* HEADER */
+
+#ap-wrapper {
+    /* background-color: orange; */
+    max-width: 200px;
+}
+#ap-wrapper-inner{
+    width: 100%;
+}
+
+/* CONTENT */
+#ap-content-wrapper {
+    background-color: papayawhip;
+    margin: 0 auto;
+    position: relative;
+    /* display: flex;
+    flex-direction: column;
+    align-items: stretch; */
+}
+
+.left-feature-image {
+    background-position: center center;
+    background-size: cover;
+}
+
+
+@media only screen and (max-width: 768px) { 
+    #ap-wrapper {
+        background-color: rgb(252, 242, 255);
+        /* max-width: fit-content; */
+    }
+
+}

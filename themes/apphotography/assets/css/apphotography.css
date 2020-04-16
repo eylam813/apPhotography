@@ -125,13 +125,13 @@ h6 {
         min-height: 100vh;
         display: flex;
         align-items: flex-start;
-        padding: 5rem;
+        padding: 0rem;
     }
     .left-feature-image{
         /* width: 100%; */
         min-height: 20vh;
     }
     .left-feature-content{
-        padding: 2rem 0.5rem;
+        padding: 2rem 1.5rem;
     }
 }

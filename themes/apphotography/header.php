@@ -78,7 +78,7 @@
 	</div> <!--#ap-wrapper -->
 </div> <!--#ap-wrapper-inner -->
 
-<section id="ap-content-wrapper" class="large-10 medium-10 small-12">
+<section id="ap-content-wrapper" class="large-10 medium-12 small-12">
 
 	<div id="ap-content" class="grid-x">
 	<!-- <div id="content" class="site-content"> -->

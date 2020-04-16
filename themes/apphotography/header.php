@@ -49,7 +49,6 @@
 			);
 			?>
 		</nav><!-- #site-navigation -->
-		<div>
 			<!-- Social Media Links -->
 		<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
 			<div class="social-media">
@@ -71,7 +70,6 @@
 
 
 			<?php } ?>
-			</div>
 		</div>
 	</header><!-- #masthead -->
 

@@ -31,9 +31,9 @@
                     <div class="grid-x">
                         <main id="left-feature-ap-main" class="ap-site-main left-feature-ap-main-content-wrapper grid-x">
                         <!-- <main id="main" class="site-main ap-main-content-wrapper"> -->
-                            <div class="left-feature-image large-4 medium-12 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div>
+                            <!-- <div class="left-feature-image large-4 medium-12 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div> -->
 
-                            <div class="left-feature-content large-8 meduim-12 small-12">
+                            <div class="left-feature-content large-12 meduim-12 small-12">
                             <?php 
                                 if ( have_posts() ) : 
                                     while ( have_posts() ) : the_post();

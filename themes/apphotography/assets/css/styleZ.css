@@ -156,6 +156,11 @@ nav{
 }
 
 /* ******************** WooCommerce Styling ******************** */
+.product{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 .woocommerce img{
     border: 1px solid var(--dark-green);
 }
@@ -173,6 +178,18 @@ h1{
     font-size: 14px;
     color: var(--dark-green);
     align-self: center;
+}
+.woocommerce a.button:hover{
+    background-color: white;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 8px #DCDCDC,
+        -4px -4px 8px #ffffff;
+}
+.woocommerce ul.products li.product .price{
+    color: var(--outer-space);
+}
+.page-numbers{
+    color: var(--dark-green);
 }
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{

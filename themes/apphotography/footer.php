@@ -19,8 +19,8 @@
 		<?php
 						// loading the menu
 						wp_nav_menu(array(
-							'theme_location' => 'menu',
-							'menu_id'        => 'primary-menu',
+							'theme_location' => 'menu-2',
+							'menu_id'        => 'footer-menu',
 							'container'		 => 'ul',
 							'container_class' => 'menu',
 

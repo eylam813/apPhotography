@@ -121,8 +121,17 @@ nav{
 /* ******************** Blog Styling ******************** */
 .blogCard {
     display: flex;
+    border: 1px solid var(--ash-grey);
 }
-
+.blogCard h3{
+    text-align: center;
+}
+.blogCard a{
+    color: var(--dark-green);
+}
+.blogCard a:hover{
+    font-weight: 600;
+}
 .blogBtn {
     align-self: flex-end;
 }
@@ -146,6 +155,25 @@ nav{
     text-align: center;
 }
 
+/* ******************** WooCommerce Styling ******************** */
+.woocommerce img{
+    border: 1px solid var(--dark-green);
+}
+
+.woocommerce a{
+    text-align: center;
+}
+h1{
+    text-align: center;
+}
+.woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button{
+    border: 2px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+    background-color: white;
+    font-size: 14px;
+    color: var(--dark-green);
+    align-self: center;
+}
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{
     border: 2px solid;

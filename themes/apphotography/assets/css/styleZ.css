@@ -189,10 +189,11 @@ footer{
     color: var(--dark-green);
     padding: 5px 15px;
 }
-footer a{
+footer .menu a{
     color: var(--dark-green);
     font-weight: 500;
     font-size: 18px;
+    padding: 0.5rem 1rem;
 }
 footer a:hover{
     color: var(--dark-green);

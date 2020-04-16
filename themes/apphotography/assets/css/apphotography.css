@@ -77,3 +77,29 @@ h6 {
 .has-white-background-color {
     background-color: var(--white);
 }
+
+
+
+/* HEADER */
+
+#ap-wrapper {
+    background-color: orange;
+    max-width: 200px;
+}
+#ap-wrapper-inner{
+    width: 100%;
+}
+
+/* CONTENT */
+#ap-content {
+    background-color: papayawhip;
+}
+
+
+@media only screen and (max-width: 768px) { 
+    #ap-wrapper {
+        background-color: rgb(252, 242, 255);
+        /* max-width: fit-content; */
+    }
+
+}

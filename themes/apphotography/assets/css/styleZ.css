@@ -1,4 +1,4 @@
-:root{
+:root {
     --dark-green: #003C44;
     --slate-grey: #6C888D;
     --outer-space: #404C56;
@@ -54,4 +54,42 @@
 
 .has-white-background-color {
     background-color: var(--white);
+}
+
+/* ******************** Nav Styling ******************** */
+header {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 20%;
+    /* position: fixed; */
+    z-index: 99;
+    /* top: 0;
+    left: 0; */
+    /* overflow-x: hidden; */
+    padding-top: 60px;
+}
+
+#primary-menu a {
+    color: var(--dark-green);
+    font-weight: 500;
+    font-size: 18px;
+}
+
+#primary-menu a:hover {
+    font-weight: 600;
+}
+
+#primary-menu ul {
+    list-style: none;
+}
+
+.social-media {
+    align-self: flex-end;
+}
+.blogCard{
+    display: flex;
+}
+.blogBtn{
+    align-self: flex-end;
 }

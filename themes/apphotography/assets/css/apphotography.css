@@ -115,6 +115,9 @@ h6 {
 .left-feature-content{
     padding: 2rem;
 }
+.left-feature-content h1{
+    text-align: center;
+}
 
 @media screen and (max-width: 64em) {
     /* LEFT-FEATURE PAGE */

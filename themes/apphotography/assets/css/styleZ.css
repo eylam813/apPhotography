@@ -88,15 +88,20 @@ header {
 #primary-menu ul {
     list-style: none;
 }
-
+nav{
+    margin-bottom: 20px;
+}
 #logo {
     width: 100%;
 }
 
 .social-media {
-    align-self: flex-end;
+    display: flex;
+    justify-content: space-around;
 }
-
+.social-media img{
+    max-width: 40px;
+}
 #ap-wrapper {
     background: #ffffff;
     box-shadow: 9px 9px 18px #f5f5f5,
@@ -109,6 +114,9 @@ header {
 }
 .menu{
     flex-direction: column;
+}
+.custom-logo{
+    margin-bottom: 20px;
 }
 /* ******************** Blog Styling ******************** */
 .blogCard {
@@ -142,4 +150,26 @@ header {
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{
     border: 2px solid;
     border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+}
+
+/* ******************** Footer Styling ******************** */
+footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    color: var(--dark-green);
+    padding: 5px 15px;
+}
+footer a{
+    color: var(--dark-green);
+    font-weight: 500;
+    font-size: 18px;
+}
+footer a:hover{
+    color: var(--dark-green);
+    font-weight: 600;
+}
+.site-info{
+    align-self: flex-end;
 }

@@ -26,18 +26,18 @@
 
         <!-- <section class="ap-main-content-wrapper large-9 medium-9 small-12 grid-x"> -->
                 
-                <div id="ap-primary" class=" left-feature-temp ap-content-area cell">
+                <div id="left-feature-ap-primary" class=" left-feature-temp left-feature-ap-content-area cell">
                 <!-- <div id="primary" class="content-area"> -->
                     <div class="grid-x">
-                        <main id="ap-main" class="ap-site-main ap-main-content-wrapper grid-x">
+                        <main id="left-feature-ap-main" class="ap-site-main left-feature-ap-main-content-wrapper grid-x">
                         <!-- <main id="main" class="site-main ap-main-content-wrapper"> -->
-                            <div class="left-feature-image large-3 medium-3 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div>
+                            <div class="left-feature-image large-4 medium-12 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div>
 
-                            <div class="left-feature-content large-9 meduim-9 small-12">
+                            <div class="left-feature-content large-8 meduim-12 small-12">
                             <?php 
                                 if ( have_posts() ) : 
                                     while ( have_posts() ) : the_post();
-                                        the_title();
+                                        ?> <h1> <?php the_title(); ?> </h1> <?php
                                         // the_title( '&lt;h1>', '&lt;/h1>' );
                                         the_content();
                                     endwhile;
@@ -55,7 +55,7 @@
                             </div>
                         </main><!-- #main -->
                     </div>  <!--.ap-main-content-wrapper-->
-                </div><!-- #primary -->
+                </div><!-- #ap-primary -->
 
                 <?php
                 get_sidebar();

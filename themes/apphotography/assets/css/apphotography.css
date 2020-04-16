@@ -90,26 +90,48 @@ h6 {
     width: 100%;
 }
 
-/* CONTENT */
+/* WHOLE CONTENT AREA */
 #ap-content-wrapper {
     background-color: papayawhip;
     margin: 0 auto;
     position: relative;
-    /* display: flex;
-    flex-direction: column;
-    align-items: stretch; */
 }
 
+/* LEFT-FEATURE PAGE */
+#left-feature-ap-primary {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 5rem;
+}
+#left-feature-ap-main{
+    margin: auto;
+}
 .left-feature-image {
     background-position: center center;
     background-size: cover;
+    min-height: 60vh;
+}
+.left-feature-content{
+    padding: 2rem;
+}
+.left-feature-content h1{
+    text-align: center;
 }
 
-
-@media only screen and (max-width: 768px) { 
-    #ap-wrapper {
-        background-color: rgb(252, 242, 255);
-        /* max-width: fit-content; */
+@media screen and (max-width: 64em) {
+    /* LEFT-FEATURE PAGE */
+    #left-feature-ap-primary {
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        padding: 0rem;
     }
-
+    .left-feature-image{
+        /* width: 100%; */
+        min-height: 20vh;
+    }
+    .left-feature-content{
+        padding: 2rem 1.5rem;
+    }
 }

@@ -107,7 +107,9 @@ header {
     display: flex;
     justify-content: center;
 }
-
+.menu{
+    flex-direction: column;
+}
 /* ******************** Blog Styling ******************** */
 .blogCard {
     display: flex;

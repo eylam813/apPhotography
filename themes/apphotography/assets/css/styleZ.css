@@ -129,6 +129,7 @@ header {
     background-position: center center;
     background-attachment: fixed;
     padding: 20px 20% 0 20%;
+    min-height: 85vh;
 }
 
 .infoPage h1 {

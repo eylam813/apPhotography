@@ -12,7 +12,7 @@
 ?>
 
 		</div><!-- #ap-content -->
-	</div><!-- #ap-content-wrapper -->
+</section><!-- #ap-content-wrapper -->
 
 	<footer id="colophon" class="site-footer">
 		<div class="site-info">

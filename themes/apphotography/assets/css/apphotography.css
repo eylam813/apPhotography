@@ -83,23 +83,55 @@ h6 {
 /* HEADER */
 
 #ap-wrapper {
-    background-color: orange;
+    /* background-color: orange; */
     max-width: 200px;
 }
 #ap-wrapper-inner{
     width: 100%;
 }
 
-/* CONTENT */
-#ap-content {
+/* WHOLE CONTENT AREA */
+#ap-content-wrapper {
     background-color: papayawhip;
+    margin: 0 auto;
+    position: relative;
 }
 
+/* LEFT-FEATURE PAGE */
+#left-feature-ap-primary {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 5rem;
+}
+#left-feature-ap-main{
+    margin: auto;
+}
+.left-feature-image {
+    background-position: center center;
+    background-size: cover;
+    min-height: 60vh;
+}
+.left-feature-content{
+    padding: 2rem;
+}
+.left-feature-content h1{
+    text-align: center;
+}
 
-@media only screen and (max-width: 768px) { 
-    #ap-wrapper {
-        background-color: rgb(252, 242, 255);
-        /* max-width: fit-content; */
+@media screen and (max-width: 64em) {
+    /* LEFT-FEATURE PAGE */
+    #left-feature-ap-primary {
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        padding: 0rem;
     }
-
+    .left-feature-image{
+        /* width: 100%; */
+        min-height: 20vh;
+    }
+    .left-feature-content{
+        padding: 2rem 1.5rem;
+    }
 }

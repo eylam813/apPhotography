@@ -190,6 +190,36 @@ h1{
 }
 .page-numbers{
     color: var(--dark-green);
+    background-color: white;
+}
+.page-numbers span:hover{
+    background-color: red;
+}
+.woocommerce nav.woocommerce-pagination ul li a:focus, .woocommerce nav.woocommerce-pagination ul li a:hover, .woocommerce nav.woocommerce-pagination ul li span.current {
+    border: 1px solid var(--ash-grey);
+    background-color: white;
+    color: var(--dark-green);
+}
+
+.woocommerce #respond input#submit.alt, .woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt{
+    border: 2px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+    background-color: white;
+    color: var(--dark-green);
+    height: 40px;
+}
+.woocommerce button.button.alt:hover{
+    background-color: white;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 8px #DCDCDC,
+        -4px -4px 8px #ffffff;
+    color: var(--dark-green);
+}
+[type='text'], [type='password'], [type='date'], [type='datetime'], [type='datetime-local'], [type='month'], [type='week'], [type='email'], [type='number'], [type='search'], [type='tel'], [type='time'], [type='url'], [type='color'], textarea{
+    border: 2px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+    background-color: white;
+    color: var(--dark-green);
 }
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{

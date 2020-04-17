@@ -56,9 +56,15 @@
     background-color: var(--white);
 }
 
-h1,h2,h3,h4,h5,h6{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--dark-green);
 }
+
 /* ******************** Nav Styling ******************** */
 header {
     display: flex;
@@ -78,45 +84,218 @@ header {
 #primary-menu a:hover {
     font-weight: 600;
 }
+#primary-menu a:active {
+    font-weight: 600;
+}
 
 #primary-menu ul {
     list-style: none;
 }
-#logo{
+nav{
+    margin-bottom: 20px;
+}
+#logo {
     width: 100%;
 }
+
 .social-media {
-    align-self: flex-end;
+    display: flex;
+    justify-content: space-around;
 }
-#ap-wrapper{
+.social-media img{
+    max-width: 40px;
+}
+#ap-wrapper {
     background: #ffffff;
-    box-shadow:  9px 9px 18px #f5f5f5, 
-                -9px -9px 18px #ffffff;
-    }
-#ap-content{
-    display: flex;
-    justify-content: center;
-}
-/* ******************** Blog Styling ******************** */
-.blogCard{
-    display: flex;
-}
-.blogBtn{
-    align-self: flex-end;
-}
-.blogSection{
-    display: flex;
-    justify-content: center;
+    box-shadow: 9px 9px 18px #f5f5f5,
+        -9px -9px 18px #ffffff;
 }
 
-/* ******************** Informative Styling ******************** */
-.infoPage{
-    background-image: url("../img/trees.png"); /* The image used */
+#ap-content {
+    display: flex;
+    justify-content: center;
+}
+.menu{
+    flex-direction: column;
+}
+.custom-logo{
+    margin-bottom: 20px;
+}
+/* ******************** Blog Styling ******************** */
+.blogCard {
+    display: flex;
+    border: 1px solid var(--ash-grey);
+}
+.blogCard h3{
+    text-align: center;
+}
+.blogCard a{
+    color: var(--dark-green);
+}
+.blogCard a:hover{
+    font-weight: 600;
+}
+.blogBtn {
+    align-self: flex-end;
+}
+
+.blogSection {
+    display: flex;
+    justify-content: center;
+}
+.singlePage {
+    margin: auto 4rem;
+
+}
+.singlePage h1{
+    text-align: left;
+}
+/* ******************** Informative Custom Template Styling ******************** */
+.infoPage {
+    background-image: url("../img/trees.png");
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
     padding: 20px 20% 0 20%;
+    min-height: 85vh;
 }
-.infoPage h1{
+
+.infoPage h1 {
     text-align: center;
+}
+
+/* ******************** WooCommerce Styling ******************** */
+.page .product{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.woocommerce img{
+    border: 1px solid var(--dark-green);
+}
+
+.woocommerce a{
+    text-align: center;
+}
+h1{
+    text-align: center;
+}
+.woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button{
+    border: 2px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+    background-color: white;
+    font-size: 14px;
+    color: var(--dark-green);
+    align-self: center;
+}
+.woocommerce a.button:hover{
+    background-color: white;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 8px #DCDCDC,
+        -4px -4px 8px #ffffff;
+}
+.woocommerce ul.products li.product .price{
+    color: var(--outer-space);
+}
+.page-numbers{
+    color: var(--dark-green);
+    background-color: white;
+}
+.page-numbers span:hover{
+    background-color: red;
+}
+.woocommerce nav.woocommerce-pagination ul li a:focus, .woocommerce nav.woocommerce-pagination ul li a:hover, .woocommerce nav.woocommerce-pagination ul li span.current {
+    border: 1px solid var(--ash-grey);
+    background-color: white;
+    color: var(--dark-green);
+}
+
+.woocommerce #respond input#submit.alt, .woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt{
+    border: 2px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+    background-color: white;
+    color: var(--dark-green);
+    height: 40px;
+}
+/* hover effect on shop button */
+.woocommerce button.button.alt:hover{
+    background-color: white;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 8px #DCDCDC,
+        -4px -4px 8px #ffffff;
+    color: var(--dark-green);
+}
+[type='text'], [type='password'], [type='date'], [type='datetime'], [type='datetime-local'], [type='month'], [type='week'], [type='email'], [type='number'], [type='search'], [type='tel'], [type='time'], [type='url'], [type='color'], textarea{
+    border: 2px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+    background-color: white;
+    color: var(--dark-green);
+}
+/* hiding product description */
+.woocommerce-tabs{
+    display: none;
+}
+.sku_wrapper{
+    display: none;
+}
+/* My Account Page styling */
+.woocommerce-MyAccount-navigation ul{
+    list-style-type:none;
+    color: var(--dark-green);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.woocommerce-MyAccount-navigation li{
+    border: 2px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+    background-color: white;
+    color: var(--dark-green);
+    width: 250px;
+    margin: 15px;
+    text-align: center;
+}
+.woocommerce-MyAccount-navigation a{
+    color: var(--dark-green);
+    
+} 
+.woocommerce-MyAccount-navigation li:hover{
+    color: var(--dark-green);
+    font-weight: 600;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 8px #DCDCDC,
+        -4px -4px 8px #ffffff;
+} 
+/* taking out grey background colour of info box */
+.woocommerce-error, .woocommerce-info, .woocommerce-message{
+    background-color: white;
+}
+/* ******************** Form Styling ******************** */
+#wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{
+    border: 2px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+}
+
+/* ******************** Footer Styling ******************** */
+footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    color: var(--dark-green);
+    padding: 5px 15px;
+}
+footer .menu a{
+    color: var(--dark-green);
+    font-weight: 500;
+    font-size: 18px;
+    padding: 0.5rem 1rem;
+}
+footer a:hover{
+    color: var(--dark-green);
+    font-weight: 600;
+}
+.site-info{
+    align-self: flex-end;
 }

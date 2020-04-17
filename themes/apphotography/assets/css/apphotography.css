@@ -119,6 +119,56 @@ h6 {
     text-align: center;
 }
 
+/* gallery album display */
+#gallery-ap-primary {
+    min-height: 100vh;
+    width: 100%;
+}
+.gallery-content {
+    height: 100%;
+    width: 100%;
+}
+#gallery-ap-primary #gallery-title-wrapper {
+    height: 15vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#gallery-ap-primary .album-title{
+    opacity: 0;
+}
+#gallery-ap-primary .album-title:hover{
+    opacity: 1;
+}
+
+#gallery-albums-wrapper{
+    display: flex;
+    /* align-items: stretch; */
+    /* height: 100%; */
+    min-height: 85vh;
+    overflow-x: scroll;
+}
+.single-album-wrapper{
+    height: 100%;
+    /* min-height: 85vh; */
+    display: flex;
+    justify-content: stretch;
+    width: auto;
+}
+.single-album-inner-wrapper{
+    height: 100%;
+    min-width: 20rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ALBUM POST TYPE SINGLE PAGE */
+
+.single-album-page-main{
+    padding: 1rem 4rem;
+}
+
 @media screen and (max-width: 64em) {
     /* LEFT-FEATURE PAGE */
     #left-feature-ap-primary {

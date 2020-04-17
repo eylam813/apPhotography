@@ -84,6 +84,9 @@ header {
 #primary-menu a:hover {
     font-weight: 600;
 }
+#primary-menu a:active {
+    font-weight: 600;
+}
 
 #primary-menu ul {
     list-style: none;
@@ -140,7 +143,13 @@ nav{
     display: flex;
     justify-content: center;
 }
+.singlePage {
+    margin: auto 4rem;
 
+}
+.singlePage h1{
+    text-align: left;
+}
 /* ******************** Informative Styling ******************** */
 .infoPage {
     background-image: url("../img/trees.png");
@@ -208,6 +217,7 @@ h1{
     color: var(--dark-green);
     height: 40px;
 }
+/* hover effect on shop button */
 .woocommerce button.button.alt:hover{
     background-color: white;
     transform: translate(-2px, -2px);
@@ -228,6 +238,32 @@ h1{
 .sku_wrapper{
     display: none;
 }
+/* My Account Page styling */
+.woocommerce-MyAccount-navigation ul{
+    list-style-type:none;
+    color: var(--dark-green);
+}
+.woocommerce-MyAccount-navigation li{
+    border: 2px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+    background-color: white;
+    color: var(--dark-green);
+    width: 250px;
+    margin: 15px;
+    text-align: center;
+}
+.woocommerce-MyAccount-navigation a{
+    color: var(--dark-green);
+    
+} 
+.woocommerce-MyAccount-navigation li:hover{
+    color: var(--dark-green);
+    font-weight: 600;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 8px #DCDCDC,
+        -4px -4px 8px #ffffff;
+} 
+
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{
     border: 2px solid;

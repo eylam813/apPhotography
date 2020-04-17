@@ -23,7 +23,6 @@
 			<div class="entry-meta">
 				<?php
 				apphotography_posted_on();
-				apphotography_posted_by();
 				?>
 			</div><!-- .entry-meta -->
 		<?php endif; ?>

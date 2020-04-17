@@ -33,7 +33,7 @@
 
                                 <?php 
                                 $args = array (
-                                    'post_type' => 'sample_theme_book',
+                                    'post_type' => 'apphoto_album',
                                     'posts_per_page' => 2,
                                 );
                                 // the query

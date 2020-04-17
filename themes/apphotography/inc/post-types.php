@@ -63,7 +63,7 @@ function apphotography_init_post_types() {
     );
 //  call our arguments, add text domain to post type, so wont be overriden by others
     // register_post_type( 'apphotography_photo', $args );
-    register_post_type( 'sample_theme_book', $args );
+    register_post_type( 'apphoto_album', $args );
 
 
 

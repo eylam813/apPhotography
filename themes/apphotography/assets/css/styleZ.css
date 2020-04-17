@@ -221,6 +221,13 @@ h1{
     background-color: white;
     color: var(--dark-green);
 }
+/* hiding product description */
+.woocommerce-tabs{
+    display: none;
+}
+.sku_wrapper{
+    display: none;
+}
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{
     border: 2px solid;

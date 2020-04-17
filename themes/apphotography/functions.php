@@ -51,6 +51,7 @@ if ( ! function_exists( 'apphotography_setup' ) ) :
 		register_nav_menus(
 			array(
 				'menu-1' => esc_html__( 'Primary', 'apphotography' ),
+				'menu-2' => esc_html__( 'Footer', 'apphotography' ),
 			)
 		);
 
@@ -180,7 +181,7 @@ function apphotography_scripts() {
 	wp_enqueue_style( 'apphotography-style', get_stylesheet_uri(), array() );
 
 	// Reset css stylesheet
-	wp_enqueue_style('apphotography-reset',get_template_directory_uri() . '/assets/css/vendors/reset.css',  array());
+	// wp_enqueue_style('apphotography-reset',get_template_directory_uri() . '/assets/css/vendors/reset.css',  array());
 	
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

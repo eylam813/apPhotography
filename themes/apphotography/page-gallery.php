@@ -23,14 +23,14 @@
                 
         <div id="gallery-ap-primary" class=" gallery-template gallery-ap-content-area grid-x ">
         <!-- <div id="primary" class="content-area"> -->
-            <div class="grid-x">
+            <!-- <div class="grid-x"> -->
                 <!-- <main id="gallery-ap-main" class="ap-site-main gallery-ap-main-content-wrapper grid-x"> -->
                 <!-- <main id="main" class="site-main ap-main-content-wrapper"> -->
                     <!-- <div class="gallery-image large-4 medium-12 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div> -->
 
                     <div class="gallery-content grid-x large-12 meduim-12 small-12">
                         <div id="gallery-title-wrapper" class="cell"><h3>Gallery</h3></div>
-                        <div id="gallery-albums-wrapper">
+                        <div id="gallery-albums-wrapper" class="cell">
                             <?php 
                             $args = array (
                                 'post_type' => 'apphoto_album',
@@ -44,8 +44,8 @@
                                 while ($events->have_posts()) :
                                     $events->the_post();
                             ?>
-                                <a class="single-album-wrapper" href="<?php echo get_permalink() ?>">
-                                    <div class="single-album-inner-wrapper" style="background-image: url(<?php echo get_the_post_thumbnail_url(); ?>)">
+                                <a class="single-album-wrapper auto" href="<?php echo get_permalink() ?>">
+                                    <div class="single-album-inner-wrapper cell" style="background-image: url(<?php echo get_the_post_thumbnail_url(); ?>)">
                                         <h2 class="large-12"><?php the_title(); ?></h2>
                                     </div>
                                 </a>
@@ -58,7 +58,8 @@
                     </div> <!--.gallery-content-->
                 <!-- </main> -->
                 <!-- #gallery-ap-main .ap-main-content-wrapper-->
-            </div>  <!-- .grid-x -->
+            <!-- </div>   -->
+            <!-- .grid-x -->
         </div><!-- #gallery-ap-primary -->
 
         <?php

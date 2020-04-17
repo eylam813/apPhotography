@@ -171,6 +171,16 @@ function apphotography_widgets_init() {
 }
 add_action( 'widgets_init', 'apphotography_widgets_init' );
 
+
+// getting our events post type on the front page with other posts
+function add_events_to_query( $query ) {
+    if ( is_home() && $query->is_main_query() )
+        $query->set( 'post_type', array( 'post', 'events' ) );
+    return $query;
+}
+add_action( 'pre_get_posts', 'add_events_to_query' );
+
+
 /**
  * Enqueue scripts and styles.
  */

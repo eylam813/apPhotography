@@ -30,11 +30,11 @@
 
                     <div class="gallery-content grid-x large-12 meduim-12 small-12">
                         <div id="gallery-title-wrapper" class="cell"><h3>Gallery</h3></div>
-                        <div id="gallery-albums-wrapper" class="cell">
+                        <div id="gallery-albums-wrapper" class="cell large-12 medium-12 small-12">
                             <?php 
                             $args = array (
                                 'post_type' => 'apphoto_album',
-                                'posts_per_page' => 2,
+                                'posts_per_page' => 12,
                             );
                             // the query
                             $events = new WP_Query($args);
@@ -44,8 +44,8 @@
                                 while ($events->have_posts()) :
                                     $events->the_post();
                             ?>
-                                <a class="single-album-wrapper auto" href="<?php echo get_permalink() ?>">
-                                    <div class="single-album-inner-wrapper cell" style="background-image: url(<?php echo get_the_post_thumbnail_url(); ?>)">
+                                <a class="single-album-wrapper" href="<?php echo get_permalink() ?>">
+                                    <div class="single-album-inner-wrapper cell large-auto" style="background-image: url(<?php echo get_the_post_thumbnail_url(); ?>)">
                                         <h2 class="large-12"><?php the_title(); ?></h2>
                                     </div>
                                 </a>

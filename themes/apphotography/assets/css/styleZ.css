@@ -242,6 +242,10 @@ h1{
 .woocommerce-MyAccount-navigation ul{
     list-style-type:none;
     color: var(--dark-green);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .woocommerce-MyAccount-navigation li{
     border: 2px solid;
@@ -263,7 +267,10 @@ h1{
     box-shadow: 4px 4px 8px #DCDCDC,
         -4px -4px 8px #ffffff;
 } 
-
+/* taking out grey background colour of info box */
+.woocommerce-error, .woocommerce-info, .woocommerce-message{
+    background-color: white;
+}
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{
     border: 2px solid;

@@ -49,13 +49,15 @@ get_header();
 								if (has_post_thumbnail()) {
 								?>
 									<div class="thumbnail-img">
+									<a href="<?php echo get_post_permalink(); ?>">
 										<img src="<?php echo get_the_post_thumbnail_url(); ?>" alt="<?php the_post_thumbnail_caption(); ?>" />
+								</a>
 									</div>
 								<?php
 								} ?>
 								<!-- loading blog excerpt -->
 								<div class="card-section blogExcerpt">
-									<h3><?php the_title(); ?> </h3>
+								<a href="<?php echo get_post_permalink(); ?>"><h3><?php the_title(); ?> </h3></a>
 									<p>
 										<?php
 										the_excerpt();

@@ -11,7 +11,7 @@
 
 
 ?>
-    <section class="grid-x ap-whole-page">
+    <section class="grid-x ap-whole-page large-12 medium-12 small-12">
         <!-- header -->
         <!-- <header class="large-3 medium-3 small-12 grid-x"> -->
             <?php
@@ -21,15 +21,15 @@
 
         <!-- <section class="ap-main-content-wrapper large-9 medium-9 small-12 grid-x"> -->
                 
-        <div id="gallery-ap-primary" class=" gallery-template gallery-ap-content-area cell">
+        <div id="gallery-ap-primary" class=" gallery-template gallery-ap-content-area grid-x ">
         <!-- <div id="primary" class="content-area"> -->
             <div class="grid-x">
-                <main id="gallery-ap-main" class="ap-site-main gallery-ap-main-content-wrapper grid-x">
+                <!-- <main id="gallery-ap-main" class="ap-site-main gallery-ap-main-content-wrapper grid-x"> -->
                 <!-- <main id="main" class="site-main ap-main-content-wrapper"> -->
                     <!-- <div class="gallery-image large-4 medium-12 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div> -->
 
-                    <div class="gallery-content large-12 meduim-12 small-12">
-                        <h3>Gallery</h3>
+                    <div class="gallery-content grid-x large-12 meduim-12 small-12">
+                        <div id="gallery-title-wrapper" class="cell"><h3>Gallery</h3></div>
                         <div id="gallery-albums-wrapper">
                             <?php 
                             $args = array (
@@ -56,13 +56,14 @@
                                 <?php endif; ?>          
                         </div> <!--#gallery-albums-wrapper -->
                     </div> <!--.gallery-content-->
-                </main><!-- #gallery-ap-main .ap-main-content-wrapper-->
+                <!-- </main> -->
+                <!-- #gallery-ap-main .ap-main-content-wrapper-->
             </div>  <!-- .grid-x -->
         </div><!-- #gallery-ap-primary -->
 
         <?php
         // get_sidebar();
-        get_footer();
+        // get_footer();
         ?>
 
     </section> <!--whole page-->

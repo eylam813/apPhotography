@@ -123,20 +123,29 @@ h6 {
 #gallery-ap-primary {
     min-height: 100vh;
 }
-#gallery-ap-primary h3 {
+.gallery-content {
+    height: 100%;
+}
+#gallery-ap-primary #gallery-title-wrapper {
     height: 15vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #gallery-albums-wrapper{
     display: flex;
     align-items: stretch;
     height: 100%;
+    /* min-height: 85vh; */
 }
 .single-album-wrapper{
     height: 100%;
+    /* min-height: 85vh; */
 }
 .single-album-inner-wrapper{
     height: 100%;
+    /* min-height: 85vh; */
 }
 
 @media screen and (max-width: 64em) {

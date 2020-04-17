@@ -33,7 +33,7 @@ function apphotography_init_post_types() {
         'items_list'            => esc_html_x( 'Photo Albums list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'apphotography' ),
     );
     // above resetting label names from left to right 
- 
+
     $args = array(
         'labels'             => $labels,
         'public'             => true,

@@ -24,12 +24,14 @@
 <?php wp_body_open(); ?>
 
 <div id="ap-wrapper" class="grid-x">
-	<div id="ap-wrapper-inner" class="large-3 medium-3 small-12">
+	<div id="ap-wrapper-inner" class="large-5 medium-3 small-12">
 
 
 	<header>
 	<!-- <header id="masthead" class="site-header"> -->
-		<div >
+
+		<div id="logo">
+
 		<!-- <div class="site-branding"> -->
 
 			<?php
@@ -47,7 +49,6 @@
 			);
 			?>
 		</nav><!-- #site-navigation -->
-		<div>
 			<!-- Social Media Links -->
 		<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
 			<div class="social-media">
@@ -69,13 +70,14 @@
 
 
 			<?php } ?>
-			</div>
 		</div>
 	</header><!-- #masthead -->
 
 	</div> <!--#ap-wrapper -->
 </div> <!--#ap-wrapper-inner -->
-<div id="ap-content-wrapper" class="grid-x large-9 medium-9 small-12">
+
+<section id="ap-content-wrapper" class="large-10 medium-12 small-12">
+
 	<div id="ap-content" class="grid-x">
 	<!-- <div id="content" class="site-content"> -->
 

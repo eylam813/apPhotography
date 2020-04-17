@@ -25,36 +25,37 @@
         <!-- </header> -->
 
         <!-- <section class="ap-main-content-wrapper large-9 medium-9 small-12 grid-x"> -->
-            
-                <div id="ap-primary" class="ap-content-area">
+                
+                <div id="left-feature-ap-primary" class=" left-feature-temp left-feature-ap-content-area cell">
                 <!-- <div id="primary" class="content-area"> -->
                     <div class="grid-x">
-                        <main id="ap-main" class="ap-site-main ap-main-content-wrapper">
+                        <main id="left-feature-ap-main" class="ap-site-main left-feature-ap-main-content-wrapper grid-x">
                         <!-- <main id="main" class="site-main ap-main-content-wrapper"> -->
+                            <div class="left-feature-image large-4 medium-12 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div>
 
-                            <?php
-                            while ( have_posts() ) :
-                                ?>
-                                <div class="large-3 medium-3 small-12">
-                                    <?php the_post_thumbnail(); ?>
-                                </div>
-
-                                <?php
-                                
-                                the_post();
-
-                                get_template_part( 'template-parts/content', 'page' );
-
-                                // If comments are open or we have at least one comment, load up the comment template.
-                                if ( comments_open() || get_comments_number() ) :
-                                    comments_template();
-                                endif;
-
-                            endwhile; // End of the loop.
+                            <div class="left-feature-content large-8 meduim-12 small-12">
+                            <?php 
+                                if ( have_posts() ) : 
+                                    while ( have_posts() ) : the_post();
+                                        ?> <h1> <?php the_title(); ?> </h1> <?php
+                                        // the_title( '&lt;h1>', '&lt;/h1>' );
+                                        the_content();
+                                    endwhile;
+                                    
+                                    // If comments are open or we have at least one comment, load up the comment template.
+                                    if ( comments_open() || get_comments_number() ) :
+                                        comments_template();
+                                    endif;
+                                endif; 
+                                wp_reset_query()
                             ?>
+                            </div> <!--.left-feature-content -->
+                            
+                            <br>
+                            </div>
                         </main><!-- #main -->
                     </div>  <!--.ap-main-content-wrapper-->
-                </div><!-- #primary -->
+                </div><!-- #ap-primary -->
 
                 <?php
                 get_sidebar();

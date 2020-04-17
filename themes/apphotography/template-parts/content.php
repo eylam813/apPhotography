@@ -23,14 +23,12 @@
 			<div class="entry-meta">
 				<?php
 				apphotography_posted_on();
-				apphotography_posted_by();
 				?>
 			</div><!-- .entry-meta -->
 		<?php endif; ?>
 	</header><!-- .entry-header -->
 
-	<?php apphotography_post_thumbnail(); ?>
-
+	
 	<div class="entry-content">
 		<?php
 		the_content(

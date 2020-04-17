@@ -2,12 +2,7 @@
 /**
  * The template for displaying the the Gallery Categories vertically in a row.
  *
- * Template Name: Vertical Gallery
- * 
- * This is the template that displays all pages by default.
- * Please note that this is the WordPress construct of pages
- * and that other 'pages' on your WordPress site may use a
- * different template.
+ * This is the template that displays all albums by default.
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
@@ -34,6 +29,7 @@
                             <!-- <div class="left-feature-image large-4 medium-12 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div> -->
 
                             <div class="left-feature-content large-12 meduim-12 small-12">
+                            <h3>This is my page-gallery template!</h3>
                             <?php 
                                 if ( have_posts() ) : 
                                     while ( have_posts() ) : the_post();

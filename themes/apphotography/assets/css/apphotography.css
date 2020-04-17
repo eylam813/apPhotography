@@ -119,6 +119,26 @@ h6 {
     text-align: center;
 }
 
+/* gallery album display */
+#gallery-ap-primary {
+    min-height: 100vh;
+}
+#gallery-ap-primary h3 {
+    height: 15vh;
+}
+
+#gallery-albums-wrapper{
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+}
+.single-album-wrapper{
+    height: 100%;
+}
+.single-album-inner-wrapper{
+    height: 100%;
+}
+
 @media screen and (max-width: 64em) {
     /* LEFT-FEATURE PAGE */
     #left-feature-ap-primary {

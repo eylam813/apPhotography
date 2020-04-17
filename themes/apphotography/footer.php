@@ -11,8 +11,7 @@
 
 ?>
 
-		</div><!-- #ap-content -->
-</section><!-- #ap-content-wrapper -->
+
 
 	<footer id="colophon" class="site-footer">
 		
@@ -37,6 +36,9 @@
 </div><!-- #page -->
 
 <?php wp_footer(); ?>
+
+</div><!-- #ap-content -->
+</section><!-- #ap-content-wrapper -->
 
 </body>
 </html>

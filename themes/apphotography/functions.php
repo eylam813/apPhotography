@@ -51,6 +51,7 @@ if ( ! function_exists( 'apphotography_setup' ) ) :
 		register_nav_menus(
 			array(
 				'menu-1' => esc_html__( 'Primary', 'apphotography' ),
+				'menu-2' => esc_html__( 'Footer', 'apphotography' ),
 			)
 		);
 
@@ -171,6 +172,16 @@ function apphotography_widgets_init() {
 }
 add_action( 'widgets_init', 'apphotography_widgets_init' );
 
+
+// getting our events post type on the front page with other posts
+function add_events_to_query( $query ) {
+    if ( is_home() && $query->is_main_query() )
+        $query->set( 'post_type', array( 'post', 'events' ) );
+    return $query;
+}
+add_action( 'pre_get_posts', 'add_events_to_query' );
+
+
 /**
  * Enqueue scripts and styles.
  */
@@ -180,7 +191,7 @@ function apphotography_scripts() {
 	wp_enqueue_style( 'apphotography-style', get_stylesheet_uri(), array() );
 
 	// Reset css stylesheet
-	wp_enqueue_style('apphotography-reset',get_template_directory_uri() . '/assets/css/vendors/reset.css',  array());
+	// wp_enqueue_style('apphotography-reset',get_template_directory_uri() . '/assets/css/vendors/reset.css',  array());
 	
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -224,6 +235,11 @@ require get_template_directory() . '/inc/template-hooks.php';
  * Customizer additions.
  */
 require get_template_directory() . '/inc/customizer.php';
+
+/**
+ * Functions which enhance the theme by hooking into post_types.
+ */
+require get_template_directory() . '/inc/post-types.php';
 
 /**
  * Load Jetpack compatibility file.

@@ -11,26 +11,34 @@
 
 ?>
 
-	</div><!-- #content -->
+
 
 	<footer id="colophon" class="site-footer">
-		<div class="site-info">
-			<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'apphotography' ) ); ?>">
-				<?php
-				/* translators: %s: CMS name, i.e. WordPress. */
-				printf( esc_html__( 'Proudly powered by %s', 'apphotography' ), 'WordPress' );
-				?>
-			</a>
-			<span class="sep"> | </span>
-				<?php
-				/* translators: 1: Theme name, 2: Theme author. */
-				printf( esc_html__( 'Theme: %1$s by %2$s.', 'apphotography' ), 'apphotography', '<a href="http://underscores.me/">Underscores.me</a>' );
-				?>
-		</div><!-- .site-info -->
+		
+		<?php
+						// loading the menu
+						wp_nav_menu(array(
+							'theme_location' => 'menu-2',
+							'menu_id'        => 'footer-menu',
+							'container'		 => 'ul',
+							'container_class' => 'menu',
+
+						));
+						?>
+				<div class="site-info">
+			Alex Pino &copy;<script>
+                document.write(new Date().getFullYear());
+            </script>
+
+		</div>
+		<!-- .site-info -->
 	</footer><!-- #colophon -->
 </div><!-- #page -->
 
 <?php wp_footer(); ?>
+
+</div><!-- #ap-content -->
+</section><!-- #ap-content-wrapper -->
 
 </body>
 </html>

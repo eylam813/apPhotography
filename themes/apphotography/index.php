@@ -15,48 +15,84 @@
 get_header();
 ?>
 
-	<div id="primary" class="content-area">
+	<div id="primary" class="content-area blogSection">
 		<main id="main" class="site-main">
 	<!-- container for blogs page  -->
-	<div class="grid-container">
+		<div class="grid-container">
 			<div class="grid-x">
-		<?php
-		if ( have_posts() ) :
+				<div class="large-10 medium-12 small-12 grid-x align-justify blog-posts-box">
+					<?php
+					if (have_posts()) :
+						// loading header if page is not the homepage
+						if (is_home() && !is_front_page()) :
+					?>
+							<!-- <section class="large-12 medium-12 small-12">
+								<h1 class="page-title screen-reader-text"><?php 
+								// single_post_title(); 
+								?></h1>
+							</section> -->
+							<!-- blog grid box -->
+						<?php
+						endif;
 
-			if ( is_home() && ! is_front_page() ) :
-				?>
-				<header>
-					<h1 class="page-title screen-reader-text"><?php single_post_title(); ?></h1>
-				</header>
-				<?php
-			endif;
+						/* Start the Loop */
+						while (have_posts()) :
+							the_post();
 
-			/* Start the Loop */
-			while ( have_posts() ) :
-				the_post();
+						?>
 
-				/*
-				 * Include the Post-Type-specific template for the content.
-				 * If you want to override this in a child theme, then include a file
-				 * called content-___.php (where ___ is the Post Type name) and that will be used instead.
-				 */
-				get_template_part( 'template-parts/content', get_post_type() );
+							<!-- container for blog card -->
+							<div class="card large-10 medium-5 small-10 blogCard">
 
-			endwhile;
+								<?php
+								// loading post thumbnail image
+								if (has_post_thumbnail()) {
+								?>
+									<div class="thumbnail-img">
+									<a href="<?php echo get_post_permalink(); ?>">
+										<img src="<?php echo get_the_post_thumbnail_url(); ?>" alt="<?php the_post_thumbnail_caption(); ?>" />
+								</a>
+									</div>
+								<?php
+								} ?>
+								<!-- loading blog excerpt -->
+								<div class="card-section blogExcerpt">
+								<a href="<?php echo get_post_permalink(); ?>"><h3><?php the_title(); ?> </h3></a>
+									<p>
+										<?php
+										the_excerpt();
+										?>
+									</p>
+									<!-- link to the post -->
+									<a class="blogBtn" href="<?php echo get_post_permalink(); ?>">continue reading</a>
+								</div>
+							</div>
 
-			the_posts_navigation();
+					<?php
 
-		else :
 
-			get_template_part( 'template-parts/content', 'none' );
+						/*
+					* Include the Post-Type-specific template for the content.
+					* If you want to override this in a child theme, then include a file
+					* called content-___.php (where ___ is the Post Type name) and that will be used instead.
+					*/
 
-		endif;
-		?>
+
+						endwhile;
+
+						the_posts_navigation();
+
+					else :
+
+						get_template_part('template-parts/content', 'none');
+
+					endif;
+					?>
+				</div><!-- cell large-8 -->
 			</div><!-- .grid-x -->
 			</div><!-- .grid-container -->
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
 <?php
-get_sidebar();
 get_footer();

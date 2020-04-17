@@ -134,6 +134,12 @@ h6 {
     justify-content: center;
     align-items: center;
 }
+#gallery-ap-primary .album-title{
+    opacity: 0;
+}
+#gallery-ap-primary .album-title:hover{
+    opacity: 1;
+}
 
 #gallery-albums-wrapper{
     display: flex;
@@ -155,6 +161,12 @@ h6 {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* ALBUM POST TYPE SINGLE PAGE */
+
+.single-album-page-main{
+    padding: 1rem 4rem;
 }
 
 @media screen and (max-width: 64em) {

@@ -46,7 +46,7 @@
                             ?>
                                 <a class="single-album-wrapper" href="<?php echo get_permalink() ?>">
                                     <div class="single-album-inner-wrapper cell large-auto" style="background-image: url(<?php echo get_the_post_thumbnail_url(); ?>)">
-                                        <h2 class="large-12"><?php the_title(); ?></h2>
+                                        <h2 class="large-12 album-title"><?php the_title(); ?></h2>
                                     </div>
                                 </a>
                                 <?php endwhile; ?>

@@ -1,6 +1,9 @@
 <?php
 /**
- * The template for displaying all single posts
+ * The template for displaying albums custom post type
+ * 
+ * Template Name: Albums Layout
+ * Template Post Type: apphoto_album
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
  *
@@ -11,7 +14,7 @@ get_header();
 ?>
 
 	<div id="primary" class="content-area">
-		<main id="main" class="site-main">
+		<main id="main" class="site-main single-album-page-main">
 
 		<?php
 		while ( have_posts() ) :

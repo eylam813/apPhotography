@@ -156,7 +156,7 @@ nav{
 }
 
 /* ******************** WooCommerce Styling ******************** */
-.product{
+.page .product{
     display: flex;
     flex-direction: column;
     justify-content: center;

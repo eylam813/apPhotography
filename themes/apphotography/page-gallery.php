@@ -21,14 +21,14 @@
 
         <!-- <section class="ap-main-content-wrapper large-9 medium-9 small-12 grid-x"> -->
                 
-                <div id="left-feature-ap-primary" class=" left-feature-temp left-feature-ap-content-area cell">
+                <div id="gallery-ap-primary" class=" gallery-template gallery-ap-content-area cell">
                 <!-- <div id="primary" class="content-area"> -->
                     <div class="grid-x">
-                        <main id="left-feature-ap-main" class="ap-site-main left-feature-ap-main-content-wrapper grid-x">
+                        <main id="gallery-ap-main" class="ap-site-main gallery-ap-main-content-wrapper grid-x">
                         <!-- <main id="main" class="site-main ap-main-content-wrapper"> -->
-                            <!-- <div class="left-feature-image large-4 medium-12 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div> -->
+                            <!-- <div class="gallery-image large-4 medium-12 small-12" style="background-image: url(<?php the_post_thumbnail_url(); ?>)"></div> -->
 
-                            <div class="left-feature-content large-12 meduim-12 small-12">
+                            <div class="gallery-content large-12 meduim-12 small-12">
                                 <h3>This is my page-gallery template!</h3>
 
                                 <?php 

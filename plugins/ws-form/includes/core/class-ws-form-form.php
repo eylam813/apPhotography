@@ -5,6 +5,7 @@
 		public $id;
 		public $checksum;
 		public $new_lookup;
+		public $variable_repair_field_array;
 
 		public $table_name;
 
@@ -26,6 +27,16 @@
 			$this->new_lookup['group'] = array();
 			$this->new_lookup['section'] = array();
 			$this->new_lookup['field'] = array();
+
+			// Variables to fix
+			$this->variable_repair_field_array = array(
+
+				'select_option_text', 
+				'radio_label',
+				'field',
+				'ecommerce_field_price',
+				'checkbox_label'
+			);
 		}
 
 		// Create form
@@ -734,8 +745,11 @@
 
 							if(isset($condition->value)) {
 
-								$condition->value = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '', $condition->value);
-								$condition->value = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $condition->value);
+								foreach($this->variable_repair_field_array as $variable_repair_field) {
+
+									$condition->value = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ')', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ')' : '', $condition->value);
+									$condition->value = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ',', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ',' : '', $condition->value);
+								}
 							}
 						}
 
@@ -765,8 +779,11 @@
 
 						if(isset($then_single->value)) {
 
-							$then_single->value = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '', $then_single->value);
-							$then_single->value = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $then_single->value);
+							foreach($this->variable_repair_field_array as $variable_repair_field) {
+
+								$then_single->value = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ')', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ')' : '', $then_single->value);
+								$then_single->value = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ',', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ',' : '', $then_single->value);
+							}
 						}
 					}
 
@@ -795,8 +812,11 @@
 
 						if(isset($else_single->value)) {
 
-							$else_single->value = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '', $else_single->value);
-							$else_single->value = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $else_single->value);
+							foreach($this->variable_repair_field_array as $variable_repair_field) {
+
+								$else_single->value = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ')', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ')' : '', $else_single->value);
+								$else_single->value = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ',', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ',' : '', $else_single->value);
+							}
 						}
 					}
 
@@ -887,8 +907,11 @@
 								// String replace - Field
 								foreach($this->new_lookup['field'] as $field_id_old => $field_id_new) {
 
-									$metas->{$meta_key}[$repeater_key]->{$key} = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '',$metas->{$meta_key}[$repeater_key]->{$key});
-									$metas->{$meta_key}[$repeater_key]->{$key} = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $metas->{$meta_key}[$repeater_key]->{$key});
+									foreach($this->variable_repair_field_array as $variable_repair_field) {
+
+										$metas->{$meta_key}[$repeater_key]->{$key} = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ')', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ')' : '',$metas->{$meta_key}[$repeater_key]->{$key});
+										$metas->{$meta_key}[$repeater_key]->{$key} = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ',', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ',' : '',$metas->{$meta_key}[$repeater_key]->{$key});
+									}
 								}
 
 								// String replace - Section
@@ -908,8 +931,11 @@
 						// String replace - Field
 						foreach($this->new_lookup['field'] as $field_id_old => $field_id_new) {
 
-							$metas->{$meta_key} = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '', $metas->{$meta_key});
-							$metas->{$meta_key} = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $metas->{$meta_key});
+							foreach($this->variable_repair_field_array as $variable_repair_field) {
+
+								$metas->{$meta_key} = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ')', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ')' : '', $metas->{$meta_key});
+								$metas->{$meta_key} = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ',', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ',' : '', $metas->{$meta_key});
+							}
 						}
 
 						// String replace - Section
@@ -1032,11 +1058,14 @@
 				// Variable replace
 				foreach($this->new_lookup['field'] as $field_id_old => $field_id_new) {
 
-					$field_meta = str_replace('#field(' . $field_id_old . ')', ($field_id_new != '') ? '#field(' . $field_id_new . ')' : '', $field_meta, $counter);
-					if($counter > 0) { $field_meta_update = true; }
+					foreach($this->variable_repair_field_array as $variable_repair_field) {
 
-					$field_meta = str_replace('#ecommerce_field_price(' . $field_id_old . ')', ($field_id_new != '') ? '#ecommerce_field_price(' . $field_id_new . ')' : '', $field_meta, $counter);
-					if($counter > 0) { $field_meta_update = true; }
+						$field_meta = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ')', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ')' : '', $field_meta, $counter);
+						if($counter > 0) { $field_meta_update = true; }
+
+						$field_meta = str_replace('#' . $variable_repair_field . '(' . $field_id_old . ',', ($field_id_new != '') ? '#' . $variable_repair_field . '(' . $field_id_new . ',' : '', $field_meta, $counter);
+						if($counter > 0) { $field_meta_update = true; }
+					}
 				}
 
 				foreach($this->new_lookup['section'] as $section_id_old => $section_id_new) {

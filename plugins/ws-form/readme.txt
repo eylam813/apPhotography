@@ -3,7 +3,7 @@ Contributors: westguard
 Tags: contact form, form builder, contact form plugin, forms, accessible form, responsive form, gutenberg form, custom form, contact button, contact me, custom contact form, form manager, forms builder, forms creator, captcha, recaptcha, Akismet, email form, web form, feedback form, payment form, survey form, donation form, email submit form, message form, dotmailer, dotmailer form, mailchimp, mailchimp form, aweber, aweber form, paypal, paypal form, salesforce, stripe, stripe form, drip, drip form, slack, slack form, getresponse, getresponse form, constant contact, constant contact form, email subscription, contact form widget, user registration form, wordpress registration, wordpress login form, data encryption
 Requires at least: 4.4
 Tested up to: 5.4
-Stable tag: 1.5.19
+Stable tag: 1.5.25
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -115,6 +115,29 @@ WS Form references the following third party components:
 For help installing WS Form, please see our [Installation](https://wsform.com/knowledgebase/installation?utm_source=wp_plugins&utm_medium=readme) knowledgebase article.
 
 == Changelog ==
+
+= 1.5.25 =
+* Bug Fix: JSON encoding on submit
+
+= 1.5.24 =
+* Bug Fix: Thousand separator in prices
+
+= 1.5.23 =
+* Bug Fix: Delimiter on variables
+
+= 1.5.22 =
+* Added: #checkbox_label variable
+* Added: #radio_label variable
+# Changed: #select_option_text to support multiple selects
+
+= 1.5.21 =
+* Added: File upload progress bar
+* Added: Grid feature for checkboxes and radios
+* Added: Form submit, save, complete, error conditional logic
+* Added: New templates
+
+= 1.5.20 =
+* Bug Fix: Decimal separator in prices
 
 = 1.5.19 =
 * Bug fix: Bulk options to POST method

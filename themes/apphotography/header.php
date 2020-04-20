@@ -28,47 +28,58 @@
 
 
 	<header>
-<div>
-		<div id="logo">
+		<div id="header-contents">
+	<!-- <header id="masthead" class="site-header"> -->
 
-			<?php
-			the_custom_logo();
-			?>
-		</div><!-- .logo -->
+			<div id="logo">
 
-		<nav id="site-navigation" class="main-navigation">
-			<?php
-			wp_nav_menu(
-				array(
-					'theme_location' => 'menu-1',
-					'menu_id'        => 'primary-menu',
-				)
-			);
-			?>
-		</nav><!-- #site-navigation -->
+			<!-- <div class="site-branding"> -->
 
-		</div>
-			<!-- Social Media Links -->
-		<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
-			<div class="social-media">
-				<?php if (get_theme_mod('apphotography_facebook_url')) { ?>
+				<?php
+				the_custom_logo();
+				?>
+			</div><!-- .site-branding -->
 
-					<!-- dynamic social media links -->
-					<!-- dynamic facebook link -->
-					<a href="<?php echo get_theme_mod('apphotography_facebook_url'); ?>"><?php echo esc_html__('', 'apphotography'); ?> <img src="<?php echo get_template_directory_uri() . '/assets/img/facebook.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>" height="50" width="50"> </a>
+			<nav id="site-navigation" class="main-navigation">
+				<?php
+				if ( has_nav_menu( 'menu-1' ) ) {
+					$args = array(
+						'theme_location' => 'menu-1',
+						'menu_id'        => 'primary-menu'
+					);
+					wp_nav_menu($args);
+				}
+				?>
+
+
+
+
+
+
+
+
+
+			</nav><!-- #site-navigation -->
+				<!-- Social Media Links -->
+			<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
+				<div class="social-media">
+					<?php if (get_theme_mod('apphotography_facebook_url')) { ?>
+
+						<!-- dynamic social media links -->
+						<!-- dynamic facebook link -->
+						<a href="<?php echo get_theme_mod('apphotography_facebook_url'); ?>"><?php echo esc_html__('', 'apphotography'); ?> <img src="<?php echo get_template_directory_uri() . '/assets/img/facebook.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>" height="50" width="50"> </a>
+						<?php } ?>
+						<?php if (get_theme_mod('apphotography_twitter_url')) { ?>
+						<!-- dynamic twitter link -->
+						<a href="<?php echo get_theme_mod('apphotography_twitter_url'); ?>"><?php echo esc_html__('', 'apphotography'); ?> <img src="<?php echo get_template_directory_uri() . '/assets/img/twitter.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>" height="50" width="50"> </a>
+						<?php } ?>
+						<?php if (get_theme_mod('apphotography_instagram_url')) { ?>
+						<!-- dynamic instagram link -->
+						<a href="<?php echo get_theme_mod('apphotography_instagram_url'); ?>"><?php echo esc_html__('', 'apphotography'); ?> <img src="<?php echo get_template_directory_uri() . '/assets/img/instagram.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>" height="50" width="50"> </a>
+
 					<?php } ?>
-					<?php if (get_theme_mod('apphotography_twitter_url')) { ?>
-					<!-- dynamic twitter link -->
-					<a href="<?php echo get_theme_mod('apphotography_twitter_url'); ?>"><?php echo esc_html__('', 'apphotography'); ?> <img src="<?php echo get_template_directory_uri() . '/assets/img/twitter.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>" height="50" width="50"> </a>
-					<?php } ?>
-					<?php if (get_theme_mod('apphotography_instagram_url')) { ?>
-					<!-- dynamic instagram link -->
-					<a href="<?php echo get_theme_mod('apphotography_instagram_url'); ?>"><?php echo esc_html__('', 'apphotography'); ?> <img src="<?php echo get_template_directory_uri() . '/assets/img/instagram.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>" height="50" width="50"> </a>
-
 				<?php } ?>
-
-
-			<?php } ?>
+			</div>
 		</div>
 	</header><!-- #masthead -->
 

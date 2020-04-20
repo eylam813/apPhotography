@@ -65,6 +65,10 @@ h6 {
     color: var(--dark-green);
 }
 
+
+#ap-content-wrapper{
+    margin: 0;
+}
 /* ******************** Nav Styling ******************** */
 header {
     display: flex;
@@ -123,6 +127,7 @@ nav{
 }
 /* ******************** Blog Styling ******************** */
 .blogCard {
+    align-self: center;
     display: flex;
     border: 1px solid var(--ash-grey);
 }
@@ -138,7 +143,12 @@ nav{
 .blogBtn {
     align-self: flex-end;
 }
-
+.blog-posts-box{
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
 .blogSection {
     display: flex;
     justify-content: center;

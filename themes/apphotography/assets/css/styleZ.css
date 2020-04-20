@@ -65,7 +65,9 @@ h6 {
     color: var(--dark-green);
 }
 
-
+h1{
+    margin-top: 30px;
+}
 #ap-content-wrapper{
     margin: 0;
 }
@@ -73,7 +75,8 @@ h6 {
 header {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    justify-content: space-between;
+    height: 100vh;
     /* width: 20%; */
     z-index: 99;
     padding: 60px 5px 0 5px;
@@ -105,6 +108,7 @@ nav{
 .social-media {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 30%;
 }
 .social-media img{
     max-width: 40px;

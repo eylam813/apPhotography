@@ -10,9 +10,9 @@
 ?>
 
 <section class="no-results not-found">
-	<header class="page-header">
+	<div class="page-header">
 		<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'apphotography' ); ?></h1>
-	</header><!-- .page-header -->
+	</div><!-- .page-header -->
 
 	<div class="page-content">
 		<?php

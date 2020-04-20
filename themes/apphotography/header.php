@@ -28,16 +28,13 @@
 
 
 	<header>
-	<!-- <header id="masthead" class="site-header"> -->
-
+<div>
 		<div id="logo">
-
-		<!-- <div class="site-branding"> -->
 
 			<?php
 			the_custom_logo();
 			?>
-		</div><!-- .site-branding -->
+		</div><!-- .logo -->
 
 		<nav id="site-navigation" class="main-navigation">
 			<?php
@@ -49,6 +46,8 @@
 			);
 			?>
 		</nav><!-- #site-navigation -->
+
+		</div>
 			<!-- Social Media Links -->
 		<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
 			<div class="social-media">

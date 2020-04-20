@@ -170,11 +170,9 @@ h6 {
 
 /* SIMPLE LIGHTBOX PLUGIN */
 /* file name caption */
-.slb_template_tag .slb_template_tag_item .slb_template_tag_item_title {
+#slb_viewer_wrap .slb_theme_slb_baseline * {
     font-size: 75%;
-}
-.slb_template_tag .slb_template_tag_ui .slb_template_tag_ui_group_status{
-    font-size: 75%;
+    color: var(--outer-space);
 }
 
 @media screen and (max-width: 64em) {

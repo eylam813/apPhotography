@@ -252,10 +252,10 @@
 			// New data
 			if($data !== false) { $json_array['data'] = $data; }
 
-			// Set HTTP content type head
-			header('Content-Type: application/json');
+			// JSON encode
+			$json_return = wp_json_encode($json_array);
 
-			// Push JSON response
+			// Check for JSON encoding error
 			if(json_last_error() !== 0) {
 
 				// Set response code
@@ -268,35 +268,43 @@
 					'error_message' =>	'JSON encoding error: ' . json_last_error_msg() . ' (' . json_last_error() . ')'
 				);
 
-			} else {
-
-				// API error
-				if($this->ws_form_submit->error) {
-
-					// Set error message
-					$json_array['error_message'] = $this->ws_form_submit->error_message;
-
-					// Set response code
-					switch($this->ws_form_submit->error_code) {
-
-						case '403' :
-
-							header('HTTP/1.1 403 Forbidden', true, 403);
-							break;
-
-						case '404' :
-
-							header('HTTP/1.1 404 Not Found', true, 403);
-							break;
-
-						default :
-
-							header('HTTP/1.1 400 Bad Request', true, 400);
-					}
-				}
+				echo json_encode($json_array);
+				exit;
 			}
 
-			echo wp_json_encode($json_array);
+			// API error
+			if($this->ws_form_submit->error) {
+
+				// Set response code
+				switch($this->ws_form_submit->error_code) {
+
+					case '403' :
+
+						header('HTTP/1.1 403 Forbidden', true, 403);
+						break;
+
+					case '404' :
+
+						header('HTTP/1.1 404 Not Found', true, 403);
+						break;
+
+					default :
+
+						header('HTTP/1.1 400 Bad Request', true, 400);
+				}
+
+				// Set error message
+				$json_array['error_message'] = $this->ws_form_submit->error_message;
+
+				echo json_encode($json_array);
+				exit;
+			}
+
+			// Set HTTP content type head
+			header('Content-Type: application/json');
+
+			// Output JSON response
+			echo $json_return;
 
 			// Stop execution
 			exit;

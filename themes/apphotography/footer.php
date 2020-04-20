@@ -16,14 +16,16 @@
 	<footer id="colophon" class="site-footer">
 		
 		<?php
-						// loading the menu
-						wp_nav_menu(array(
-							'theme_location' => 'menu-2',
-							'menu_id'        => 'footer-menu',
-							'container'		 => 'ul',
-							'container_class' => 'menu',
-
-						));
+			// loading the menu
+			if ( has_nav_menu( 'menu-2' ) ) {
+				$args = array(
+					'theme_location' => 'menu-2',
+					'menu_id'        => 'footer-menu',
+					'container'		 => 'ul',
+					'container_class' => 'menu',
+				);
+				wp_nav_menu($args);
+			}
 						?>
 				<div class="site-info">
 			Alex Pino &copy;<script>

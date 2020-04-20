@@ -216,6 +216,11 @@ function apphotography_scripts() {
 	
 	// adding app.js
 	wp_enqueue_script( 'apphotography-foundation-script', get_template_directory_uri() . '/assets/js/app.js', array('jquery', 'apphotography-foundation'), '6.5.1', true );
+	
+	// adding gsap minified
+	wp_enqueue_script( 'gsap-script', get_template_directory_uri() . '/assets/js/vendors/gsap-minified/gsap.min.js', array() );
+	
+	// adding ap-photography script
 	wp_enqueue_script( 'apphotography-script', get_template_directory_uri() . '/assets/js/ap-photography.js', array());
 
 }

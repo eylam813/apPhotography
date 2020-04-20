@@ -215,7 +215,8 @@ function apphotography_scripts() {
 	wp_enqueue_script( 'apphotography-foundation', get_template_directory_uri() . '/assets/js/vendors/foundation.min.js', array('jquery', 'apphotography-what-input'), '6.5.1', true );
 	
 	// adding app.js
-	wp_enqueue_script( 'apphotography-script', get_template_directory_uri() . '/assets/js/app.js', array('jquery', 'apphotography-foundation'), '6.5.1', true );
+	wp_enqueue_script( 'apphotography-foundation-script', get_template_directory_uri() . '/assets/js/app.js', array('jquery', 'apphotography-foundation'), '6.5.1', true );
+	wp_enqueue_script( 'apphotography-script', get_template_directory_uri() . '/assets/js/ap-photography.js', array());
 
 }
 add_action( 'wp_enqueue_scripts', 'apphotography_scripts' );

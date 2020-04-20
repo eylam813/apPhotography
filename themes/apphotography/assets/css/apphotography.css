@@ -134,10 +134,14 @@ h6 {
     justify-content: center;
     align-items: center;
 }
-#gallery-ap-primary .album-title{
+.single-album-inner-wrapper{
+    border: 2px solid white;
+}
+.album-title{
+/* #gallery-ap-primary .album-title{ */
     opacity: 0;
 }
-#gallery-ap-primary .album-title:hover{
+.single-album-inner-wrapper:hover .album-title{
     opacity: 1;
 }
 
@@ -164,9 +168,15 @@ h6 {
 }
 
 /* ALBUM POST TYPE SINGLE PAGE */
-
 .single-album-page-main{
     padding: 1rem 4rem;
+}
+
+/* SIMPLE LIGHTBOX PLUGIN */
+/* file name caption */
+#slb_viewer_wrap .slb_theme_slb_baseline * {
+    font-size: 75%;
+    color: var(--outer-space);
 }
 
 @media screen and (max-width: 64em) {

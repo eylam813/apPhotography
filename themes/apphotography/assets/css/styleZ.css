@@ -142,6 +142,7 @@ nav{
 }
 .blogBtn {
     align-self: flex-end;
+    float: right;
 }
 .blog-posts-box{
     width: 100%;
@@ -295,6 +296,8 @@ footer{
     width: 100%;
     color: var(--dark-green);
     padding: 5px 15px;
+    background-color: white;
+    border-top: 1px solid var(--ash-grey);
 }
 footer .menu a{
     color: var(--dark-green);

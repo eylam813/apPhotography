@@ -136,6 +136,9 @@ h6 {
 }
 .single-album-inner-wrapper{
     border: 2px solid white;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 .album-title{
 /* #gallery-ap-primary .album-title{ */

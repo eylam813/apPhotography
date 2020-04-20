@@ -134,10 +134,14 @@ h6 {
     justify-content: center;
     align-items: center;
 }
-#gallery-ap-primary .album-title{
+.single-album-inner-wrapper{
+    border: 2px solid white;
+}
+.album-title{
+/* #gallery-ap-primary .album-title{ */
     opacity: 0;
 }
-#gallery-ap-primary .album-title:hover{
+.single-album-inner-wrapper:hover .album-title{
     opacity: 1;
 }
 

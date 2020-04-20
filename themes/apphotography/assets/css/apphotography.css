@@ -137,15 +137,13 @@ h6 {
 .single-album-inner-wrapper{
     border: 2px solid white;
 }
-#gallery-ap-primary .album-title{
+.album-title{
+/* #gallery-ap-primary .album-title{ */
     opacity: 0;
 }
-.single-album-inner-wrapper:hover a.single-album-wrapper h2.album-title{
+.single-album-inner-wrapper:hover .album-title{
     opacity: 1;
 }
-/* a.single-album-wrapper:hover a.single-album-wrapper h2.album-title{
-    opacity: 1;
-} */
 
 #gallery-albums-wrapper{
     display: flex;

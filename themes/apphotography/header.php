@@ -42,13 +42,23 @@
 
 			<nav id="site-navigation" class="main-navigation">
 				<?php
-				wp_nav_menu(
-					array(
+				if ( has_nav_menu( 'menu-1' ) ) {
+					$args = array(
 						'theme_location' => 'menu-1',
-						'menu_id'        => 'primary-menu',
-					)
-				);
+						'menu_id'        => 'primary-menu'
+					);
+					wp_nav_menu($args);
+				}
 				?>
+
+
+
+
+
+
+
+
+
 			</nav><!-- #site-navigation -->
 				<!-- Social Media Links -->
 			<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>

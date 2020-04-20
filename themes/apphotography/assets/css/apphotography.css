@@ -164,9 +164,17 @@ h6 {
 }
 
 /* ALBUM POST TYPE SINGLE PAGE */
-
 .single-album-page-main{
     padding: 1rem 4rem;
+}
+
+/* SIMPLE LIGHTBOX PLUGIN */
+/* file name caption */
+.slb_template_tag .slb_template_tag_item .slb_template_tag_item_title {
+    font-size: 75%;
+}
+.slb_template_tag .slb_template_tag_ui .slb_template_tag_ui_group_status{
+    font-size: 75%;
 }
 
 @media screen and (max-width: 64em) {

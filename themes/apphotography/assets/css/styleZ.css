@@ -65,11 +65,18 @@ h6 {
     color: var(--dark-green);
 }
 
+h1{
+    margin-top: 30px;
+}
+#ap-content-wrapper{
+    margin: 0;
+}
 /* ******************** Nav Styling ******************** */
 header {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    justify-content: space-between;
+    height: 100vh;
     /* width: 20%; */
     z-index: 99;
     padding: 60px 5px 0 5px;
@@ -101,6 +108,7 @@ nav{
 .social-media {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 30%;
 }
 .social-media img{
     max-width: 40px;
@@ -123,6 +131,7 @@ nav{
 }
 /* ******************** Blog Styling ******************** */
 .blogCard {
+    align-self: center;
     display: flex;
     border: 1px solid var(--ash-grey);
 }
@@ -137,8 +146,14 @@ nav{
 }
 .blogBtn {
     align-self: flex-end;
+    float: right;
 }
-
+.blog-posts-box{
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
 .blogSection {
     display: flex;
     justify-content: center;
@@ -285,6 +300,8 @@ footer{
     width: 100%;
     color: var(--dark-green);
     padding: 5px 15px;
+    background-color: white;
+    border-top: 1px solid var(--ash-grey);
 }
 footer .menu a{
     color: var(--dark-green);

@@ -6327,8 +6327,11 @@
 						// No rows for a new group
 						group_new.rows = [];
 
-						// Default label
+						// Defaults
 						group_new.label = $.WS_Form.this.language('data_grid_group_label_default');
+						group_new.disabled = '';
+						group_new.mask_group = '';
+						group_new.label_render = '';
 
 						// Add group
 						meta_value.groups.push(group_new);

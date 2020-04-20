@@ -43,6 +43,13 @@
 			},
 
 			{
+				"id"					:	"file-upload-progress",
+				"label" 				: 	"File Upload + Progress",
+				"file_json"				:	"ws-form-file-upload-progress.json",
+				"pro_required"			:	1
+			},
+
+			{
 				"id"					:	"newsletter-sign-up",
 				"label" 				: 	"Newsletter Sign Up",
 				"file_json"				:	"ws-form-newsletter-sign-up.json",
@@ -186,6 +193,34 @@
 				"label" 				: 	"Booking Form",
 				"file_json"				:	"ws-form-repeatable-booking-form.json",
 				"pro_required"			:	1
+			},
+
+			{
+				"id"					:	"repeatable-add-remove",
+				"label" 				: 	"Add / Remove",
+				"file_json"				:	"ws-form-repeatable-add-remove.json",
+				"pro_required"			:	1
+			},
+
+			{
+				"id"					:	"repeatable-move-up-move-down",
+				"label" 				: 	"Move Up / Down",
+				"file_json"				:	"ws-form-repeatable-move-up-move-down.json",
+				"pro_required"			:	1
+			},
+
+			{
+				"id"					:	"repeatable-section-icons",
+				"label" 				: 	"Section Icons",
+				"file_json"				:	"ws-form-repeatable-section-icons.json",
+				"pro_required"			:	1
+			},
+
+			{
+				"id"					:	"field-to-row-count",
+				"label" 				: 	"Field to Row Count",
+				"file_json"				:	"ws-form-repeatable-field-to-row-count.json",
+				"pro_required"			:	1
 			}
 		]
 	},
@@ -274,14 +309,28 @@
 				"id"					:	"style-checkboxes",
 				"label" 				: 	"Style Checkboxes",
 				"file_json"				:	"ws-form-style-checkboxes.json",
-				"pro_required"			:	0
+				"pro_required"			:	1
+			},
+
+			{
+				"id"					:	"responsive-checkbox-grid",
+				"label" 				: 	"Checkbox Grid",
+				"file_json"				:	"ws-form-responsive-checkbox-grid.json",
+				"pro_required"			:	1
 			},
 
 			{
 				"id"					:	"style-radios",
 				"label" 				: 	"Style Radios",
 				"file_json"				:	"ws-form-style-radios.json",
-				"pro_required"			:	0
+				"pro_required"			:	1
+			},
+
+			{
+				"id"					:	"responsive-radio-grid",
+				"label" 				: 	"Radio Grid",
+				"file_json"				:	"ws-form-responsive-radio-grid.json",
+				"pro_required"			:	1
 			}
 		]
 	}

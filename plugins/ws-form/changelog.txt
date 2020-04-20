@@ -1,5 +1,28 @@
 == Changelog ==
 
+= 1.5.25 =
+* Bug Fix: JSON encoding on submit
+
+= 1.5.24 =
+* Bug Fix: Thousand separator in prices
+
+= 1.5.23 =
+* Bug Fix: Delimiter on variables
+
+= 1.5.22 =
+* Added: #checkbox_label variable
+* Added: #radio_label variable
+# Changed: #select_option_text to support multiple selects
+
+= 1.5.21 =
+* Added: File upload progress bar
+* Added: Grid feature for checkboxes and radios
+* Added: Form submit, save, complete, error conditional logic
+* Added: New templates
+
+= 1.5.20 =
+* Bug Fix: Decimal separator in prices
+
 = 1.5.19 =
 * Bug fix: Bulk options to POST method
 

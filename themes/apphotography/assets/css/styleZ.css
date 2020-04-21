@@ -292,6 +292,13 @@ h1{
 .woocommerce-error, .woocommerce-info, .woocommerce-message{
     background-color: white;
 }
+
+.related .products, .up-sells{
+    display: none;
+}
+.related h2{
+    display: none;
+}
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{
     border: 2px solid;

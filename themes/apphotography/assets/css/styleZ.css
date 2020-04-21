@@ -70,6 +70,11 @@ h1{
 }
 #ap-content-wrapper{
     margin: 0;
+    width: 86%;
+    /* padding: 20px; */
+}
+#ap-content{
+    min-height: 80vh;
 }
 /* ******************** Nav Styling ******************** */
 header {
@@ -292,6 +297,16 @@ h1{
 .woocommerce-error, .woocommerce-info, .woocommerce-message{
     background-color: white;
 }
+.related .products{
+    display: none;
+}
+.related h2{
+    display: none;
+}
+/* targeting price colour */
+.woocommerce-Price-amount{
+    color: var(--dark-green);
+}
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{
     border: 2px solid;
@@ -310,6 +325,10 @@ h1{
     border-top: 1px solid var(--ash-grey);
     box-shadow: 9px 9px 18px #ffffff,
         -9px -9px 18px #f5f5f5;
+    max-height: 150px;
+    /* position: absolute; */
+    /* bottom: 0; */
+
 }
 footer .menu a{
     color: var(--dark-green);

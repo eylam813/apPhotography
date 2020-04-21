@@ -12,7 +12,7 @@
 ?>
 
 
-
+</div><!-- #page -->
 	<footer id="colophon" class="site-footer">
 		
 		<?php
@@ -35,7 +35,7 @@
 		</div>
 		<!-- .site-info -->
 	</footer><!-- #colophon -->
-</div><!-- #page -->
+
 
 <?php wp_footer(); ?>
 

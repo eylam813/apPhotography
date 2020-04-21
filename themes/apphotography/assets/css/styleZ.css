@@ -292,19 +292,7 @@ h1{
 .woocommerce-error, .woocommerce-info, .woocommerce-message{
     background-color: white;
 }
-/* removed related products and upsell section */
-.related .products, .up-sells{
-    display: none;
-}
-.related h2{
-    display: none;
-}
-.nav-links{
-    display: none;
-}
-.product_meta{
-    display: none;
-}
+
 /* targeting price colour */
 .woocommerce-Price-amount{
     color: var(--dark-green);

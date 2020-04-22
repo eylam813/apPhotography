@@ -30,14 +30,32 @@
 
 
 	<header>
-		
-		<section class="inner-header">
-			<section>
-				<div id="logo">
-					<?php
-					the_custom_logo();
-					?>
-				</div><!-- .logo -->
+	<section>
+		<!-- responsive header nav -->
+		<div class="title-bar" data-responsive-toggle="site-navigation" data-hide-for="large">
+					
+					<!-- container for the logo - mobile/tablet only -->
+					<div class="title-bar-title">
+						<?php
+						// if there's no custom logo load the title text
+						if (!has_custom_logo()) :
+						?>
+							<h1 class="site-title"><a href="<?php echo esc_url(home_url('/')); ?>" rel="home"><?php bloginfo('name'); ?></a></h1>
+						<?php
+						else :
+							// else if there is a custom logo load the logo
+							the_custom_logo();
+						endif;
+						?>
+					</div>
+					<!-- menu button -->
+					<button class="menu-icon" type="button" data-toggle="site-navigation"></button>
+				</div>
+		<div id="logo">
+			<?php
+			the_custom_logo();
+			?>
+		</div><!-- .logo -->
 
 				<nav id="site-navigation" class="main-navigation">
 					<?php

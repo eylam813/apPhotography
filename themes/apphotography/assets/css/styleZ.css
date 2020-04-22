@@ -71,7 +71,7 @@ h1 {
 
 #ap-content-wrapper {
     margin: 0;
-    width: 86%;
+    /* width: 86%; */
     /* padding: 20px; */
     background: none;
 }
@@ -245,7 +245,13 @@ screen and (max-width:40em) {
 .singlePage h1 {
     text-align: left;
 }
-
+.entry-content{
+    margin: auto 4rem;
+}
+/* removes updated date on blog entries, to avoid a double date */
+.updated{
+    display: none;
+}
 /* ******************** Informative Custom Template Styling ******************** */
 .infoPage {
     background-image: url("../img/trees.png");

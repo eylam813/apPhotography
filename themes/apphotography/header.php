@@ -23,7 +23,7 @@
 <body class="grid-x" <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
-<div id="menu-hamburger">Menu</div>
+<!-- <div id="menu-hamburger">Menu</div> -->
 
 <div id="ap-wrapper" class="grid-x">
 	<div id="ap-wrapper-inner" class="large-2 medium-2 small-12">
@@ -43,9 +43,12 @@
 					<?php
 					if ( has_nav_menu( 'menu-1' ) ) {
 						$args = array(
+							'menu' => 'Primary Menu', 
 							'theme_location' => 'menu-1',
 							'menu_id'        => 'primary-menu',
 							// 'menu_class'     => 'vertical menu'
+							'container_id' => 'cssmenu', 
+							'walker' => new AP_Walker_Nav_Menu()
 						);
 						wp_nav_menu($args);
 					}

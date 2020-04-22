@@ -105,6 +105,80 @@ h6 {
     position: relative;
 }
 
+/* ******************** DROPDOWN MENU ******************** */
+
+#cssmenu > ul > li > a {
+	position: relative;
+}
+#cssmenu > ul > li > a:hover {
+	background: var(--slate-grey);
+	color: var(--dark-green);
+}
+#cssmenu > ul > li:first-child > a {
+	border-radius: 5px 0 0 5px;
+}
+/* submenu styles */
+#cssmenu > ul > li.has-sub {
+    position: relative;
+}
+/* arrow */
+#cssmenu > ul > li.has-sub > a:before {
+	content: '';
+	position: absolute;
+	top: 18px;
+	right: 6px;
+	border: 5px solid transparent;
+	border-top: 5px solid var(--dark-green);
+}
+/* arrow on menu */
+#cssmenu > ul > li.has-sub:hover > a:before {
+    transform: rotate(-90deg) translate(50%, -50%);
+    top:50%;
+}
+/* show submenu on li hover */
+#cssmenu ul li.has-sub:hover > ul,
+#cssmenu ul li.has-sub:hover > div {
+    display: block;
+    position: absolute;
+    top:0;
+    left:90%;
+}
+/* submenu block */
+#cssmenu ul li > ul,
+#cssmenu ul li > div {
+	display: none;
+	width: auto;
+	position: absolute;
+	top: 38px;
+	background: var(--white);
+	border-radius: 0 0 5px 5px;
+    z-index: 999;
+    box-shadow: 2px 2px 5px 5px #ACB4B620;
+}
+#cssmenu ul li > ul {
+	width: 200px;
+}
+#cssmenu ul li > ul li {
+	display: block;
+	list-style: inside none;
+	padding: 5px 0;
+	margin: 0;
+    position: relative;
+}
+/* submenu text */
+#cssmenu ul li > ul li a {
+	outline: none;
+	display: block;
+	position: relative;
+	margin: 0;
+    padding: 8px 20px;
+    font-size: 18px;
+	color: var(--dark-green);
+	text-decoration: none;
+}
+#cssmenu ul li > ul li:hover{
+    background-color: var(--slate-grey);
+}
 /* ******************** LEFT-FEATURE TEMPLATE ******************** */
 
 #left-feature-ap-primary {
@@ -202,11 +276,11 @@ h6 {
         position: sticky;
         opacity: 0;
     } */
-    #ap-wrapper {
+    /* #ap-wrapper {
         position: sticky;
         opacity: 0;
         display: none;
-    }
+    } */
     /* #menu-hamburge{
         position: fixed;
         top:0;
@@ -228,9 +302,4 @@ h6 {
     .left-feature-content{
         padding: 2rem 1.5rem;
     }
-}
-/* small only */
-@media screen and (max-width: 39.9375em) {
-
-    
 }

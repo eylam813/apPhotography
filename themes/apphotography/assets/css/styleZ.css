@@ -96,6 +96,10 @@ header {
     font-weight: 500;
     font-size: 18px;
 }
+.menu .active > a {
+    color: var(--dark-green);
+    background: none;
+}
 
 #primary-menu a:hover {
     font-weight: 600;

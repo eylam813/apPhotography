@@ -172,16 +172,6 @@ function apphotography_widgets_init() {
 }
 add_action( 'widgets_init', 'apphotography_widgets_init' );
 
-
-// getting our events post type on the front page with other posts
-function add_events_to_query( $query ) {
-    if ( is_home() && $query->is_main_query() )
-        $query->set( 'post_type', array( 'post', 'events' ) );
-    return $query;
-}
-add_action( 'pre_get_posts', 'add_events_to_query' );
-
-
 /**
  * Enqueue scripts and styles.
  */
@@ -215,7 +205,13 @@ function apphotography_scripts() {
 	wp_enqueue_script( 'apphotography-foundation', get_template_directory_uri() . '/assets/js/vendors/foundation.min.js', array('jquery', 'apphotography-what-input'), '6.5.1', true );
 	
 	// adding app.js
-	wp_enqueue_script( 'apphotography-script', get_template_directory_uri() . '/assets/js/app.js', array('jquery', 'apphotography-foundation'), '6.5.1', true );
+	wp_enqueue_script( 'apphotography-foundation-script', get_template_directory_uri() . '/assets/js/app.js', array('jquery', 'apphotography-foundation'), '6.5.1', true );
+	
+	// adding gsap minified
+	wp_enqueue_script( 'gsap-script', get_template_directory_uri() . '/assets/js/vendors/gsap-minified/gsap.min.js', array() );
+	
+	// adding ap-photography script
+	wp_enqueue_script( 'apphotography-script', get_template_directory_uri() . '/assets/js/ap-photography.js', array());
 
 }
 add_action( 'wp_enqueue_scripts', 'apphotography_scripts' );

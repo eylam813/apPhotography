@@ -384,11 +384,11 @@
 
 				if(feedback_reason_error) {
 
-					$('#wsf-feedback-reason-error-text').show();
+					$('#wsf-feedback-reason-error-wrapper').show();
 
 				} else {
 
-					$('#wsf-feedback-reason-error-text').hide();
+					$('#wsf-feedback-reason-error-wrapper').hide();
 				}
 			});
 
@@ -405,6 +405,7 @@
 						'wsf_nonce_field_name' : '<?php echo WS_FORM_POST_NONCE_FIELD_NAME; ?>',
 						'wsf_nonce': '<?php echo wp_create_nonce(WS_FORM_POST_NONCE_ACTION_NAME); ?>',
 						'feedback_reason': $('[name="wsf_feedback_reason"]:checked').val(),
+						'feedback_reason_error': $('[name="wsf_feedback_reason_error"]').val(),
 						'feedback_reason_found_better_plugin': $('[name="wsf_feedback_reason_found_better_plugin"]').val(),
 						'feedback_reason_other': $('[name="wsf_feedback_reason_other"]').val(),
 					},
@@ -423,7 +424,7 @@
 			// Defaults
 			$('#wsf-feedback-reason-other-text').hide();
 			$('#wsf-feedback-reason-found-better-plugin-select').hide();
-			$('#wsf-feedback-reason-error-text').hide();
+			$('#wsf-feedback-reason-error-wrapper').hide();
 		});
 
 	})(jQuery);
@@ -453,14 +454,17 @@
 
 <fieldset>
 
-<p><?php echo esc_html(sprintf(__('We would greatly appreciate your feedback about why you are deactivating %s. Thank you for your help!', 'ws-form'), WS_FORM_NAME_PRESENTABLE)); ?></p>
+<p><?php esc_html_e(sprintf(__('We would greatly appreciate your feedback about why you are deactivating %s. Thank you for your help!', 'ws-form'), WS_FORM_NAME_PRESENTABLE)); ?></p>
 
-<label><input type="radio" name="wsf_feedback_reason" value="Upgraded" /> <?php echo esc_html(sprintf(__('I\'m upgrading to <a href="%s" target="_blank">WS Form PRO</a>', 'ws-form'), WS_Form_Common::get_plugin_website_url('', 'plugins_deactivate'))); ?></label>
+<label><input type="radio" name="wsf_feedback_reason" value="Upgraded" /> <?php esc_html_e('I\'m upgrading to ', 'ws-form'); ?><?php echo sprintf(' <a href="%s" target="_blank">%s</a>', WS_Form_Common::get_plugin_website_url('', 'plugins_deactivate'), esc_html__('WS Form PRO', 'ws-form')); ?></label>
 <label><input type="radio" name="wsf_feedback_reason" value="Temporary" /> <?php esc_html_e('Temporarily deactivating', 'ws-form'); ?></label>
 
 <label><input type="radio" id="wsf-feedback-reason-error" name="wsf_feedback_reason" value="Error" /> <?php esc_html_e('The plugin did not work', 'ws-form'); ?></label>
 
-<p id="wsf-feedback-reason-error-text"><em>Need help? <?php echo esc_html(sprintf(__('<a href="%s" target="_blank">Get Support</a>', 'ws-form'), WS_Form_Common::get_plugin_website_url('/support/', 'plugins_deactivate'))); ?></em></p>
+<div id="wsf-feedback-reason-error-wrapper">
+<textarea id="wsf-feedback-reason-error-text" name="wsf_feedback_reason_error" placeholder="<?php esc_attr_e('Please describe the error...', 'ws-form'); ?>" rows="3"></textarea>
+<p><em><?php esc_html_e('Need help? ', 'ws-form'); ?><?php echo sprintf('<a href="%s" target="_blank">%s</a>', WS_Form_Common::get_plugin_website_url('/support/', 'plugins_deactivate'), esc_html__('Get Support', 'ws-form')); ?></em></p>
+</div>
 
 <label><input type="radio" name="wsf_feedback_reason" value="No Longer Need" /> <?php esc_html_e('I no longer need the plugin', 'ws-form'); ?></label>
 

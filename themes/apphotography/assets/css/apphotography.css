@@ -80,7 +80,8 @@ h6 {
 
 
 
-/* HEADER */
+/* ******************** HEADER ******************** */
+
 
 #ap-wrapper {
     /* background-color: orange; */
@@ -96,6 +97,7 @@ h6 {
     height: 100%;
 }
 
+
 /* WHOLE CONTENT AREA */
 #ap-content-wrapper {
     background-color: papayawhip;
@@ -103,7 +105,8 @@ h6 {
     position: relative;
 }
 
-/* LEFT-FEATURE PAGE */
+/* ******************** LEFT-FEATURE TEMPLATE ******************** */
+
 #left-feature-ap-primary {
     min-height: 100vh;
     display: flex;
@@ -125,7 +128,7 @@ h6 {
     text-align: center;
 }
 
-/* gallery album display */
+/* ******************** GALLERY ALBUM PAGE ******************** */
 #gallery-ap-primary {
     min-height: 100vh;
     width: 100%;
@@ -175,20 +178,44 @@ h6 {
     align-items: center;
 }
 
-/* ALBUM POST TYPE SINGLE PAGE */
+/* ******************** ALBUM POST TYPE SINGLE PAGE ******************** */
 .single-album-page-main{
     padding: 1rem 4rem;
 }
 
-/* SIMPLE LIGHTBOX PLUGIN */
+/* ******************** SIMPLE LIGHTBOX PLUGIN ******************** */
 /* file name caption */
 #slb_viewer_wrap .slb_theme_slb_baseline * {
     font-size: 75%;
     color: var(--outer-space);
 }
 
-@media screen and (max-width: 64em) {
-    /* LEFT-FEATURE PAGE */
+/* trial menu */
+/* #menu-hamburge{
+
+    display: none;
+}  */
+
+/* 1024px and lower */
+@media screen and (max-width: 63.9375em) {
+    /* header {
+        position: sticky;
+        opacity: 0;
+    } */
+    #ap-wrapper {
+        position: sticky;
+        opacity: 0;
+        display: none;
+    }
+    /* #menu-hamburge{
+        position: fixed;
+        top:0;
+        right: 0;
+        height: 50px;
+        z-index: 1000;
+    }  */
+    
+    /* ******************** LEFT-FEATURE PAGE ******************** */
     #left-feature-ap-primary {
         min-height: 100vh;
         display: flex;
@@ -196,10 +223,14 @@ h6 {
         padding: 0rem;
     }
     .left-feature-image{
-        /* width: 100%; */
         min-height: 20vh;
     }
     .left-feature-content{
         padding: 2rem 1.5rem;
     }
+}
+/* small only */
+@media screen and (max-width: 39.9375em) {
+
+    
 }

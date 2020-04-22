@@ -427,7 +427,28 @@ textarea {
 .woocommerce-Price-amount {
     color: var(--dark-green);
 }
-
+/* product photo */
+.woocommerce #content div.product div.images, .woocommerce div.product div.images, .woocommerce-page #content div.product div.images, .woocommerce-page div.product div.images{
+    width: 75%;
+    /* margin-right: 1rem; */
+}
+/* product info */
+.woocommerce #content div.product div.summary, .woocommerce div.product div.summary, .woocommerce-page #content div.product div.summary, .woocommerce-page div.product div.summary{
+    width: 25%;
+}
+/* cart button */
+.woocommerce #respond input#submit.alt:hover, .woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover, .woocommerce input.button.alt:hover
+{
+    background-color: var(--slate-grey);
+}
+/* cart update message */
+.woocommerce-message{
+    border-top-color: var(--dark-green);
+}
+/* cart update checkmark */
+.woocommerce-message::before{
+    color: var(--dark-green);
+}
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2,
 #wsf-1-field-1,

@@ -296,6 +296,7 @@
 			$data = array(
 
 				'feedback_reason'						=> WS_Form_Common::get_query_var_nonce('feedback_reason'),
+				'feedback_reason_error'					=> WS_Form_Common::get_query_var_nonce('feedback_reason_error'),
 				'feedback_reason_found_better_plugin'	=> WS_Form_Common::get_query_var_nonce('feedback_reason_found_better_plugin'),
 				'feedback_reason_other'					=> WS_Form_Common::get_query_var_nonce('feedback_reason_other')
 			);

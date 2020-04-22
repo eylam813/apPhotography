@@ -65,16 +65,32 @@ h6 {
     color: var(--dark-green);
 }
 
+h1{
+    margin-top: 30px;
+}
+#ap-content-wrapper{
+    margin: 0;
+    width: 86%;
+    /* padding: 20px; */
+}
+#ap-content{
+    min-height: 80vh;
+}
 /* ******************** Nav Styling ******************** */
 header {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    justify-content: space-between;
+    height: 100vh;
     /* width: 20%; */
     z-index: 99;
     padding: 60px 5px 0 5px;
 }
-
+/* change styling on a of current page on nav */
+#primary-menu .current-menu-item a, 
+#primary-menu .current_page_item a {
+    font-weight: 600;
+}
 #primary-menu a {
     color: var(--dark-green);
     font-weight: 500;
@@ -96,11 +112,13 @@ nav{
 }
 #logo {
     width: 100%;
+    min-width: 100px;
 }
 
 .social-media {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 30%;
 }
 .social-media img{
     max-width: 40px;
@@ -121,8 +139,10 @@ nav{
 .custom-logo{
     margin-bottom: 20px;
 }
+
 /* ******************** Blog Styling ******************** */
 .blogCard {
+    align-self: center;
     display: flex;
     border: 1px solid var(--ash-grey);
 }
@@ -137,8 +157,14 @@ nav{
 }
 .blogBtn {
     align-self: flex-end;
+    float: right;
 }
-
+.blog-posts-box{
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
 .blogSection {
     display: flex;
     justify-content: center;
@@ -271,6 +297,16 @@ h1{
 .woocommerce-error, .woocommerce-info, .woocommerce-message{
     background-color: white;
 }
+.related .products{
+    display: none;
+}
+.related h2{
+    display: none;
+}
+/* targeting price colour */
+.woocommerce-Price-amount{
+    color: var(--dark-green);
+}
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2, #wsf-1-field-1, #wsf-1-field-3, #wsf-1-field-4, #wsf-1-field-5{
     border: 2px solid;
@@ -278,13 +314,21 @@ h1{
 }
 
 /* ******************** Footer Styling ******************** */
-footer{
+.site-footer{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
     color: var(--dark-green);
     padding: 5px 15px;
+    background-color: white;
+    border-top: 1px solid var(--ash-grey);
+    box-shadow: 9px 9px 18px #ffffff,
+        -9px -9px 18px #f5f5f5;
+    max-height: 150px;
+    /* position: absolute; */
+    /* bottom: 0; */
+
 }
 footer .menu a{
     color: var(--dark-green);

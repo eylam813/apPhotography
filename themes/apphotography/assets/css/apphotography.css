@@ -203,10 +203,15 @@ h6 {
     width: 50vw;
     max-width: 500px;
     margin-left: auto;
-    margin-right: 20px;
+    margin-right: 4vw;
     padding: 20px;
     height: 100%;
+    min-height: 85vh;
     font-weight: bolder;
+    border-radius: 0 0 5px 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
 }
 

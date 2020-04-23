@@ -164,6 +164,8 @@
 			$xpos_offset = ($col_width / 2);
 			$ypos_offset = 0;
 
+			$row_height_max = 0;
+
 			$input_found = false;
 
 			$field_type_buttons = apply_filters('wsf_wizard_svg_buttons', array(
@@ -179,7 +181,6 @@
 				'section_delete' => array('fill' => $this->color_danger, 'color' => $this->color_default_inverted),
 				'section_up' => array('fill' => $this->color_default_lighter, 'color' => $this->color_default),
 				'section_down' => array('fill' => $this->color_default_lighter, 'color' => $this->color_default)
-
 			));
 
 			$field_type_price_span = apply_filters('wsf_wizard_svg_price_span', array());
@@ -326,6 +327,12 @@
 					}
 				}
 
+				// Calculate row_height_max
+				if($row_height > $row_height_max) {
+
+					$row_height_max = $row_height;
+				}
+
 				// Col index
 				$col_index += $field_size + $field_offset;
 				if($col_index >= $col_index_max) {
@@ -333,7 +340,8 @@
 					$col_index = 0;
 					$col_index_field = 0;
 					$xpos_offset = ($col_width / 2);
-					$ypos_offset += $row_height;
+					$ypos_offset += $row_height_max;
+					$row_height_max = 0;
 					$input_found = false;
 
 				} else {

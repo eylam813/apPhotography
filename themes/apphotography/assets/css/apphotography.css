@@ -263,8 +263,8 @@ h6 {
 }
 .album-title{
     opacity: 0;
-    background-color: #ffffff50;
-    box-shadow: 0 0 10px 10px #ffffff50;
+    background-color: #ffffff80;
+    box-shadow: 0 0 10px 10px #ffffff80;
     border-radius: 5px;
 }
 .single-album-inner-wrapper:hover .album-title{

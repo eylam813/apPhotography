@@ -9,13 +9,13 @@
  * @package apPhotography
  */
 
-
+get_header();
 ?>
     <section class="grid-x ap-whole-page large-12 medium-12 small-12">
         <!-- header -->
         <!-- <header class="large-3 medium-3 small-12 grid-x"> -->
             <?php
-                get_header();
+                
             ?>
         <!-- </header> -->
 

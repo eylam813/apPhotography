@@ -142,7 +142,7 @@ h6 {
     display: block;
     position: absolute;
     top:0;
-    left:90%;
+    left:-7%;
 }
 /* submenu block */
 #cssmenu ul li > ul,
@@ -153,7 +153,7 @@ h6 {
 	top: 38px;
 	background: var(--white);
 	border-radius: 0 0 5px 5px;
-    z-index: 9999999;
+    z-index: 99999999;
     box-shadow: 2px 2px 5px 5px #ACB4B620;
 }
 #cssmenu ul li > ul {

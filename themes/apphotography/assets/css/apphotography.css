@@ -80,15 +80,23 @@ h6 {
 
 
 
-/* HEADER */
+/* ******************** HEADER ******************** */
+
 
 #ap-wrapper {
     /* background-color: orange; */
     max-width: 200px;
+    position: sticky;
+    position: -webkit-sticky; /* Safari */
+    top:0;
+    left:0;
+    height: 100vh;
 }
 #ap-wrapper-inner{
     width: 100%;
+    height: 100%;
 }
+
 
 /* WHOLE CONTENT AREA */
 #ap-content-wrapper {
@@ -97,7 +105,82 @@ h6 {
     position: relative;
 }
 
-/* LEFT-FEATURE PAGE */
+/* ******************** DROPDOWN MENU ******************** */
+
+#cssmenu > ul > li > a {
+	position: relative;
+}
+#cssmenu > ul > li > a:hover {
+	background: var(--slate-grey);
+	color: var(--dark-green);
+}
+#cssmenu > ul > li:first-child > a {
+	border-radius: 5px 0 0 5px;
+}
+/* submenu styles */
+#cssmenu > ul > li.has-sub {
+    position: relative;
+}
+/* arrow */
+#cssmenu > ul > li.has-sub > a:before {
+	content: '';
+	position: absolute;
+	top: 18px;
+	right: 6px;
+	border: 5px solid transparent;
+	border-top: 5px solid var(--dark-green);
+}
+/* arrow on menu */
+#cssmenu > ul > li.has-sub:hover > a:before {
+    transform: rotate(-90deg) translate(50%, -50%);
+    top:50%;
+}
+/* show submenu on li hover */
+#cssmenu ul li.has-sub:hover > ul,
+#cssmenu ul li.has-sub:hover > div {
+    display: block;
+    position: absolute;
+    top:0;
+    left:90%;
+}
+/* submenu block */
+#cssmenu ul li > ul,
+#cssmenu ul li > div {
+	display: none;
+	width: auto;
+	position: absolute;
+	top: 38px;
+	background: var(--white);
+	border-radius: 0 0 5px 5px;
+    z-index: 999;
+    box-shadow: 2px 2px 5px 5px #ACB4B620;
+}
+#cssmenu ul li > ul {
+	width: 200px;
+}
+#cssmenu ul li > ul li {
+	display: block;
+	list-style: inside none;
+	padding: 5px 0;
+	margin: 0;
+    position: relative;
+}
+/* submenu text */
+#cssmenu ul li > ul li a {
+	outline: none;
+	display: block;
+	position: relative;
+	margin: 0;
+    padding: 8px 20px;
+    font-size: 18px;
+	color: var(--dark-green);
+	text-decoration: none;
+}
+#cssmenu ul li > ul li:hover{
+    background-color: var(--slate-grey);
+}
+/* ******************** LEFT-FEATURE TEMPLATE ******************** */
+
 #left-feature-ap-primary {
     min-height: 100vh;
     display: flex;
@@ -119,7 +202,7 @@ h6 {
     text-align: center;
 }
 
-/* gallery album display */
+/* ******************** GALLERY ALBUM PAGE ******************** */
 #gallery-ap-primary {
     min-height: 100vh;
     width: 100%;
@@ -134,23 +217,29 @@ h6 {
     justify-content: center;
     align-items: center;
 }
-#gallery-ap-primary .album-title{
-    opacity: 0;
+.single-album-inner-wrapper{
+    border: 2px solid white;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
-#gallery-ap-primary .album-title:hover{
+.album-title{
+    opacity: 0;
+    background-color: #ffffff50;
+    box-shadow: 0 0 10px 10px #ffffff50;
+    border-radius: 5px;
+}
+.single-album-inner-wrapper:hover .album-title{
     opacity: 1;
 }
 
 #gallery-albums-wrapper{
     display: flex;
-    /* align-items: stretch; */
-    /* height: 100%; */
     min-height: 85vh;
     overflow-x: scroll;
 }
 .single-album-wrapper{
     height: 100%;
-    /* min-height: 85vh; */
     display: flex;
     justify-content: stretch;
     width: auto;
@@ -163,14 +252,52 @@ h6 {
     align-items: center;
 }
 
-/* ALBUM POST TYPE SINGLE PAGE */
-
+/* ******************** ALBUM POST TYPE SINGLE PAGE ******************** */
 .single-album-page-main{
     padding: 1rem 4rem;
 }
 
-@media screen and (max-width: 64em) {
-    /* LEFT-FEATURE PAGE */
+/* ******************** SIMPLE LIGHTBOX PLUGIN ******************** */
+/* file name caption */
+#slb_viewer_wrap .slb_theme_slb_baseline * {
+    font-size: 75%;
+    color: var(--outer-space);
+}
+
+/* trial menu */
+/* #menu-hamburge{
+
+    display: none;
+}  */
+
+/* 1024px and lower */
+@media screen and (max-width: 63.9375em) {
+    /* header {
+        position: sticky;
+        opacity: 0;
+    } */
+    /* #ap-wrapper {
+        position: sticky;
+        opacity: 0;
+        display: none;
+    } */
+    /* #menu-hamburge{
+        position: fixed;
+        top:0;
+        right: 0;
+        height: 50px;
+        z-index: 1000;
+    }  */
+    #cssmenu ul li.has-sub:hover > ul,
+    #cssmenu ul li.has-sub:hover > div {
+    display: block;
+    position: absolute;
+    width: 95%;
+    top:100%;
+    /* bottom:0; */
+    left:0px;
+}
+    /* ******************** LEFT-FEATURE PAGE ******************** */
     #left-feature-ap-primary {
         min-height: 100vh;
         display: flex;
@@ -178,7 +305,6 @@ h6 {
         padding: 0rem;
     }
     .left-feature-image{
-        /* width: 100%; */
         min-height: 20vh;
     }
     .left-feature-content{

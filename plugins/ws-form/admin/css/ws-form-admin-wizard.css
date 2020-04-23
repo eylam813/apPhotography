@@ -1,14 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Lato:300,400");
 .wsf-templates {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-direction: row;
+  flex-wrap: wrap;
   margin: 12px -6px; }
   .wsf-templates > li {
     margin-bottom: 24px;
@@ -26,8 +20,7 @@
       right: -14px;
       text-align: center;
       top: 4px;
-      -webkit-transform: rotate(45deg);
-              transform: rotate(45deg);
+      transform: rotate(45deg);
       width: 49px; }
     .wsf-templates > li.wsf-pro-required .wsf-template svg {
       opacity: .5; }

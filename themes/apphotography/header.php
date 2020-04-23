@@ -25,8 +25,9 @@
 
 <!-- <div id="menu-hamburger">Menu</div> -->
 
-<div id="ap-wrapper" class="grid-x">
-	<div id="ap-wrapper-inner" class="large-2 medium-2 small-12">
+<div id="ap-wrapper" class="grid-x large-2 medium-2 small-12">
+	<div id="ap-wrapper-inner">
+	<!-- <div id="ap-wrapper-inner" class="large-2 medium-2 small-12"> -->
 
 
 	<header>
@@ -99,7 +100,7 @@
 	</div> <!--#ap-wrapper -->
 </div> <!--#ap-wrapper-inner -->
 
-<section id="ap-content-wrapper" class="large-10 medium-9 small-12">
+<section id="ap-content-wrapper" class="large-10 medium-10 small-12">
 
 	<div id="ap-content" class="grid-x">
 	<!-- <div id="content" class="site-content"> -->

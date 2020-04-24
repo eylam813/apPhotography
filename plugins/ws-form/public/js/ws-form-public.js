@@ -2098,6 +2098,7 @@
 
 			// We're done!
 			ws_this.trigger(post_mode + '-complete');
+			ws_this.trigger('complete');
 			return;
 		}
 
@@ -2163,6 +2164,7 @@
 		 	}
 
 			ws_this.trigger(post_mode + '-complete');
+			ws_this.trigger('complete');
 
 	 		return !errors;
 
@@ -2180,6 +2182,7 @@
 
 			// Trigger post most complete event
 			ws_this.trigger(post_mode + '-error');
+			ws_this.trigger('error');
 
  		}, (action_id > 0));
 	}
@@ -2236,6 +2239,9 @@
 			// Enable submit buttons
 			$('button[type="submit"].wsf-button, input[type="submit"].wsf-button, button[data-action="wsf-save"].wsf-button, button[data-ecommerce-payment].wsf-button, [data-post-lock]', ws_this.form_canvas_obj).removeAttr('disabled');
 			ws_this.form_post_locked = false;
+
+			// Reset post upload progress indicators
+			ws_this.api_call_progress_reset();
 
 			// Trigger rendered event
 			ws_this.trigger('unlock');
@@ -2376,12 +2382,55 @@
 			}
 		};
 
+		// Data
 		if(params !== false) { ajax_request.data = params; }
+
+		// Progress
+		var progress_objs = $('[data-source="post_progress"]', this.form_canvas_obj);
+		if(progress_objs.length) {
+
+			ajax_request.xhr = function() {
+
+				var xhr = new window.XMLHttpRequest();
+				xhr.upload.addEventListener("progress", function(e) { ws_this.api_call_progress(progress_objs, e); }, false);
+				xhr.addEventListener("progress", function(e) { ws_this.api_call_progress(progress_objs, e); }, false);
+				return xhr;
+			};
+		}
 
 		$.ajax(ajax_request);
 
 		return this;
 	};
+
+	// API Call - Progress
+	$.WS_Form.prototype.api_call_progress = function(progress_objs, e) {
+
+		if(!e.lengthComputable) { return; }
+
+		var ws_this = this;
+
+		progress_objs.each(function() {
+
+			// Get progress value
+			var progress_percentage = (e.loaded / e.total) * 100;
+
+			// Set progress fields
+			ws_this.form_progress_set_value($(this), Math.round(progress_percentage));
+		});
+	}
+
+	// API Call - Progress
+	$.WS_Form.prototype.api_call_progress_reset = function() {
+
+		var ws_this = this;
+
+		var progress_obj = $('[data-progress-bar][data-source="post_progress"]', this.form_canvas_obj);
+		progress_obj.each(function() {
+
+			ws_this.form_progress_set_value($(this), 0);
+		});
+	}
 
 	// JS Actions - Init
 	$.WS_Form.prototype.action_js_init = function(action_js) {

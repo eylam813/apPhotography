@@ -121,7 +121,8 @@
 	width: 100%;
 }
 
-#wsf-feedback-reason-other-text {
+#wsf-feedback-reason-other-text,
+#wsf-feedback-reason-error-text {
 	width: 100%;
 }
 

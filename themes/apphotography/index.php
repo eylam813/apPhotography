@@ -20,17 +20,18 @@ get_header();
 	<!-- container for blogs page  -->
 		<div class="grid-container">
 			<div class="grid-x">
-				<div class="large-10 medium-12 small-12 grid-x align-justify blog-posts-box">
+				<div class="large-12 medium-12 small-12 grid-x align-justify blog-posts-box">
 					<?php
 					if (have_posts()) :
 						// loading header if page is not the homepage
 						if (is_home() && !is_front_page()) :
 					?>
-							<!-- <section class="large-12 medium-12 small-12">
+							<section class="large-12 medium-12 small-12">
 								<h1 class="page-title screen-reader-text"><?php 
-								// single_post_title(); 
+								single_post_title(); 
 								?></h1>
-							</section> -->
+								<h1>Blog Archive</h1>
+							</section>
 							<!-- blog grid box -->
 						<?php
 						endif;
@@ -42,7 +43,7 @@ get_header();
 						?>
 
 							<!-- container for blog card -->
-							<div class="card large-10 medium-5 small-10 blogCard">
+							<div class="card large-7 medium-5 small-10 blogCard">
 
 								<?php
 								// loading post thumbnail image

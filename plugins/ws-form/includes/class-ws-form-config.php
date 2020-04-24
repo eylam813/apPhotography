@@ -925,8 +925,8 @@
 							),
 
 							// Groups
-							'mask_group'		=>	'<fieldset#disabled>#group_label#group</fieldset>',
-							'mask_group_label'	=>	'<legend#attributes>#group_label</legend>',
+							'mask_group_wrapper'		=>	'<div#attributes>#group</div>',
+							'mask_group_label'			=>	'<legend>#group_label</legend>',
 
 							// Rows
 							'mask_row'					=>	'<div#attributes>#row_label</div>',
@@ -940,7 +940,7 @@
 							'mask_row_default' 			=>	' checked',
 
 							// Fields
-							'mask_field'					=>	'<div#attributes>#data</div>#help',
+							'mask_field'					=>	'#data#help',
 							'mask_field_label'				=>	'<label id="#label_id"#attributes>#label</label>',
 							'mask_field_label_attributes'	=>	array('class'),
 //							'mask_field_label_hide_group'	=>	true,
@@ -951,9 +951,15 @@
 								'basic'	=> array(
 
 									'label'		=>	__('Basic', 'ws-form'),
-									'meta_keys'	=>	array('label_render_off', 'label_position', 'label_column_width', 'hidden', 'select_all', 'select_all_label', 'class_inline', 'help'),
+									'meta_keys'	=>	array('label_render_off', 'label_position', 'label_column_width', 'hidden', 'select_all', 'select_all_label', 'help'),
 
 									'fieldsets'	=>	array(
+
+										array(
+											'label'		=>	__('Layout', 'ws-form'),
+											'meta_keys'	=>	array('orientation',
+											)
+										),
 
 										array(
 											'label'		=>	__('Accessibility', 'ws-form'),
@@ -1017,8 +1023,8 @@
 							),
 
 							// Groups
-							'mask_group'			=>	'<fieldset#disabled>#group_label#group</fieldset>',
-							'mask_group_label'		=>	'<legend#attributes>#group_label</legend>',
+							'mask_group_wrapper'		=>	'<div#attributes>#group</div>',
+							'mask_group_label'			=>	'<legend>#group_label</legend>',
 
 							// Rows
 							'mask_row'					=>	'<div#attributes>#row_label</div>',
@@ -1032,7 +1038,7 @@
 							'mask_row_default' 			=>	' checked',
 
 							// Fields
-							'mask_field'					=>	'<div#attributes>#data</div>#help',
+							'mask_field'					=>	'#data#help',
 							'mask_field_attributes'			=>	array('class', 'required_attribute_no'),
 							'mask_field_label'				=>	'<label id="#label_id"#attributes>#label</label>',
 							'mask_field_label_attributes'	=>	array('class'),
@@ -1046,9 +1052,15 @@
 								'basic'	=> array(
 
 									'label'			=>	__('Basic', 'ws-form'),
-									'meta_keys'		=>	array('label_render', 'label_position', 'label_column_width', 'required_attribute_no', 'hidden', 'class_inline', 'help'),
+									'meta_keys'		=>	array('label_render', 'label_position', 'label_column_width', 'required_attribute_no', 'hidden', 'help'),
 
 									'fieldsets'		=>	array(
+
+										array(
+											'label'		=>	__('Layout', 'ws-form'),
+											'meta_keys'	=>	array('orientation',
+											)
+										),
 
 										array(
 											'label'		=>	__('Accessibility', 'ws-form'),
@@ -1453,8 +1465,8 @@
 							),
 
 							// Groups
-							'mask_group'				=>	'<fieldset#disabled>#group_label#group</fieldset>',
-							'mask_group_label'			=>	'<legend#attributes>#group_label</legend>',
+							'mask_group_wrapper'		=>	'<div#attributes>#group</div>',
+							'mask_group_label'			=>	'<legend>#group_label</legend>',
 
 							// Rows
 							'mask_row'					=>	'<div#attributes>#row_label</div>',
@@ -1469,7 +1481,7 @@
 							'mask_row_default' 			=>	' checked',
 
 							// Fields
-							'mask_field'				=>	'<div#attributes>#data</div>#help',
+							'mask_field'				=>	'#data#help',
 							'mask_field_label'				=>	'<label id="#label_id"#attributes>#label</label>',
 							'mask_field_label_attributes'	=>	array('class'),
 //							'mask_field_label_hide_group'	=>	true,
@@ -1480,9 +1492,15 @@
 								'basic'	=> array(
 
 									'label'			=>	__('Basic', 'ws-form'),
-									'meta_keys'		=>	array('label_render_off', 'label_position', 'label_column_width', 'hidden', 'select_all', 'select_all_label', 'class_inline', 'help'),
+									'meta_keys'		=>	array('label_render_off', 'label_position', 'label_column_width', 'hidden', 'select_all', 'select_all_label', 'help'),
 
 									'fieldsets'	=>	array(
+
+										array(
+											'label'		=>	__('Layout', 'ws-form'),
+											'meta_keys'	=>	array('orientation',
+											)
+										),
 
 										array(
 											'label'		=>	__('Accessibility', 'ws-form'),
@@ -3626,8 +3644,8 @@
 					'select_list'				=>	true
 				),
 
-				// Adds inline class to class attribute
-				'class_inline'			=> array(
+				// Orientation
+				'orientation'			=> array(
 
 					'label'						=>	__('Orientation', 'ws-form'),
 					'type'						=>	'select',
@@ -3635,9 +3653,11 @@
 					'options'					=>	array(
 
 						array('value' => '', 'text' => __('Vertical', 'ws-form')),
-						array('value' => 'on', 'text' => __('Horizontal', 'ws-form'))
-					)
+						array('value' => 'horizontal', 'text' => __('Horizontal', 'ws-form')),
+					),
+					'key_legacy'				=>	'class_inline'
 				),
+
 
 				// Form label mask (Allows user to define custom mask)
 				'label_mask_form'		=> array(
@@ -6311,6 +6331,8 @@
 								'class_invalid_feedback'		=> array('wsf-invalid-feedback'),
 								'class_inline' 					=> array('wsf-inline'),
 								'class_form_validated'			=> array('wsf-validated'),
+								'class_orientation_wrapper'		=> array('wsf-grid'),
+								'class_orientation_row'			=> array('wsf-tile'),
 								'class_single_vertical_align'	=> array(
 
 									'middle'	=>	'wsf-middle',
@@ -6334,7 +6356,8 @@
 										'class_field'			=> array(),
 										'class_row_field'		=> array('wsf-field'),
 										'class_row_field_label'	=> array('wsf-label'),
-										'mask_row_label'		=>	'#row_field<label id="#label_row_id" for="#row_id"#attributes>#checkbox_field_label</label>#invalid_feedback',
+										'mask_group'			=> '<fieldset class="wsf-fieldset"#disabled>#group_label#group</fieldset>',
+										'mask_row_label'		=> '#row_field<label id="#label_row_id" for="#row_id"#attributes>#checkbox_field_label</label>#invalid_feedback',
 									),
 
 									'radio' 	=> array(
@@ -6342,7 +6365,8 @@
 										'class_field'			=> array(),
 										'class_row_field'		=> array('wsf-field'),
 										'class_row_field_label'	=> array('wsf-label'),
-										'mask_row_label'		=>	'#row_field<label id="#label_row_id" data-label-required-id="#label_id" for="#row_id"#attributes>#radio_field_label</label>#invalid_feedback',
+										'mask_group'			=> '<fieldset class="wsf-fieldset"#disabled>#group_label#group</fieldset>',
+										'mask_row_label'		=> '#row_field<label id="#label_row_id" data-label-required-id="#label_id" for="#row_id"#attributes>#radio_field_label</label>#invalid_feedback',
 									),
 
 									'spacer' 	=> array(
@@ -6500,6 +6524,8 @@
 								'class_invalid_feedback'	=> array('help-block', 'wsf-invalid-feedback'),
 								'class_inline' 				=> array('form-inline'),
 								'class_form_validated'		=> array('wsf-validated'),
+								'class_orientation_wrapper'	=> array('row'),
+								'class_orientation_row'		=> array(),
 								'class_field_button_type'	=> array(
 
 									'default'		=>	'btn-default',
@@ -6705,6 +6731,8 @@
 								'class_invalid_feedback'		=> array('invalid-feedback'),
 								'class_inline' 					=> array('form-inline'),
 								'class_form_validated'			=> array('was-validated'),
+								'class_orientation_wrapper'		=> array('row'),
+								'class_orientation_row'			=> array(),
 								'class_single_vertical_align'	=> array(
 
 									'middle'	=>	'align-self-center',
@@ -6731,24 +6759,24 @@
 									'checkbox' 	=> array(
 										
 										'class_field'			=> array(),
-										'class_row'				=> array('custom-control', 'custom-checkbox'),
+										'class_row'				=> array(),
 										'class_row_disabled'	=> array('disabled'),
 										'class_row_field'		=> array('custom-control-input'),
 										'class_row_field_label'	=> array('custom-control-label'),
 										'class_inline' 			=> array('custom-control-inline'),
 										'mask_field'			=> '<div#attributes>#data</div>#help',
-										'mask_row_label'		=> '#row_field<label id="#label_row_id" for="#row_id"#attributes>#checkbox_field_label</label>#invalid_feedback',
+										'mask_row_label'		=> '<div class="custom-control custom-checkbox">#row_field<label id="#label_row_id" for="#row_id"#attributes>#checkbox_field_label</label></div>#invalid_feedback',
 									),
 
 									'radio' 	=> array(
 
 										'class_field'			=> array(),
-										'class_row'				=> array('custom-control', 'custom-radio'),
+										'class_row'				=> array(),
 										'class_row_disabled'	=> array('disabled'),
 										'class_row_field'		=> array('custom-control-input'),
 										'class_row_field_label'	=> array('custom-control-label'),
 										'class_inline' 			=> array('custom-control-inline'),
-										'mask_row_label'		=> '#row_field<label id="#label_row_id" for="#row_id" data-label-required-id="#label_id"#attributes>#radio_field_label</label>#invalid_feedback'
+										'mask_row_label'		=> '<div class="custom-control custom-radio">#row_field<label id="#label_row_id" for="#row_id" data-label-required-id="#label_id"#attributes>#radio_field_label</label></div>#invalid_feedback'
 									),
 
 									'spacer' 	=> array(
@@ -6787,8 +6815,8 @@
 						'columns'					=>	array(
 
 							'column_count' 			=> 	12,
-							'column_class'				=>	'col-#id-#size',
-							'column_css_selector'		=>	'.col-#id-#size',
+							'column_class'			=>	'col-#id-#size',
+							'column_css_selector'	=>	'.col-#id-#size',
 							'offset_class'			=>	'offset-#id-#offset',
 							'offset_css_selector'	=>	'.offset-#id-#offset'
 						),
@@ -6797,8 +6825,8 @@
 
 							// Up to 575px
 							25	=>	array(
-								'id'				=>	'xs',
-								'name'				=>	__('Extra Small', 'ws-form'),
+								'id'					=>	'xs',
+								'name'					=>	__('Extra Small', 'ws-form'),
 								'column_class'			=>	'col-#size',
 								'column_css_selector'	=>	'.col-#size',
 								'offset_class'			=>	'offset-#offset',
@@ -6926,6 +6954,8 @@
 								'class_invalid_feedback'		=> array('invalid-feedback'),
 								'class_inline' 					=> array('form-inline'),
 								'class_form_validated'			=> array('was-validated'),
+								'class_orientation_wrapper'		=> array('row'),
+								'class_orientation_row'			=> array(),
 								'class_single_vertical_align'	=> array(
 
 									'middle'	=>	'align-self-center',
@@ -6952,24 +6982,24 @@
 									'checkbox' 	=> array(
 
 										'class_field'			=> array(),
-										'class_row'				=> array('custom-control', 'custom-checkbox'),
+										'class_row'				=> array(),
 										'class_row_disabled'	=> array('disabled'),
 										'class_row_field'		=> array('custom-control-input'),
 										'class_row_field_label'	=> array('custom-control-label'),
 										'class_inline' 			=> array('custom-control-inline'),
 										'mask_field'			=> '<div#attributes>#data</div>#help',
-										'mask_row_label'		=> '#row_field<label id="#label_row_id" for="#row_id"#attributes>#checkbox_field_label</label>#invalid_feedback',
+										'mask_row_label'		=> '<div class="custom-control custom-checkbox">#row_field<label id="#label_row_id" for="#row_id"#attributes>#checkbox_field_label</label></div>#invalid_feedback',
 									),
 
 									'radio' 	=> array(
 
 										'class_field'			=> array(),
-										'class_row'				=> array('custom-control', 'custom-radio'),
+										'class_row'				=> array(),
 										'class_row_disabled'	=> array('disabled'),
 										'class_row_field'		=> array('custom-control-input'),
 										'class_row_field_label'	=> array('custom-control-label'),
 										'class_inline' 			=> array('custom-control-inline'),
-										'mask_row_label'		=> '#row_field<label id="#label_row_id" for="#row_id" data-label-required-id="#label_id"#attributes>#radio_field_label</label>#invalid_feedback'
+										'mask_row_label'		=> '<div class="custom-control custom-radio">#row_field<label id="#label_row_id" for="#row_id" data-label-required-id="#label_id"#attributes>#radio_field_label</label></div>#invalid_feedback'
 									),
 
 									'spacer' 	=> array(
@@ -7140,6 +7170,8 @@
 								'class_invalid_feedback'	=> array('error'),
 								'class_inline' 				=> array('form-inline'),
 								'class_form_validated'		=> array('was-validated'),
+								'class_orientation_wrapper'		=> array('row'),
+								'class_orientation_row'			=> array('columns'),
 								'class_field_button_type'	=> array(
 
 									'secondary'		=>	'secondary',
@@ -7346,6 +7378,8 @@
 								'class_invalid_feedback'		=> array('form-error'),
 								'class_inline' 					=> array('form-inline'),
 								'class_form_validated'			=> array('was-validated'),
+								'class_orientation_wrapper'		=> array('row'),
+								'class_orientation_row'			=> array('columns'),
 								'class_single_vertical_align'	=> array(
 
 									'middle'	=>	'align-self-middle',
@@ -7556,6 +7590,8 @@
 								'class_invalid_feedback'	=> array('form-error'),
 								'class_inline' 				=> array('form-inline'),
 								'class_form_validated'		=> array('was-validated'),
+								'class_orientation_wrapper'		=> array('grid-x', 'grid-margin-x'),
+								'class_orientation_row'			=> array('cell'),
 								'class_single_vertical_align'	=> array(
 
 									'middle'	=>	'align-self-middle',
@@ -7763,7 +7799,7 @@
 
 					'variables'	=> array(
 
-						'client_time' => array('label' => __('Current Time', 'ws-form'), 'limit' => 'in client facing areas', 'description' => __('Returns the users web browser local time in the format configured in WordPress.', 'ws-form')),
+						'client_time' => array('label' => __('Current Time', 'ws-form'), 'limit' => 'in client-side', 'description' => __('Returns the users web browser local time in the format configured in WordPress.', 'ws-form')),
 
 						'client_date_custom' => array(
 
@@ -7776,12 +7812,12 @@
 
 							'kb_slug' => 'date-formats',
 
-							'limit' => 'in client facing areas',
+							'limit' => 'in client-side',
 
 							'description' => __('Returns the users web browser local date and time in a specified format (PHP date format).', 'ws-form')
 						),
 
-						'client_date' => array('label' => __('Current Date', 'ws-form'), 'limit' => 'in client facing areas', 'description' => __('Returns the users web browser local date in the format configured in WordPress.', 'ws-form')),
+						'client_date' => array('label' => __('Current Date', 'ws-form'), 'limit' => 'in client-side', 'description' => __('Returns the users web browser local date in the format configured in WordPress.', 'ws-form')),
 					)
  				),
 
@@ -7916,7 +7952,7 @@
 								array('id' => 'id', 'required' => true),
 							),
 
-							'description' => __('Use this variable to pull back the value of a field on your form. For example: <code>#field(123)</code> where \'123\' is the field ID shown in the form editor.', 'ws-form')
+							'description' => __('Use this variable to pull back the value of a field on your form. For example: <code>#field(123)</code> where \'123\' is the field ID shown in the layout editor.', 'ws-form')
 						),
 					)
 				),
@@ -7935,9 +7971,60 @@
 							'attributes' => array(
 
 								array('id' => 'id', 'required' => true),
+								array('id' => 'delimiter')
 							),
 
-							'description' => __('Use this variable to pull back the selected option text of a select field on your form. For example: <code>#select_option_text(123)</code> where \'123\' is the field ID shown in the form editor.', 'ws-form')
+							'description' => __('Use this variable to pull back the selected option text of a select field on your form. For example: <code>#select_option_text(123)</code> where \'123\' is the field ID shown in the layout editor.', 'ws-form'),
+
+							'limit' => 'in client-side'
+						),
+					)
+				),
+
+				// Checkbox label
+				'checkbox' 	=> array(
+
+					'label'		=> __('Checkboxes', 'ws-form'),
+
+					'variables'	=> array(
+
+						'checkbox_label'	=>	array(
+
+							'label' => __('Checkbox Label', 'ws-form'),
+
+							'attributes' => array(
+
+								array('id' => 'id', 'required' => true),
+								array('id' => 'delimiter')
+							),
+
+							'description' => __('Use this variable to pull back the label of a checkbox field on your form. For example: <code>#checkbox_label(123)</code> where \'123\' is the field ID shown in the layout editor.', 'ws-form'),
+
+							'limit' => 'in client-side'
+						),
+					)
+				),
+
+				// Radio label
+				'radio' 	=> array(
+
+					'label'		=> __('Radios', 'ws-form'),
+
+					'variables'	=> array(
+
+						'radio_label'	=>	array(
+
+							'label' => __('Radio Label', 'ws-form'),
+
+							'attributes' => array(
+
+								array('id' => 'id', 'required' => true),
+								array('id' => 'delimiter')
+							),
+
+							'description' => __('Use this variable to pull back the label of a radio field on your form. For example: <code>#radio_label(123)</code> where \'123\' is the field ID shown in the layout editor.', 'ws-form'),
+
+							'limit' => 'in client-side'
 						),
 					)
 				),

@@ -553,14 +553,16 @@
 	box-sizing: inherit;
 }
 
-.wsf-section {
+.wsf-section,
+.wsf-fieldset {
 	border: none;
 	margin: 0;
 	min-width: 0;
 	padding: 0;
 }
 
-.wsf-section legend {
+.wsf-section > legend,
+.wsf-fieldset > legend {
 	border: 0;
 	font-size: 25px;
 	margin-bottom: <?php self::e($spacing_small . $unit_of_measurement); ?>;
@@ -815,6 +817,9 @@ textarea.wsf-field:disabled {
 <?php } ?>
 	cursor: not-allowed;
 	opacity: 1;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
 }
 
@@ -909,6 +914,9 @@ input[type=checkbox].wsf-field + label.wsf-label {
 	margin: 0 0 <?php self::e($spacing_small . $unit_of_measurement); ?>;
 	padding-left: <?php self::e(($checkbox_size + $spacing_extra_small) . $unit_of_measurement); ?>;
 	position: relative;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
 }
 
@@ -1094,6 +1102,9 @@ input[type=radio].wsf-field + label.wsf-label {
 	margin: 0 0 <?php self::e($spacing_small . $unit_of_measurement); ?>;
 	padding-left: <?php self::e(($radio_size + $spacing_extra_small) . $unit_of_measurement); ?>;
 	position: relative;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
 }
 
@@ -1189,7 +1200,6 @@ body.rtl input[type=radio].wsf-field + label.wsf-label:before {
 
 input[type=checkbox].wsf-field.wsf-button + label.wsf-label,
 input[type=radio].wsf-field.wsf-button + label.wsf-label {
-  	appearance: none;
   	background-color: <?php self::e($color_default_lighter); ?>;
   <?php if ($form_border) { ?>
   	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
@@ -1215,7 +1225,10 @@ input[type=radio].wsf-field.wsf-button + label.wsf-label {
   <?php if ($form_transition) { ?>
   	transition: background-color <?php self::e($form_transition_speed); ?>, border-color <?php self::e($form_transition_speed); ?>, color <?php self::e($form_transition_speed); ?>;
   <?php } ?>
-  	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
   	vertical-align: middle;
 }
 
@@ -1439,7 +1452,7 @@ select.wsf-field:not([multiple]):not([size]):invalid {
 <?php } ?>
 
 button.wsf-button {
-	appearance: none;
+	-webkit-appearance: none;
 	background-color: <?php self::e($color_default_lighter); ?>;
 <?php if ($form_border) { ?>
 	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
@@ -1465,6 +1478,9 @@ button.wsf-button {
 <?php if ($form_transition) { ?>
 	transition: background-color <?php self::e($form_transition_speed); ?>, border-color <?php self::e($form_transition_speed); ?>;
 <?php } ?>
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
 	vertical-align: middle;
 }

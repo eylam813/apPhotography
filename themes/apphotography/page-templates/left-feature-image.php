@@ -58,7 +58,7 @@
                 </div><!-- #ap-primary -->
 
                 <?php
-                get_sidebar();
+                
                 get_footer();
                 ?>
             

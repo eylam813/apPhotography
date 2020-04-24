@@ -180,6 +180,7 @@ screen and (max-width:40em) {
     header {
         padding: 5px;
         width: 100%;
+        max-height: 20vh;
     }
 
 
@@ -477,7 +478,6 @@ textarea {
     max-height: 150px;
     /* position: absolute; */
     /* bottom: 0; */
-
 }
 
 footer .menu a {
@@ -494,4 +494,21 @@ footer a:hover {
 
 .site-info {
     align-self: flex-end;
+}
+
+@media print,
+screen and (max-width:40em) {
+    .site-footer {
+        flex-direction: column;
+        padding: 1rem 0.5rem;
+        max-height: fit-content;
+    }
+    footer .menu a{
+        font-size: 0.9rem;
+    }
+    .site-info {
+        margin-top: 1rem;
+        align-self: center;
+        color: var(--slate-grey);
+    }
 }

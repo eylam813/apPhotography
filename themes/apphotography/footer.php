@@ -14,7 +14,6 @@
 
 </div><!-- #page -->
 	<footer id="colophon" class="site-footer">
-		
 		<?php
 			// loading the menu
 			if ( has_nav_menu( 'menu-2' ) ) {
@@ -27,11 +26,10 @@
 				wp_nav_menu($args);
 			}
 						?>
-				<div class="site-info">
-			Alex Pino &copy;<script>
+		<div class="site-info">
+		Alejandro Pino Photography &copy; <script>
                 document.write(new Date().getFullYear());
             </script>
-
 		</div>
 		<!-- .site-info -->
 	</footer><!-- #colophon -->

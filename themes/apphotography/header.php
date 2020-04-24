@@ -33,7 +33,7 @@
 	<header>
 	<section>
 		<!-- responsive header nav -->
-		<div class="title-bar" data-responsive-toggle="site-navigation" data-hide-for="large">
+		<div class="title-bar" data-responsive-toggle="site-navigation" data-hide-for="medium">
 					
 					<!-- container for the logo - mobile/tablet only -->
 					<div class="title-bar-title">

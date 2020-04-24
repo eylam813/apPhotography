@@ -27,7 +27,9 @@ get_header();
 			
 		endwhile; // End of the loop.
 		?>
-
+		<!-- go to shop button-->
+		<a href="<?php echo get_permalink( wc_get_page_id( 'shop' ) ); ?>" class="albumToShopBtn">
+		<img src="<?php echo get_template_directory_uri() . '/assets/img/cart.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>">Shop  &#8594; </a>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 

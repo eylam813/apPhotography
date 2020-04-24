@@ -293,7 +293,25 @@ h6 {
 .single-album-page-main{
     padding: 1rem 4rem;
 }
+.albumToShopBtn {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background-color: var(--ash-grey);
+    color: var(--white);
+    position: fixed;
+    bottom: 5vh;
+    right: 5vw;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
+.albumToShopBtn img {
+    width: 50px;
+    height: 50px;
+}
 /* ******************** SIMPLE LIGHTBOX PLUGIN ******************** */
 /* file name caption */
 #slb_viewer_wrap .slb_theme_slb_baseline * {
@@ -340,6 +358,9 @@ h6 {
         display: flex;
         justify-content: stretch;
         width: auto;
+    }
+    .single-album-page-main{
+        padding: 1rem 0rem;
     }
     .single-album-inner-wrapper{
         height: 100%;

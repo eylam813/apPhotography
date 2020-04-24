@@ -7,7 +7,7 @@
 
 			// These are set here to avoid problems if someone has both plugins installed and migrates from basic to PRO without de-activating the basic edition first. This ensures the PRO options are set up.
 			$ws_form_edition = 'basic';
-			$ws_form_version = '1.5.19';
+			$ws_form_version = '1.5.25';
 
 			$run_version_check = true;
 
@@ -44,6 +44,9 @@
 
 			// Initialize database
 			self::database_init();
+
+			// Upgrade
+			self::upgrade_init();
 
 			// Initialize options
 			self::options_init();
@@ -375,6 +378,31 @@
 			$role->add_cap('export_submission');
 			$role->add_cap('read_submission');
 			$role->add_cap('manage_options_wsform');
+		}
+
+		private static function upgrade_init() {
+
+			global $wpdb;
+
+			// Get current plug-in version
+			$version = WS_Form_Common::option_get('version');
+
+			// Version 1.5.21 - Orientation upgrade
+			if(version_compare($version, '1.5.21') >= 0) {
+
+				// Table prefix
+				$table_prefix = $wpdb->prefix . WS_FORM_DB_TABLE_PREFIX;
+
+				// Version 1.5.21 - Orientation upgrade
+				$wpdb->update(
+
+					$table_prefix . 'field_meta',
+					array('meta_key' => 'orientation', 'meta_value' => 'horizontal'),
+					array('meta_key' => 'class_inline', 'meta_value' => 'on'),
+					array('%s'),
+					array('%s', '%s')
+				);
+			}
 		}
 	}
 

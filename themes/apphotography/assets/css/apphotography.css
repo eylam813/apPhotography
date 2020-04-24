@@ -190,9 +190,6 @@ h6 {
     width: 100%;
     height: 100%;
 }
-.front-page h1 {
-    display: none;
-}
 .front-page .bg-holder{
     width: 100%;
     height: 100%;
@@ -217,7 +214,6 @@ h6 {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
 }
 
 /* ******************** LEFT-FEATURE TEMPLATE ******************** */

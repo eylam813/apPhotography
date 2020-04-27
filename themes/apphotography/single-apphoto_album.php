@@ -24,17 +24,15 @@ get_header();
 
 			the_post_navigation();
 
-			// If comments are open or we have at least one comment, load up the comment template.
-			if ( comments_open() || get_comments_number() ) :
-				comments_template();
-			endif;
-
+			
 		endwhile; // End of the loop.
 		?>
-
+		<!-- go to shop button-->
+		<a href="<?php echo get_permalink( wc_get_page_id( 'shop' ) ); ?>" class="albumToShopBtn">
+		Shop  &#8594; </a>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
 <?php
-get_sidebar();
+
 get_footer();

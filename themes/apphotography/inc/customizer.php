@@ -37,6 +37,8 @@ function apphotography_customize_register( $wp_customize ) {
 			'title' => esc_html__( 'Social Media', 'apphotography' ),
 			'capability' => 'edit_theme_options',
 		) );
+		// For background image
+		$wp_customize->remove_panel('background_image');
 	// Sections
 		// For Dynamic Social Media (facebook)
 		$wp_customize->add_section( 'apphotography_facebook_section', array(
@@ -56,6 +58,8 @@ function apphotography_customize_register( $wp_customize ) {
 			'capability' => 'edit_theme_options',
 			'panel' => 'apphotography_social_media_panel'
 		) );
+		// For background image
+		$wp_customize->remove_section('background_image');
 	// settings
 		// For Dynamic Social Media (facebook)
 		$wp_customize->add_setting( 'apphotography_facebook_url', array(
@@ -63,18 +67,20 @@ function apphotography_customize_register( $wp_customize ) {
 			'default' => '',
 			'sanitize_callback' => 'esc_url_raw',
 		));
-			// For Dynamic Social Media (instagram)
+		// For Dynamic Social Media (instagram)
 		$wp_customize->add_setting( 'apphotography_instagram_url', array(
 			'transport' => 'refresh',
 			'default' => '',
 			'sanitize_callback' => 'esc_url_raw',
 		));
-			// For Dynamic Social Media (twitter)
+		// For Dynamic Social Media (twitter)
 		$wp_customize->add_setting( 'apphotography_twitter_url', array(
 			'transport' => 'refresh',
 			'default' => '',
 			'sanitize_callback' => 'esc_url_raw',
 		));
+		// For background image
+		$wp_customize->remove_setting('background_image');
 	// controls
 		// For Dynamic Social Media (facebook)
 		$wp_customize->add_control( 'apphotography_facebook_url', array(
@@ -106,6 +112,8 @@ function apphotography_customize_register( $wp_customize ) {
 				'placeholder' => esc_html__( 'https://twitter.com', 'apphotography' )
 			)
 		) );
+		// For background image
+		$wp_customize->remove_control('background_image');
 }
 add_action( 'customize_register', 'apphotography_customize_register' );
 

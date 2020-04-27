@@ -433,8 +433,12 @@ textarea {
 }
 /* product photo */
 .woocommerce #content div.product div.images, .woocommerce div.product div.images, .woocommerce-page #content div.product div.images, .woocommerce-page div.product div.images{
-    width: 75%;
+    width: 70%;
     /* margin-right: 1rem; */
+}
+
+.nav-links{
+    display: none;
 }
 /* product info */
 .woocommerce #content div.product div.summary, .woocommerce div.product div.summary, .woocommerce-page #content div.product div.summary, .woocommerce-page div.product div.summary{

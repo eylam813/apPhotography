@@ -115,9 +115,6 @@ h6 {
 	background: var(--slate-grey);
 	color: var(--dark-green);
 }
-#cssmenu > ul > li:first-child > a {
-	border-radius: 5px 0 0 5px;
-}
 /* submenu styles */
 #cssmenu > ul > li.has-sub {
     position: relative;
@@ -201,7 +198,7 @@ h6 {
     box-shadow: inset 0 0 5px 10px #ffffff;
 }
 .front-page .bg-holder main {
-    /* background-color: #ffffff80; */
+    background-color: #ffffff80;
     width: 50vw;
     max-width: 500px;
     margin-left: auto;
@@ -293,7 +290,25 @@ h6 {
 .single-album-page-main{
     padding: 1rem 4rem;
 }
+.albumToShopBtn {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background-color: var(--ash-grey);
+    color: var(--white);
+    position: fixed;
+    bottom: 5vh;
+    right: 5vw;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
+.albumToShopBtn img {
+    width: 50px;
+    height: 50px;
+}
 /* ******************** SIMPLE LIGHTBOX PLUGIN ******************** */
 /* file name caption */
 #slb_viewer_wrap .slb_theme_slb_baseline * {
@@ -340,6 +355,9 @@ h6 {
         display: flex;
         justify-content: stretch;
         width: auto;
+    }
+    .single-album-page-main{
+        padding: 1rem 0rem;
     }
     .single-album-inner-wrapper{
         height: 100%;

@@ -83,12 +83,19 @@ h1 {
 /* ******************** Nav Styling ******************** */
 header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
-    height: 100vh;
+    /* height: 100vh; */
     /* width: 20%; */
-    z-index: 99;
+    /* z-index: 99; */
     padding: 60px 5px 0 5px;
+}
+
+header section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: fit-content;
 }
 
 /* change styling on a of current page on nav */
@@ -126,12 +133,13 @@ nav {
 #logo {
     width: 100%;
     min-width: 100px;
+    max-width: 200px;
 }
 
 .social-media {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 30%;
+    /* margin-bottom: 30%; */
 }
 
 .social-media img {
@@ -149,9 +157,9 @@ nav {
     justify-content: center;
 }
 
-.menu {
+/* .menu {
     flex-direction: column;
-}
+} */
 
 .custom-logo {
     margin-bottom: 20px;
@@ -176,21 +184,21 @@ screen and (max-width:40em) {
     .social-media {
         display: none;
     }
-
+/* 
     header {
         padding: 5px;
         width: 100%;
         max-height: 20vh;
-    }
+    } */
 
 
     header section {
         background: white;
-        z-index: 99;
+        /* z-index: 99; */
     }
 
     #ap-wrapper {
-        z-index: 9999999;
+        /* z-index: 9999999; */
         height: 5rem;
         min-width: 100vw;
     }

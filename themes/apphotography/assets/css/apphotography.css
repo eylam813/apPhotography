@@ -85,12 +85,13 @@ h6 {
 
 #ap-wrapper {
     /* background-color: orange; */
-    max-width: 200px;
+    /* max-width: 200px; */
     position: sticky;
     position: -webkit-sticky; /* Safari */
     top:0;
     left:0;
-    height: 100vh;
+    z-index: 99999999;
+    /* height: 100vh; */
 }
 
 #ap-wrapper-inner{

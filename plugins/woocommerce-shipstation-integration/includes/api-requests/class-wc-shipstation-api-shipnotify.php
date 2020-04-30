@@ -180,11 +180,20 @@ class WC_Shipstation_API_Shipnotify extends WC_Shipstation_API_Request {
 			$can_parse_xml = false;
 			$this->log( __( 'Missing ShipNotify XML input.', 'woocommerce-shipstation' ) );
 
+			$mask = array(
+				'auth_key'                         => '***',
+				'woocommerce-login-nonce'          => '***',
+				'_wpnonce'                         => '***',
+				'woocommerce-reset-password-nonce' => '***',
+			);
+
+			$obfuscated_request = $mask + $_REQUEST;
+
 			// For unknown reason raw post data can be empty. Log all requests
 			// information might help figuring out the culprit.
 			//
 			// @see https://github.com/woocommerce/woocommerce-shipstation/issues/80.
-			$this->log( '$_REQUEST: ' . print_r( $_REQUEST, true ) );
+			$this->log( '$_REQUEST: ' . print_r( $obfuscated_request, true ) );
 		}
 
 		if ( ! function_exists( 'simplexml_import_dom' ) ) {

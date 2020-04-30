@@ -15,7 +15,7 @@
 			self::add_sections($wp_customize);
 
 			// Add scripts
-			add_action('customize_controls_print_scripts', array($this, 'customize_controls_print_scripts'), 30);
+			wp_add_inline_script('customize-controls', self::customize_controls_after());
 		}
 
 		public function add_panel($wp_customize) {
@@ -95,7 +95,7 @@
 
 								array(
 									'label'			=> $field['label'],
-									'description'	=> isset($field['help']) ? $field['help'] : '',
+									'description'	=> isset($field['description']) ? $field['description'] : '',
 									'section'		=> $section_id,
 									'settings'		=> $setting_id,
 									'type'			=> 'select',
@@ -116,7 +116,7 @@
 
 									array(
 										'label'			=> $field['label'],
-										'description'	=> isset($field['help']) ? $field['help'] : '',
+										'description'	=> isset($field['description']) ? $field['description'] : '',
 										'section'		=> $section_id,
 										'settings'		=> $setting_id,
 									)
@@ -133,7 +133,7 @@
 
 								array(
 									'label'       => $field['label'],
-									'description' => isset($field['help']) ? $field['help'] : '',
+									'description' => isset($field['description']) ? $field['description'] : '',
 									'section'     => $section_id,
 									'settings'    => $setting_id,
 									'type'        => $field['type']
@@ -150,47 +150,35 @@
 			return ((isset($checked) && true == $checked) ? 'true' : 'false');
 		}
 
-		public function customize_controls_print_scripts() {
+		public function customize_controls_after() {
 
 			// Work out which form to use for the preview
-			$ws_form_form = new WS_Form_Form();
-			$form_id = $ws_form_form->db_get_preview_form_id();
-			$form_preview_url = WS_Form_Common::get_preview_url($form_id);
-?>
-<script type="text/javascript">
+			$form_id = intval(WS_Form_Common::get_query_var('wsf_preview_form_id'));
+			if($form_id === 0) {
 
-	(function( $ ) {
+				// Find a default form to use
+				$ws_form_form = new WS_Form_Form();
+				$form_id = $ws_form_form->db_get_preview_form_id();
+			}
 
-		'use strict';
+			// Determine if we should automatically open the WS Form panel
+			$wsf_panel_open = WS_Form_Common::get_query_var('wsf_panel_open');
 
-		$(function() {
+			$return_script = "wp.customize.bind('ready', function() {\n";
 
-			wp.customize.bind('ready', function() {
-		});
+			if($form_id > 0) {
 
-<?php
+				$form_preview_url = WS_Form_Common::get_preview_url($form_id);
+				$return_script .= sprintf("	wp.customize.previewer.previewUrl('%s');\n", esc_js($form_preview_url));
+			}
 
-	if($form_id > 0) {
-?>
-			// Show preview when WS Form panel is opened
-			wp.customize.panel('wsform_panel', function(panel) {
+			if($wsf_panel_open === 'true') {
 
-				panel.expanded.bind(function(is_expanded) {
+				$return_script .= "	wp.customize.panel('wsform_panel').expand();\n";
+			}
 
-					if(is_expanded) {
+			$return_script .= '});';
 
-						wp.customize.previewer.previewUrl.set('<?php echo esc_html($form_preview_url); ?>');
-					}
-				});
-			});
-<?php
-	}
-?>
-		});
-
-	})(jQuery);
-
-</script>
-<?php
+			return $return_script;
 		}
 	}

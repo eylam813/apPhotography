@@ -722,6 +722,19 @@
 								)
 							),
 
+							'action_' . $this->id . '_field_labels'	=> array(
+
+								'label'		=>	__('Render Field Labels', 'ws-form'),
+								'type'		=>	'select',
+								'default'	=>	'auto',
+								'options'	=>	array(
+
+									'auto'				=>	array('text' => __("Auto (Hidden if 'Render Label' not checked)", 'ws-form')),
+									'true'				=>	array('text' => __('Yes', 'ws-form')),
+									'false'				=>	array('text' => __('No', 'ws-form'))
+								)
+							),
+
 							'action_' . $this->id . '_static_fields'	=>	array(
 
 								'label'		=>	__('Render Static Fields', 'ws-form'),

@@ -93,6 +93,7 @@
 			}
 
 			// Push JSON response
+			$json_return = wp_json_encode($json_array);
 			if(json_last_error() !== 0) {
 
 				// Set response code
@@ -104,8 +105,12 @@
 					'error' => 			true,
 					'error_message' =>	'JSON encoding error: ' . json_last_error_msg() . ' (' . json_last_error() . ')'
 				);
+
+				echo wp_json_encode($json_array);
+				exit;
 			}
-			echo wp_json_encode($json_array);
+
+			echo $json_return; // phpcs:ignore
 
 			// Stop execution
 			exit;
@@ -209,7 +214,7 @@
 		// Access denied
 		public function api_access_denied() {
 
-			echo json_encode(array('edition' => WS_FORM_EDITION, 'error' => true, 'error_message' => __('Access denied', 'ws-form')));
+			echo wp_json_encode(array('edition' => WS_FORM_EDITION, 'error' => true, 'error_message' => __('Access denied', 'ws-form')));
 			exit;
 		}
 	}

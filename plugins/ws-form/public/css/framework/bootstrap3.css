@@ -1,8 +1,12 @@
-.col-xs-12,
-.col-sm-12,
-.col-md-12,
-.col-lg-12 {
+.wsf-form .col-xs-12,
+.wsf-form .col-sm-12,
+.wsf-form .col-md-12,
+.wsf-form .col-lg-12 {
 	float: left;
+}
+
+.wsf-form .alert > *:last-child {
+	margin-bottom: 0;
 }
 
 .wsf-validated .form-control:invalid,

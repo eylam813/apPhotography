@@ -88,8 +88,8 @@ if ( ! function_exists( 'apphotography_setup' ) ) :
 				'color' => '#002349',
 			),
 			array(
-				'name' => esc_html__( 'Slate Grey', 'apphotography' ),
-				'slug' => 'slategrey',
+				'name' => esc_html__( 'Grey', 'apphotography' ),
+				'slug' => 'grey',
 				'color' => '#6C888D',
 			),
 			array(

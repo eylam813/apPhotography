@@ -22,7 +22,7 @@ h6 {
 }
 :root{
     --dark-blue: #003C44;
-    --slate-grey: #6C888D;
+    --grey: #6C888D;
     --outer-space: #404C56;
     --ash-grey: #ACB4B6;
     --white: #FFFFFF;
@@ -30,20 +30,20 @@ h6 {
 }
 
 /* ******************** Colour Settings ******************** */
-.has-darkgreen-color {
+.has-darkblue-color {
     color: var(--dark-blue);
 }
 
-.has-darkgreen-background-color {
+.has-darkblue-background-color {
     background-color: var(--dark-blue);
 }
 
-.has-slategrey-color {
-    color: var(--slate-grey);
+.has-grey-color {
+    color: var(--grey);
 }
 
-.has-slategrey-background-color {
-    background-color: var(--slate-grey);
+.has-grey-background-color {
+    background-color: var(--grey);
 }
 
 .has-outerspace-color {
@@ -113,7 +113,7 @@ h6 {
 	position: relative;
 }
 #cssmenu > ul > li > a:hover {
-	background: var(--slate-grey);
+	background: var(--grey);
 	color: var(--dark-blue);
 }
 /* submenu styles */
@@ -177,7 +177,7 @@ h6 {
 	text-decoration: none;
 }
 #cssmenu ul li > ul li:hover{
-    background-color: var(--slate-grey);
+    background-color: var(--grey);
     z-index: 99999999;
 }
 

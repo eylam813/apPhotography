@@ -1,6 +1,6 @@
 :root {
     --dark-blue: #002349;
-    --slate-grey: #6C888D;
+    --grey: #999999;
     --outer-space: #404C56;
     --ash-grey: #ACB4B6;
     --white: #FFFFFF;
@@ -8,20 +8,20 @@
 }
 
 /* ******************** Colour Settings ******************** */
-.has-darkgreen-color {
+.has-darkblue-color {
     color: var(--dark-blue);
 }
 
-.has-darkgreen-background-color {
+.has-darkblue-background-color {
     background-color: var(--dark-blue);
 }
 
-.has-slategrey-color {
-    color: var(--slate-grey);
+.has-grey-color {
+    color: var(--grey);
 }
 
-.has-slategrey-background-color {
-    background-color: var(--slate-grey);
+.has-grey-background-color {
+    background-color: var(--grey);
 }
 
 .has-outerspace-color {
@@ -470,7 +470,7 @@ textarea {
 /* cart button */
 .woocommerce #respond input#submit.alt:hover, .woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover, .woocommerce input.button.alt:hover
 {
-    background-color: var(--slate-grey);
+    background-color: var(--grey);
 }
 /* cart update message */
 .woocommerce-message{
@@ -534,6 +534,6 @@ screen and (max-width:40em) {
     .site-info {
         margin-top: 1rem;
         align-self: center;
-        color: var(--slate-grey);
+        color: var(--grey);
     }
 }

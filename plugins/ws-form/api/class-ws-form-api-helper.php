@@ -230,7 +230,7 @@
 				// Add checksum
 				$form->checksum = md5(json_encode($form));
 
-				$form_json = json_encode($form);
+				$form_json = wp_json_encode($form);
 
 				// Add to data
 				$data['contact_form'] = $form_json;
@@ -241,7 +241,7 @@
 			if($contact_push_system) {
 
 				// Add to data
-				$data['contact_system'] = json_encode(WS_Form_Config::get_system());
+				$data['contact_system'] = wp_json_encode(WS_Form_Config::get_system());
 			}
 
 			// Filters

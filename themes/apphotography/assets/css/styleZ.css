@@ -1,5 +1,5 @@
 :root {
-    --dark-green: #003C44;
+    --dark-blue: #002349;
     --slate-grey: #6C888D;
     --outer-space: #404C56;
     --ash-grey: #ACB4B6;
@@ -9,11 +9,11 @@
 
 /* ******************** Colour Settings ******************** */
 .has-darkgreen-color {
-    color: var(--dark-green);
+    color: var(--dark-blue);
 }
 
 .has-darkgreen-background-color {
-    background-color: var(--dark-green);
+    background-color: var(--dark-blue);
 }
 
 .has-slategrey-color {
@@ -62,7 +62,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: var(--dark-green);
+    color: var(--dark-blue);
 }
 
 h1 {
@@ -104,12 +104,12 @@ header section {
 }
 
 #primary-menu a {
-    color: var(--dark-green);
+    color: var(--dark-blue);
     font-weight: 500;
     font-size: 18px;
 }
 .menu .active > a {
-    color: var(--dark-green);
+    color: var(--dark-blue);
     background: none;
 }
 
@@ -226,7 +226,7 @@ screen and (max-width:40em) {
 }
 
 .blogCard a {
-    color: var(--dark-green);
+    color: var(--dark-blue);
 }
 
 .blogCard a:hover {
@@ -301,7 +301,7 @@ screen and (max-width:40em) {
 }
 
 .woocommerce img {
-    border: 1px solid var(--dark-green);
+    border: 1px solid var(--dark-blue);
 }
 
 .woocommerce a {
@@ -320,7 +320,7 @@ h1 {
     border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
     background-color: white;
     font-size: 14px;
-    color: var(--dark-green);
+    color: var(--dark-blue);
     align-self: center;
 }
 
@@ -336,7 +336,7 @@ h1 {
 }
 
 .page-numbers {
-    color: var(--dark-green);
+    color: var(--dark-blue);
     background-color: white;
 }
 
@@ -349,7 +349,7 @@ h1 {
 .woocommerce nav.woocommerce-pagination ul li span.current {
     border: 1px solid var(--ash-grey);
     background-color: white;
-    color: var(--dark-green);
+    color: var(--dark-blue);
 }
 
 .woocommerce #respond input#submit.alt,
@@ -359,7 +359,7 @@ h1 {
     border: 2px solid;
     border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
     background-color: white;
-    color: var(--dark-green);
+    color: var(--dark-blue);
     height: 40px;
 }
 
@@ -369,7 +369,7 @@ h1 {
     transform: translate(-2px, -2px);
     box-shadow: 4px 4px 8px #DCDCDC,
         -4px -4px 8px #ffffff;
-    color: var(--dark-green);
+    color: var(--dark-blue);
 }
 
 [type='text'],
@@ -390,7 +390,7 @@ textarea {
     border: 2px solid;
     border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
     background-color: white;
-    color: var(--dark-green);
+    color: var(--dark-blue);
 }
 
 /* hiding product description */
@@ -405,7 +405,7 @@ textarea {
 /* My Account Page styling */
 .woocommerce-MyAccount-navigation ul {
     list-style-type: none;
-    color: var(--dark-green);
+    color: var(--dark-blue);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -416,19 +416,19 @@ textarea {
     border: 2px solid;
     border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
     background-color: white;
-    color: var(--dark-green);
+    color: var(--dark-blue);
     width: 250px;
     margin: 15px;
     text-align: center;
 }
 
 .woocommerce-MyAccount-navigation a {
-    color: var(--dark-green);
+    color: var(--dark-blue);
 
 }
 
 .woocommerce-MyAccount-navigation li:hover {
-    color: var(--dark-green);
+    color: var(--dark-blue);
     font-weight: 600;
     transform: translate(-2px, -2px);
     box-shadow: 4px 4px 8px #DCDCDC,
@@ -452,7 +452,7 @@ textarea {
 
 /* targeting price colour */
 .woocommerce-Price-amount {
-    color: var(--dark-green);
+    color: var(--dark-blue);
 }
 /* product photo */
 .woocommerce #content div.product div.images, .woocommerce div.product div.images, .woocommerce-page #content div.product div.images, .woocommerce-page div.product div.images{
@@ -474,11 +474,11 @@ textarea {
 }
 /* cart update message */
 .woocommerce-message{
-    border-top-color: var(--dark-green);
+    border-top-color: var(--dark-blue);
 }
 /* cart update checkmark */
 .woocommerce-message::before{
-    color: var(--dark-green);
+    color: var(--dark-blue);
 }
 /* ******************** Form Styling ******************** */
 #wsf-1-field-2,
@@ -496,21 +496,21 @@ textarea {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    color: var(--dark-green);
+    color: var(--dark-blue);
     padding: 5px 15px;
     border-top: 1px solid var(--ash-grey);
     max-height: 150px;
 }
 
 footer .menu a {
-    color: var(--dark-green);
+    color: var(--dark-blue);
     font-weight: 500;
     font-size: 16px;
     padding: 0.5rem 1rem;
 }
 
 footer a:hover {
-    color: var(--dark-green);
+    color: var(--dark-blue);
     font-weight: 600;
 }
 

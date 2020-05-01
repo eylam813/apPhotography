@@ -21,7 +21,7 @@ h6 {
 	font-family: headerFont;
 }
 :root{
-    --dark-green: #003C44;
+    --dark-blue: #003C44;
     --slate-grey: #6C888D;
     --outer-space: #404C56;
     --ash-grey: #ACB4B6;
@@ -31,11 +31,11 @@ h6 {
 
 /* ******************** Colour Settings ******************** */
 .has-darkgreen-color {
-    color: var(--dark-green);
+    color: var(--dark-blue);
 }
 
 .has-darkgreen-background-color {
-    background-color: var(--dark-green);
+    background-color: var(--dark-blue);
 }
 
 .has-slategrey-color {
@@ -114,7 +114,7 @@ h6 {
 }
 #cssmenu > ul > li > a:hover {
 	background: var(--slate-grey);
-	color: var(--dark-green);
+	color: var(--dark-blue);
 }
 /* submenu styles */
 #cssmenu > ul > li.has-sub {
@@ -127,7 +127,7 @@ h6 {
 	top: 18px;
 	right: 6px;
 	border: 5px solid transparent;
-	border-top: 5px solid var(--dark-green);
+	border-top: 5px solid var(--dark-blue);
 }
 /* arrow on menu */
 #cssmenu > ul > li.has-sub:hover > a:before {
@@ -173,7 +173,7 @@ h6 {
 	margin: 0;
     padding: 8px 20px;
     font-size: 18px;
-	color: var(--dark-green);
+	color: var(--dark-blue);
 	text-decoration: none;
 }
 #cssmenu ul li > ul li:hover{

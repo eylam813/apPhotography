@@ -139,11 +139,12 @@ nav {
 .social-media {
     display: flex;
     justify-content: space-around;
-    /* margin-bottom: 30%; */
+    margin-left: 30px;
 }
 
 .social-media img {
-    max-width: 40px;
+    max-width: 25px;
+    margin-right: 10px;
 }
 
 #ap-wrapper {

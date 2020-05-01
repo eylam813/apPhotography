@@ -31,7 +31,7 @@
 
 
 	<header>
-	<section>
+	
 		<!-- responsive header nav -->
 		<div class="title-bar" data-responsive-toggle="site-navigation" data-hide-for="medium">
 					
@@ -57,7 +57,7 @@
 			the_custom_logo();
 			?>
 		</div><!-- .logo -->
-
+		<section>
 				<nav id="site-navigation" class="main-navigation">
 					<?php
 					if ( has_nav_menu( 'menu-1' ) ) {
@@ -73,7 +73,7 @@
 					}
 					?>
 				</nav><!-- #site-navigation -->
-			</section>
+			
 			<!-- Social Media Links -->
 			<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
 				<div class="social-media">
@@ -94,6 +94,7 @@
 					<?php } ?>
 				</div> <!--social media-->
 			<?php } ?>
+			</section>
 		<!-- </section> -->
 	</header><!-- #masthead -->
 

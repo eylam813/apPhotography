@@ -85,10 +85,9 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    /* height: 100vh; */
-    /* width: 20%; */
-    /* z-index: 99; */
-    padding: 60px 5px 0 5px;
+    height: 10vh;
+    padding: 0 2.5rem;
+    align-items: center;
 }
 
 header section {
@@ -126,14 +125,14 @@ header section {
     list-style: none;
 }
 
-nav {
+/* nav {
     margin-bottom: 20px;
-}
+} */
 
 #logo {
     width: 100%;
     min-width: 100px;
-    max-width: 200px;
+    max-width: 250px;
 }
 
 .social-media {
@@ -145,6 +144,7 @@ nav {
 .social-media img {
     max-width: 25px;
     margin-right: 10px;
+    height: 100%;
 }
 
 #ap-wrapper {
@@ -162,9 +162,9 @@ nav {
     flex-direction: column;
 } */
 
-.custom-logo {
+/* .custom-logo {
     margin:0 0 20px 40px;
-}
+} */
 
 .title-bar {
     background-color: white;

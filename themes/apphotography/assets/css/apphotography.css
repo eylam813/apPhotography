@@ -21,8 +21,8 @@ h6 {
 	font-family: headerFont;
 }
 :root{
-    --dark-green: #003C44;
-    --slate-grey: #6C888D;
+    --dark-blue: #003C44;
+    --grey: #6C888D;
     --outer-space: #404C56;
     --ash-grey: #ACB4B6;
     --white: #FFFFFF;
@@ -30,20 +30,20 @@ h6 {
 }
 
 /* ******************** Colour Settings ******************** */
-.has-darkgreen-color {
-    color: var(--dark-green);
+.has-darkblue-color {
+    color: var(--dark-blue);
 }
 
-.has-darkgreen-background-color {
-    background-color: var(--dark-green);
+.has-darkblue-background-color {
+    background-color: var(--dark-blue);
 }
 
-.has-slategrey-color {
-    color: var(--slate-grey);
+.has-grey-color {
+    color: var(--grey);
 }
 
-.has-slategrey-background-color {
-    background-color: var(--slate-grey);
+.has-grey-background-color {
+    background-color: var(--grey);
 }
 
 .has-outerspace-color {
@@ -113,8 +113,8 @@ h6 {
 	position: relative;
 }
 #cssmenu > ul > li > a:hover {
-	background: var(--slate-grey);
-	color: var(--dark-green);
+	background: var(--grey);
+	color: var(--dark-blue);
 }
 /* submenu styles */
 #cssmenu > ul > li.has-sub {
@@ -127,7 +127,7 @@ h6 {
 	top: 18px;
 	right: 6px;
 	border: 5px solid transparent;
-	border-top: 5px solid var(--dark-green);
+	border-top: 5px solid var(--dark-blue);
 }
 /* arrow on menu */
 #cssmenu > ul > li.has-sub:hover > a:before {
@@ -173,11 +173,11 @@ h6 {
 	margin: 0;
     padding: 8px 20px;
     font-size: 18px;
-	color: var(--dark-green);
+	color: var(--dark-blue);
 	text-decoration: none;
 }
 #cssmenu ul li > ul li:hover{
-    background-color: var(--slate-grey);
+    background-color: var(--grey);
     z-index: 99999999;
 }
 
@@ -200,10 +200,10 @@ h6 {
 }
 .front-page .bg-holder main {
     background-color: #ffffff80;
-    width: 50vw;
-    max-width: 500px;
+    /* width: 50vw; */
+    /* max-width: 500px; */
     margin-left: auto;
-    margin-right: 4vw;
+    /* margin-right: 4vw; */
     padding: 20px;
     height: 100%;
     min-height: 85vh;

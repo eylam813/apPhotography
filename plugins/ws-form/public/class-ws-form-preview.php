@@ -10,8 +10,8 @@
 
 		public function __construct() {
 
-			// Get form_id
-			$this->form_id = intval(WS_Form_Common::get_query_var('wsf_preview_form_id'));
+			// Get form_id (Have to use $_GET here because of the way customizer does a POST request with query vars!)
+			$this->form_id = ((isset($_GET) && isset($_GET['wsf_preview_form_id'])) ? intval($_GET['wsf_preview_form_id']) : 0);	// phpcs:ignore
 			if($this->form_id <= 0) { return false; }
 			if(!WS_Form_Common::can_user('edit_form')) { return false; }
 

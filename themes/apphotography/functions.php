@@ -71,16 +71,25 @@ if ( ! function_exists( 'apphotography_setup' ) ) :
 				'script',
 			)
 		);
+		/** 
+		* Add support for block styles
+		*/
+		add_theme_support( 'wp-block-styles' );
+		/** 
+		* Add support for align-wide
+		*/
+		add_theme_support( 'align-wide' );
+
 		// Add theme support for custom colours
 		add_theme_support( 'editor-color-palette', array(
 			array(
-				'name' => esc_html__( 'Dark Green', 'apphotography' ),
-				'slug' => 'darkgreen',
-				'color' => '#003C44',
+				'name' => esc_html__( 'Dark Blue', 'apphotography' ),
+				'slug' => 'darkblue',
+				'color' => '#002349',
 			),
 			array(
-				'name' => esc_html__( 'Slate Grey', 'apphotography' ),
-				'slug' => 'slategrey',
+				'name' => esc_html__( 'Grey', 'apphotography' ),
+				'slug' => 'grey',
 				'color' => '#6C888D',
 			),
 			array(

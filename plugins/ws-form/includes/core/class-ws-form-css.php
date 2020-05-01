@@ -564,13 +564,9 @@
 .wsf-section > legend,
 .wsf-fieldset > legend {
 	border: 0;
-	font-size: 25px;
+	font-size: <?php self::e($font_size_large . $unit_of_measurement); ?>;
 	margin-bottom: <?php self::e($spacing_small . $unit_of_measurement); ?>;
 	padding: 0;
-}
-
-.wsf-form small {
-	font-size: <?php self::e($font_size_small . $unit_of_measurement); ?>;
 }
 
 .wsf-form ul.wsf-group-tabs {
@@ -652,9 +648,10 @@
 	margin-bottom: <?php self::e($grid_gutter . $unit_of_measurement); ?>;
 }
 
-.wsf-field-wrapper[data-type='divider'],
 .wsf-field-wrapper[data-type='texteditor'],
-.wsf-field-wrapper[data-type='html'] {
+.wsf-field-wrapper[data-type='html'],
+.wsf-field-wrapper[data-type='divider'],
+.wsf-field-wrapper[data-type='message'] {
 	margin-bottom: 0;
 }
 
@@ -1875,7 +1872,7 @@ button.wsf-button:disabled {
 .wsf-alert {
 	background-color: <?php self::e($color_default_lightest); ?>;
 <?php if ($form_border) { ?>
-	border: <?php self::e($form_border_width . $unit_of_measurement . ' ' . $form_border_style . ' ' . $form_border_color); ?>;
+	border-left: 4px <?php self::e($form_border_style . ' ' . $form_border_color); ?>;
 <?php } ?>
 <?php if ($form_border_radius > 0) { ?>
 	border-radius: <?php self::e($form_border_radius . $unit_of_measurement); ?>;
@@ -1897,6 +1894,13 @@ button.wsf-button:disabled {
 <?php if ($form_border) { ?>
 	border-color: <?php self::e(WS_Form_Common::hex_lighten_percentage($color_success, 40)); ?>;
 <?php } ?>
+	color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_success, 40)); ?>;
+}
+
+.wsf-alert-success a,
+.wsf-alert-success a:hover,
+.wsf-alert-success a:focus {
+	color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_success, 60)); ?>;
 }
 
 .wsf-alert-information {
@@ -1904,6 +1908,13 @@ button.wsf-button:disabled {
 <?php if ($form_border) { ?>
 	border-color: <?php self::e(WS_Form_Common::hex_lighten_percentage(esc_html($color_information), 40)); ?>;
 <?php } ?>
+	color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_information, 40)); ?>;
+}
+
+.wsf-alert-information a,
+.wsf-alert-information a:hover,
+.wsf-alert-information a:focus {
+	color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_information, 60)); ?>;
 }
 
 .wsf-alert-warning {
@@ -1911,6 +1922,13 @@ button.wsf-button:disabled {
 <?php if ($form_border) { ?>
 	border-color: <?php self::e(WS_Form_Common::hex_lighten_percentage($color_warning, 40)); ?>;
 <?php } ?>
+	color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_warning, 40)); ?>;
+}
+
+.wsf-alert-warning a,
+.wsf-alert-warning a:hover,
+.wsf-alert-warning a:focus {
+	color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_warning, 60)); ?>;
 }
 
 .wsf-alert-danger {
@@ -1918,6 +1936,13 @@ button.wsf-button:disabled {
 <?php if ($form_border) { ?>
 	border-color: <?php self::e(WS_Form_Common::hex_lighten_percentage($color_danger, 40)); ?>;
 <?php } ?>
+	color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_danger, 40)); ?>;
+}
+
+.wsf-alert-danger a,
+.wsf-alert-danger a:hover,
+.wsf-alert-danger a:focus {
+	color: <?php self::e(WS_Form_Common::hex_darken_percentage($color_danger, 60)); ?>;
 }
 
 .wsf-text-primary {

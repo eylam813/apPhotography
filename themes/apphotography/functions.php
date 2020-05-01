@@ -71,6 +71,15 @@ if ( ! function_exists( 'apphotography_setup' ) ) :
 				'script',
 			)
 		);
+		/** 
+		* Add support for block styles
+		*/
+		add_theme_support( 'wp-block-styles' );
+		/** 
+		* Add support for align-wide
+		*/
+		add_theme_support( 'align-wide' );
+
 		// Add theme support for custom colours
 		add_theme_support( 'editor-color-palette', array(
 			array(

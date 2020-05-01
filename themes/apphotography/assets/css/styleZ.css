@@ -273,12 +273,13 @@ screen and (max-width:40em) {
     background-attachment: fixed;
     padding: 20px 20% 0 20%;
     min-height: 85vh;
+    display: flex;
+    align-items: center;
 }
 
 .infoPage h1 {
     text-align: center;
 }
-
 /* ******************** WooCommerce Styling ******************** */
 .page .product {
     display: flex;
@@ -491,7 +492,7 @@ textarea {
 footer .menu a {
     color: var(--dark-green);
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16px;
     padding: 0.5rem 1rem;
 }
 

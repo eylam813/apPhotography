@@ -217,7 +217,7 @@ h6 {
 /* ******************** LEFT-FEATURE TEMPLATE ******************** */
 
 #left-feature-ap-primary {
-    min-height: 100vh;
+    /* min-height: 100vh; */
     display: flex;
     align-items: center;
     padding: 5rem;
@@ -239,7 +239,7 @@ h6 {
 
 /* ******************** GALLERY ALBUM PAGE ******************** */
 #gallery-ap-primary {
-    min-height: 100vh;
+    /* min-height: 100vh; */
     width: 100%;
 }
 .gallery-content {
@@ -252,40 +252,39 @@ h6 {
     justify-content: center;
     align-items: center;
 }
-.single-album-inner-wrapper{
-    border: 2px solid white;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-.album-title{
-    opacity: 0;
-    background-color: #ffffff80;
-    box-shadow: 0 0 10px 10px #ffffff80;
-    border-radius: 5px;
-}
-.single-album-inner-wrapper:hover .album-title{
-    opacity: 1;
-}
 
 #gallery-albums-wrapper{
+    margin: 0 auto;
+}
+#gallery-albums-inner-wrapper{
+    max-width: 1100px;
+    width: 90vw;
+    margin: 0 auto;
     display: flex;
-    min-height: 85vh;
-    overflow-x: scroll;
+    flex-wrap: wrap;
 }
 .single-album-wrapper{
-    height: 100%;
-    display: flex;
-    justify-content: stretch;
-    width: auto;
+    padding: 20px;
+    margin: 3% 0;
 }
 .single-album-inner-wrapper{
-    height: 100%;
-    min-width: 20rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
+.single-album-inner-wrapper img {
+    height: auto;
+}
+.album-title{
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+}
+
+
+
 
 /* ******************** ALBUM POST TYPE SINGLE PAGE ******************** */
 .single-album-page-main{
@@ -329,7 +328,7 @@ h6 {
 }
     /* ******************** LEFT-FEATURE PAGE ******************** */
     #left-feature-ap-primary {
-        min-height: 100vh;
+        /* min-height: 100vh; */
         display: flex;
         align-items: flex-start;
         padding: 0rem;
@@ -344,34 +343,12 @@ h6 {
 
 /* mobile only */
 @media screen and (max-width: 39.9375em) {
-    #gallery-albums-wrapper{
+
+    .single-album-wrapper{
         display: flex;
         flex-direction: column;
-        min-height: 85vh;
-        overflow-x: hidden;
-        overflow: auto;
-    }
-    .single-album-wrapper{
-        height: 250px;
-        display: flex;
-        justify-content: stretch;
-        width: auto;
-    }
-    .single-album-page-main{
-        padding: 1rem 0rem;
-    }
-    .single-album-inner-wrapper{
-        height: 100%;
-        min-width: 100vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .album-title{
-        opacity: 1;
-        background-color: #ffffff80;
-        box-shadow: 0 0 10px 10px #ffffff80;
-        border-radius: 5px;
+        justify-self: center;
+        padding: 50px;
     }
 }
 

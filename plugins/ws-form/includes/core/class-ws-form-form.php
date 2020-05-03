@@ -6,6 +6,8 @@
 		public $checksum;
 		public $new_lookup;
 		public $variable_repair_field_array;
+		public $label;
+		public $meta;
 
 		public $table_name;
 
@@ -27,6 +29,8 @@
 			$this->new_lookup['group'] = array();
 			$this->new_lookup['section'] = array();
 			$this->new_lookup['field'] = array();
+			$this->label = WS_FORM_DEFAULT_FORM_NAME;
+			$this->meta = array();
 
 			// Variables to fix
 			$this->variable_repair_field_array = array(
@@ -40,7 +44,7 @@
 		}
 
 		// Create form
-		public function db_create() {
+		public function db_create($create_group = true) {
 
 			// User capability check
 			if(!WS_Form_Common::can_user('create_form')) { return false; }
@@ -48,7 +52,7 @@
 			global $wpdb;
 
 			// Add form
-			$sql = sprintf("INSERT INTO %s (%s) VALUES ('%s', %u, '%s', '%s', '%s');", $this->table_name, self::DB_INSERT, esc_sql(WS_FORM_DEFAULT_FORM_NAME), WS_Form_Common::get_user_id(), WS_Form_Common::get_mysql_date(), WS_Form_Common::get_mysql_date(), WS_FORM_VERSION);
+			$sql = sprintf("INSERT INTO %s (%s) VALUES ('%s', %u, '%s', '%s', '%s');", $this->table_name, self::DB_INSERT, esc_sql($this->label), WS_Form_Common::get_user_id(), WS_Form_Common::get_mysql_date(), WS_Form_Common::get_mysql_date(), WS_FORM_VERSION);
 			if($wpdb->query($sql) === false) { parent::db_throw_error(__('Error adding form', 'ws-form')); }
 
 			// Get inserted ID
@@ -60,6 +64,7 @@
 			$meta_keys = WS_Form_Config::get_meta_keys();
 			$meta_keys = apply_filters('wsf_form_create_meta_keys', $meta_keys);
 			$meta_data_array = self::build_meta_data($meta_data, $meta_keys);
+			$meta_data_array = array_merge($meta_data_array, $this->meta);
 
 			// Build meta data
 			$form_meta = New WS_Form_Meta();
@@ -68,9 +73,12 @@
 			$form_meta->db_update_from_array($meta_data_array);
 
 			// Build first group
-			$ws_form_group = New WS_Form_Group();
-			$ws_form_group->form_id = $this->id;
-			$ws_form_group->db_create();
+			if($create_group) {
+
+				$ws_form_group = New WS_Form_Group();
+				$ws_form_group->form_id = $this->id;
+				$ws_form_group->db_create();
+			}
 
 			// Run action
 			do_action('wsf_form_create', $this);
@@ -117,7 +125,7 @@
 		public function db_create_from_action($action_id, $list_id, $list_sub_id = false) {
 
 			// Create new form
-			self::db_create();
+			self::db_create(false);
 
 			if($this->id > 0) {
 
@@ -143,7 +151,7 @@
 			self::db_check_id();
 
 			// Read form
-			$sql = sprintf("SELECT %s FROM %s WHERE id = %s LIMIT 1;", self::DB_SELECT, $this->table_name, $this->id);
+			$sql = sprintf("SELECT %s FROM %s WHERE id = %u LIMIT 1;", self::DB_SELECT, $this->table_name, $this->id);
 			$return_array = $wpdb->get_row($sql, 'ARRAY_A');
 
 			if($return_array === null) { parent::db_throw_error(__('Unable to read form', 'ws-form')); }
@@ -189,7 +197,7 @@
 			global $wpdb;
 
 			// Get contents of published field
-			$sql = sprintf("SELECT checksum, published FROM %s WHERE id = %s LIMIT 1;", $this->table_name, $this->id);
+			$sql = sprintf("SELECT checksum, published FROM %s WHERE id = %u LIMIT 1;", $this->table_name, $this->id);
 			$published_row = $wpdb->get_row($sql);
 
 			if($published_row === null) { parent::db_throw_error(__('Unable to read published form data', 'ws-form')); }
@@ -234,7 +242,7 @@
 			apply_filters('wsf_form_publish', $form);
 
 			// JSON encode
-			$form_json = json_encode($form);
+			$form_json = wp_json_encode($form);
 
 			// Publish form
 			$sql = sprintf("UPDATE %s SET published = '%s', published_checksum = '%s' WHERE id = %u LIMIT 1;", $this->table_name, esc_sql($form_json), esc_sql($this->checksum), $this->id);
@@ -831,7 +839,7 @@
 				}
 
 				// Write conditional
-				$conditional_json_encode = json_encode($conditional_json_decode);
+				$conditional_json_encode = wp_json_encode($conditional_json_decode);
 				$conditional['groups'][0]['rows'][$row_index]['data'][1] = $conditional_json_encode;
 				$meta_data_array = array('conditional' => $conditional);
 				$ws_form_meta->db_update_from_array($meta_data_array);
@@ -947,7 +955,7 @@
 				}
 
 				// Write action
-				$action_json_encode = json_encode($action_json_decode);
+				$action_json_encode = wp_json_encode($action_json_decode);
 				$action['groups'][0]['rows'][$row_index]['data'][1] = $action_json_encode;
 				$meta_data_array = array('action' => $action);
 				$ws_form_meta->db_update_from_array($meta_data_array);
@@ -1095,7 +1103,7 @@
 			global $wpdb;
 
 			// Get contents of published field
-			$sql = sprintf("SELECT id FROM %s WHERE status = 'publish' ORDER BY date_updated DESC LIMIT 1;", $this->table_name);
+			$sql = sprintf("SELECT id FROM %s ORDER BY date_updated DESC LIMIT 1;", $this->table_name);
 			$form_id = $wpdb->get_Var($sql);
 
 			if(is_null($form_id)) { return 0; } else { return $form_id; }
@@ -1118,16 +1126,23 @@
 		}
 
 		// API - POST - Download - JSON
-		public function db_download_json() {
+		public function db_download_json($published = false) {
 
 			// User capability check
-			if(!WS_Form_Common::can_user('export_form')) { parent::api_access_denied(); }
+			if(!$published && !WS_Form_Common::can_user('export_form')) { parent::api_access_denied(); }
 
 			// Check form ID
 			self::db_check_id();
 
 			// Get form
-			$form = self::db_read(true, true);
+			if($published) {
+
+				$form = self::db_read_published();
+
+			} else {
+
+				$form = self::db_read(true, true);
+			}
 
 			// Convert to object
 			$form = json_decode(json_encode($form));
@@ -1147,13 +1162,13 @@
 			$form->checksum = md5(json_encode($form));
 
 			// Build filename
-			$filename = 'ws-form-' . strtolower($this->label) . '.json';
+			$filename = 'ws-form-' . strtolower($form->label) . '.json';
 
 			// HTTP headers
 			WS_Form_Common::file_download_headers($filename, 'application/octet-stream');
 
 			// Output JSON
-			echo json_encode($form);
+			echo wp_json_encode($form);
 			
 			exit;
 		}

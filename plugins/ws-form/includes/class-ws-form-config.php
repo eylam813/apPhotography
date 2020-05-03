@@ -198,7 +198,7 @@
 									'fieldsets'		=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -288,7 +288,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -382,7 +382,7 @@
 									'fieldsets'		=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -483,7 +483,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -584,7 +584,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -685,7 +685,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -723,83 +723,6 @@
 									'meta_keys'	=> array('data_grid_datalist', 'datalist_field_text', 'datalist_field_value')
 								)
 							)
-						),
-
-						'divider' => array (
-
-							'label'					=>	__('Divider', 'ws-form'),
-							'pro_required'			=>	!WS_Form_Common::is_edition('basic'),
-							'kb_url'				=>	'/knowledgebase/divider/',
-							'label_default'			=>	__('Divider', 'ws-form'),
-							'mask_field'			=>	'<hr#attributes />',
-							'submit_save'			=>	false,
-							'submit_edit'			=>	false,
-							'label_disabled'			=>	true,
-
-							'fieldsets'	=> array(
-
-								// Tab: Basic
-								'basic'	=> array(
-
-									'label'			=>	__('Basic', 'ws-form'),
-									'meta_keys'	=>	array('hidden')
-								),
-
-								// Tab: Advanced
-								'advanced'	=>	array(
-
-									'label'		=>	__('Advanced', 'ws-form'),
-
-									'fieldsets'	=>	array(
-
-										array(
-											'label'		=>	__('Styles', 'ws-form'),
-											'meta_keys'	=>	array('class_single_vertical_align')
-										),
-
-										array(
-											'label'			=>	__('Classes', 'ws-form'),
-											'meta_keys'	=> array('class_field_wrapper', 'class_field')
-										),
-									)
-								)
-							)
-						),
-
-						'spacer' => array (
-
-							'label'				=>	__('Spacer', 'ws-form'),
-							'pro_required'		=>	!WS_Form_Common::is_edition('basic'),
-							'kb_url'			=>	'/knowledgebase/spacer/',
-							'label_default'		=>	__('Spacer', 'ws-form'),
-							'mask_field'		=>	'',
-							'submit_save'		=>	false,
-							'submit_edit'		=>	false,
-							'label_disabled'	=>	true,
-
-							'fieldsets'			=> array(
-
-								// Tab: Basic
-								'basic'	=> array(
-
-									'label'			=>	__('Basic', 'ws-form'),
-									'meta_keys'	=>	array('hidden')
-								),
-
-								// Tab: Advanced
-								'advanced'	=>	array(
-
-									'label'	=>	__('Advanced', 'ws-form'),
-
-									'fieldsets'	=>	array(
-
-										array(
-											'label'		=>	__('Classes', 'ws-form'),
-											'meta_keys'	=> array('class_field_wrapper')
-										),
-									)
-								)
-							)
 						)
 					)
 				),
@@ -833,7 +756,7 @@
 							'mask_row'						=>	'<option id="#row_id" data-id="#data_id" value="#select_field_value"#attributes>#select_field_label</option>',
 							'mask_row_placeholder'			=>	'<option data-id="0" value="" data-placeholder>#value</option>',
 							'mask_row_attributes'			=>	array('default', 'disabled'),
-							'mask_row_lookups'				=>	array('select_field_value', 'select_field_label', 'select_cascade_field_filter'),
+							'mask_row_lookups'				=>	array('select_field_value', 'select_field_label', 'select_field_parse_variable', 'select_cascade_field_filter'),
 							'datagrid_column_value'			=>	'select_field_value',
 							'mask_row_default' 				=>	' selected',
 
@@ -849,7 +772,7 @@
 								'basic'	=> array(
 
 									'label'			=>	__('Basic', 'ws-form'),
-									'meta_keys'		=> array('label_render', 'label_position', 'label_column_width', 'required', 'hidden', 'size', 'multiple', 'placeholder_row', 'help'),
+									'meta_keys'		=> array('label_render', 'label_position', 'label_column_width', 'required', 'hidden', 'multiple', 'size', 'placeholder_row', 'help'),
 
 									'fieldsets'		=>	array(
 
@@ -873,7 +796,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -903,7 +826,7 @@
 								'options'	=> array(
 
 									'label'			=>	__('Options', 'ws-form'),
-									'meta_keys'		=> array('data_grid_select', 'select_field_label', 'select_field_value', 'data_grid_rows_randomize'),
+									'meta_keys'		=> array('data_grid_select', 'select_field_label', 'select_field_value', 'select_field_parse_variable', 'data_grid_rows_randomize'),
 								)
 							)
 						),
@@ -935,7 +858,7 @@
 							'mask_row_label_attributes'	=>	array('class'),
 							'mask_row_field'			=>	'<input type="checkbox" id="#row_id" name="#name" value="#checkbox_field_value"#attributes />',
 							'mask_row_field_attributes'	=>	array('class', 'default', 'disabled', 'required', 'aria_labelledby'),
-							'mask_row_lookups'			=>	array('checkbox_field_value', 'checkbox_field_label'),
+							'mask_row_lookups'			=>	array('checkbox_field_value', 'checkbox_field_label', 'checkbox_field_parse_variable'),
 							'datagrid_column_value'		=>	'checkbox_field_value',
 							'mask_row_default' 			=>	' checked',
 
@@ -981,7 +904,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -1001,7 +924,7 @@
 								'checkboxes' 	=> array(
 
 									'label'		=>	__('Checkboxes', 'ws-form'),
-									'meta_keys'	=> array('data_grid_checkbox', 'checkbox_field_label', 'checkbox_field_value', 'data_grid_rows_randomize')
+									'meta_keys'	=> array('data_grid_checkbox', 'checkbox_field_label', 'checkbox_field_value', 'checkbox_field_parse_variable', 'data_grid_rows_randomize')
 								)
 							)
 						),
@@ -1033,7 +956,7 @@
 							'mask_row_label_attributes'	=>	array('class'),
 							'mask_row_field'			=>	'<input type="radio" id="#row_id" name="#name" value="#radio_field_value"#attributes />',
 							'mask_row_field_attributes'	=>	array('class', 'default', 'disabled', 'required_row', 'aria_labelledby', 'hidden'),
-							'mask_row_lookups'			=>	array('radio_field_value', 'radio_field_label', 'radio_cascade_field_filter'),
+							'mask_row_lookups'			=>	array('radio_field_value', 'radio_field_label', 'radio_field_parse_variable', 'radio_cascade_field_filter'),
 							'datagrid_column_value'		=>	'radio_field_value',
 							'mask_row_default' 			=>	' checked',
 
@@ -1082,7 +1005,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -1102,7 +1025,7 @@
 								'radios'	=> array(
 
 									'label'		=>	__('Radios', 'ws-form'),
-									'meta_keys'	=> array('data_grid_radio', 'radio_field_label', 'radio_field_value', 'data_grid_rows_randomize'),
+									'meta_keys'	=> array('data_grid_radio', 'radio_field_label', 'radio_field_value', 'radio_field_parse_variable', 'data_grid_rows_randomize'),
 								)
 							)
 						),
@@ -1211,7 +1134,7 @@
 							'pro_required'			=>	!WS_Form_Common::is_edition('basic'),
 							'kb_url'				=>	'/knowledgebase/texteditor/',
 							'label_default'			=>	__('Text Editor', 'ws-form'),
-							'mask_field'			=>	'<div#attributes>#value</div>',
+							'mask_field'			=>	'<div data-text-editor#attributes>#value</div>',
 							'mask_preview'			=>	'#text_editor',
 							'meta_wpautop'			=>	'text_editor',
 							'submit_save'			=>	false,
@@ -1243,7 +1166,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -1262,6 +1185,91 @@
 							'label'					=>	__('HTML', 'ws-form'),
 							'pro_required'			=>	!WS_Form_Common::is_edition('pro'),
 							'kb_url'				=>	'/knowledgebase/html/',
+						),
+
+						'divider' => array (
+
+							'label'					=>	__('Divider', 'ws-form'),
+							'pro_required'			=>	!WS_Form_Common::is_edition('basic'),
+							'kb_url'				=>	'/knowledgebase/divider/',
+							'label_default'			=>	__('Divider', 'ws-form'),
+							'mask_field'			=>	'<hr#attributes />',
+							'submit_save'			=>	false,
+							'submit_edit'			=>	false,
+							'label_disabled'			=>	true,
+
+							'fieldsets'	=> array(
+
+								// Tab: Basic
+								'basic'	=> array(
+
+									'label'			=>	__('Basic', 'ws-form'),
+									'meta_keys'	=>	array('hidden')
+								),
+
+								// Tab: Advanced
+								'advanced'	=>	array(
+
+									'label'		=>	__('Advanced', 'ws-form'),
+
+									'fieldsets'	=>	array(
+
+										array(
+											'label'		=>	__('Style', 'ws-form'),
+											'meta_keys'	=>	array('class_single_vertical_align')
+										),
+
+										array(
+											'label'			=>	__('Classes', 'ws-form'),
+											'meta_keys'	=> array('class_field_wrapper', 'class_field')
+										),
+									)
+								)
+							)
+						),
+
+						'spacer' => array (
+
+							'label'				=>	__('Spacer', 'ws-form'),
+							'pro_required'		=>	!WS_Form_Common::is_edition('basic'),
+							'kb_url'			=>	'/knowledgebase/spacer/',
+							'label_default'		=>	__('Spacer', 'ws-form'),
+							'mask_field'		=>	'',
+							'submit_save'		=>	false,
+							'submit_edit'		=>	false,
+							'label_disabled'	=>	true,
+
+							'fieldsets'			=> array(
+
+								// Tab: Basic
+								'basic'	=> array(
+
+									'label'			=>	__('Basic', 'ws-form'),
+									'meta_keys'	=>	array('hidden')
+								),
+
+								// Tab: Advanced
+								'advanced'	=>	array(
+
+									'label'	=>	__('Advanced', 'ws-form'),
+
+									'fieldsets'	=>	array(
+
+										array(
+											'label'		=>	__('Classes', 'ws-form'),
+											'meta_keys'	=> array('class_field_wrapper')
+										),
+									)
+								)
+							)
+						),
+
+						'message' => array (
+
+							'label'					=>	__('Message', 'ws-form'),
+							'pro_required'			=>	!WS_Form_Common::is_edition('pro'),
+							'kb_url'				=>	'/knowledgebase/message/',
+							'icon'					=>	'info-circle',
 						)
 					)
 				),
@@ -1314,7 +1322,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align_bottom', 'class_field_button_type_primary', 'class_field_full_button_remove')
 										),
 
@@ -1522,7 +1530,7 @@
 									'fieldsets'	=>	array(
 
 										array(
-											'label'		=>	__('Styles', 'ws-form'),
+											'label'		=>	__('Style', 'ws-form'),
 											'meta_keys'	=>	array('class_single_vertical_align')
 										),
 
@@ -1714,39 +1722,39 @@
 							'label'			=>	__('Default', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#000000',
-							'description'	=>	__('Main color used for fonts and borders.')
+							'description'	=>	__('Labels and field values.', 'ws-form')
 						),
 
 						'skin_color_default_inverted'	=> array(
 
-							'label'			=>	__('Default Inverted', 'ws-form'),
+							'label'			=>	__('Inverted', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#FFFFFF',
-							'description'	=>	__('A color that contrast the default color.')
+							'description'	=>	__('Field backgrounds and button text.', 'ws-form')
 						),
 
 						'skin_color_default_light'	=> array(
 
-							'label'			=>	__('Default Light', 'ws-form'),
+							'label'			=>	__('Light', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#8E8E93',
-							'description'	=>	__('A light version of the default color.')
+							'description'	=>	__('Placeholders, help text, and disabled field values.', 'ws-form')
 						),
 
 						'skin_color_default_lighter'	=> array(
 
-							'label'			=>	__('Default Lighter', 'ws-form'),
+							'label'			=>	__('Lighter', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#CECED2',
-							'description'	=>	__('A lighter version of the default color.')
+							'description'	=>	__('Field borders and buttons.', 'ws-form')
 						),
 
 						'skin_color_default_lightest'	=> array(
 
-							'label'			=>	__('Default Lightest', 'ws-form'),
+							'label'			=>	__('Lightest', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#EFEFF4',
-							'description'	=>	__('The lightest version of the default color.')
+							'description'	=>	__('Range slider backgrounds, progress bar backgrounds, and disabled field backgrounds.', 'ws-form')
 						),
 
 						'skin_color_primary'	=> array(
@@ -1754,7 +1762,7 @@
 							'label'			=>	__('Primary', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#205493',
-							'description'	=>	__('Used for primary elements such as a submit button.')
+							'description'	=>	__('Checkboxes, radios, range sliders, progress bars, and submit buttons.')
 						),
 
 						'skin_color_secondary'	=> array(
@@ -1762,7 +1770,7 @@
 							'label'			=>	__('Secondary', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#5b616b',
-							'description'	=>	__('Used for secondary elements such as a reset button.')
+							'description'	=>	__('Secondary elements such as a reset button.', 'ws-form')
 						),
 
 						'skin_color_success'	=> array(
@@ -1770,7 +1778,7 @@
 							'label'			=>	__('Success', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#2e8540',
-							'description'	=>	__('Used for success messages.')
+							'description'	=>	__('Completed progress bars, save buttons, and success messages.')
 						),
 
 						'skin_color_information'	=> array(
@@ -1778,7 +1786,7 @@
 							'label'			=>	__('Information', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#02bfe7',
-							'description'	=>	__('Used for information messages.')
+							'description'	=>	__('Information messages.', 'ws-form')
 						),
 
 						'skin_color_warning'	=> array(
@@ -1786,7 +1794,7 @@
 							'label'			=>	__('Warning', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#fdb81e',
-							'description'	=>	__('Used for warning messages.')
+							'description'	=>	__('Warning messages.', 'ws-form')
 						),
 
 						'skin_color_danger'	=> array(
@@ -1794,7 +1802,7 @@
 							'label'			=>	__('Danger', 'ws-form'),
 							'type'			=>	'color',
 							'default'		=>	'#981b1e',
-							'description'	=>	__('Used for danger messages.')
+							'description'	=>	__('Required field labels, invalid field borders, invalid feedback text, remove repeatable section buttons, and danger messages.')
 						)
 					)
 				),
@@ -1809,7 +1817,7 @@
 							'label'			=>	__('Font Family', 'ws-form'),
 							'type'			=>	'text',
 							'default'		=>	'inherit',
-							'description'	=>	__('Font family used throughout the form.')
+							'description'	=>	__('Font family used throughout the form.', 'ws-form')
 						),
 
 						'skin_font_size'	=> array(
@@ -1817,15 +1825,15 @@
 							'label'			=>	__('Font Size', 'ws-form'),
 							'type'			=>	'number',
 							'default'		=>	14,
-							'description'	=>	__('Regular font size used on the form.')
+							'description'	=>	__('Regular font size used on the form.', 'ws-form')
 						),
 
 						'skin_font_size_large'	=> array(
 
 							'label'			=>	__('Font Size Large', 'ws-form'),
 							'type'			=>	'number',
-							'default'		=>	16,
-							'description'	=>	__('Large font size used on the form.')
+							'default'		=>	25,
+							'description'	=>	__('Font size used for section labels and fieldset legends.', 'ws-form')
 						),
 
 						'skin_font_size_small'	=> array(
@@ -1833,7 +1841,7 @@
 							'label'			=>	__('Font Size Small', 'ws-form'),
 							'type'			=>	'number',
 							'default'		=>	12,
-							'description'	=>	__('Small font size used on the form.')
+							'description'	=>	__('Font size used for help text and invalid feedback text.', 'ws-form')
 						),
 
 						'skin_font_weight'	=>	array(
@@ -1856,7 +1864,7 @@
 								'800'		=>	__('800', 'ws-form'),
 								'900'		=>	__('900', 'ws-form')
 							),
-							'description'	=>	__('Font weight used throughout the form.')
+							'description'	=>	__('Font weight used throughout the form.', 'ws-form')
 						),
 
 
@@ -1865,7 +1873,7 @@
 							'label'			=>	__('Line Height', 'ws-form'),
 							'type'			=>	'number',
 							'default'		=>	1.4,
-							'description'	=>	__('Line height used throughout form.')
+							'description'	=>	__('Line height used throughout form.', 'ws-form')
 						)
 					)
 				),
@@ -1880,7 +1888,7 @@
 							'label'			=>	__('Enabled', 'ws-form'),
 							'type'			=>	'checkbox',
 							'default'		=>	true,
-							'description'	=>	__('When checked, borders will be shown.')
+							'description'	=>	__('When checked, borders will be shown.', 'ws-form')
 							),
 
 						'skin_border_width'	=> array(
@@ -1888,7 +1896,7 @@
 							'label'			=>	__('Width', 'ws-form'),
 							'type'			=>	'number',
 							'default'		=>	1,
-							'description'	=>	__('Specify the width of borders used through the form. For example, borders around form fields.')
+							'description'	=>	__('Specify the width of borders used through the form. For example, borders around form fields.', 'ws-form')
 						),
 
 						'skin_border_style'	=>	array(
@@ -1907,7 +1915,7 @@
 								'ridge'		=>	__('Ridge', 'ws-form'),
 								'solid'		=>	__('Solid', 'ws-form')
 							),
-							'description'	=>	__('Border style used throughout the form.')
+							'description'	=>	__('Border style used throughout the form.', 'ws-form')
 						),
 
 						'skin_border_radius'	=> array(
@@ -1915,7 +1923,7 @@
 							'label'			=>	__('Radius', 'ws-form'),
 							'type'			=>	'number',
 							'default'		=>	4,
-							'description'	=>	__('Border radius used throughout the form.')
+							'description'	=>	__('Border radius used throughout the form.', 'ws-form')
 						)
 					)
 				),
@@ -1930,7 +1938,7 @@
 							'label'			=>	__('Enabled', 'ws-form'),
 							'type'			=>	'checkbox',
 							'default'		=>	true,
-							'description'	=>	__('When checked, transitions will be used on the form.')
+							'description'	=>	__('When checked, transitions will be used on the form.', 'ws-form')
 						),
 
 						'skin_transition_speed'	=> array(
@@ -1939,7 +1947,7 @@
 							'type'			=>	'number',
 							'default'		=>	200,
 							'help'			=>	'Value in milliseconds.',
-							'description'	=>	__('Transition speed in milliseconds.')
+							'description'	=>	__('Transition speed in milliseconds.', 'ws-form')
 						),
 
 						'skin_transition_timing_function'	=>	array(
@@ -1957,7 +1965,7 @@
 								'step-end'		=>	__('Step End', 'ws-form'),
 								'step-start'	=>	__('Step Start', 'ws-form')
 							),
-							'description'	=>	__('Speed curve of the transition effect.')
+							'description'	=>	__('Speed curve of the transition effect.', 'ws-form')
 						)
 					)
 				),
@@ -1972,7 +1980,7 @@
 							'label'			=>	__('Grid Gutter', 'ws-form'),
 							'type'			=>	'number',
 							'default'		=>	20,
-							'description'	=>	__('Sets the distance between form elements.')
+							'description'	=>	__('Sets the distance between form elements.', 'ws-form')
 						)
 					)
 				)
@@ -3065,7 +3073,10 @@
 
 					// API - List subs
 					'list_subs_call'		=>	__('Retrieving...', 'ws-form'),
-					'list_subs_select'		=>	__('Select...', 'ws-form')
+					'list_subs_select'		=>	__('Select...', 'ws-form'),
+
+					// Options
+					'options_select'		=>	__('Select...', 'ws-form')
 				)
 			);
 
@@ -3232,9 +3243,16 @@
 
 			$button_types = array(
 
-				array('value' => 'default', 	'text' => __('Default', 'ws-form')),
 				array('value' => 'primary', 	'text' => __('Primary', 'ws-form')),
 				array('value' => 'secondary', 	'text' => __('Secondary', 'ws-form')),
+				array('value' => 'success', 	'text' => __('Success', 'ws-form')),
+				array('value' => 'information', 'text' => __('Information', 'ws-form')),
+				array('value' => 'warning', 	'text' => __('Warning', 'ws-form')),
+				array('value' => 'danger', 		'text' => __('Danger', 'ws-form'))
+			);
+
+			$message_types = array(
+
 				array('value' => 'success', 	'text' => __('Success', 'ws-form')),
 				array('value' => 'information', 'text' => __('Information', 'ws-form')),
 				array('value' => 'warning', 	'text' => __('Warning', 'ws-form')),
@@ -3508,6 +3526,14 @@
 					'label'						=>	__('Remove Full Width Class', 'ws-form'),
 					'type'						=>	'checkbox',
 					'default'					=>	''
+				),
+
+				'class_field_message_type'			=> array(
+
+					'label'						=>	__('Type', 'ws-form'),
+					'type'						=>	'select',
+					'default'					=>	'information',
+					'options'					=>	$message_types
 				),
 
 				'class_field_button_type'			=> array(
@@ -4761,6 +4787,15 @@
 					'default'					=>	0
 				),
 
+				'select_field_parse_variable'	=> array(
+
+					'label'						=>	__('Variables', 'ws-form'),
+					'type'						=>	'data_grid_field',
+					'data_grid'					=>	'data_grid_select',
+					'default'					=>	0,
+					'help'						=>	__('Choose which column to use for server side variables (e.g. #field or #email_submission in email templates).')
+				),
+
 				'select_cascade'				=> array(
 
 					'label'						=>	__('Cascade', 'ws-form'),
@@ -4903,6 +4938,15 @@
 					'default'					=>	0
 				),
 
+				'checkbox_field_parse_variable'			=> array(
+
+					'label'						=>	__('Variables', 'ws-form'),
+					'type'						=>	'data_grid_field',
+					'data_grid'					=>	'data_grid_checkbox',
+					'default'					=>	0,
+					'help'						=>	__('Choose which column to use for server side variables (e.g. #field or #email_submission in email templates).')
+				),
+
 				'data_grid_radio'	=>	array(
 
 					'label'					=>	__('Radios', 'ws-form'),
@@ -4982,7 +5026,7 @@
 					)
 				),
 
-				'radio_field_value'	=> array(
+				'radio_field_value'				=> array(
 
 					'label'						=>	__('Values', 'ws-form'),
 					'type'						=>	'data_grid_field',
@@ -4991,12 +5035,21 @@
 					'html_encode'				=>	true
 				),
 
-				'radio_field_label'		=> array(
+				'radio_field_label'				=> array(
 
 					'label'						=>	__('Labels', 'ws-form'),
 					'type'						=>	'data_grid_field',
 					'data_grid'					=>	'data_grid_radio',
 					'default'					=>	0
+				),
+
+				'radio_field_parse_variable'	=> array(
+
+					'label'						=>	__('Variables', 'ws-form'),
+					'type'						=>	'data_grid_field',
+					'data_grid'					=>	'data_grid_radio',
+					'default'					=>	0,
+					'help'						=>	__('Choose which column to use for server side variables (e.g. #field or #email_submission in email templates).')
 				),
 
 				'radio_cascade'				=> array(
@@ -5861,7 +5914,7 @@
 
 				case 'info-circle' :
 
-					$return_value = '<path d="M8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C12.4,16 16,12.4 16,8 C16,3.6 12.4,0 8,0 Z"></path><polygon fill="#FFFFFF" points="9 13 7 13 7 6 9 6"></polygon><polygon fill="#FFFFFF" points="9 5 7 5 7 3 9 3"></polygon>';
+					$return_value = '<path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm1 13H7V6h2v7zm0-8H7V3h2v2z"/>';
 					break;
 
 				case 'last' :
@@ -6347,6 +6400,13 @@
 									'warning'		=>	'wsf-button-warning',
 									'danger'		=>	'wsf-button-danger'
 								),
+								'class_field_message_type'	=> array(
+
+									'success'		=>	'wsf-alert-success',
+									'information'	=>	'wsf-alert-information',
+									'warning'		=>	'wsf-alert-warning',
+									'danger'		=>	'wsf-alert-danger'
+								),
 
 								// Custom settings by field type
 								'field_types'		=> array(
@@ -6534,6 +6594,13 @@
 									'information'	=>	'btn-info',
 									'warning'		=>	'btn-warning',
 									'danger'		=>	'btn-danger'
+								),
+								'class_field_message_type'	=> array(
+
+									'success'		=>	'alert-success',
+									'information'	=>	'alert-info',
+									'warning'		=>	'alert-warning',
+									'danger'		=>	'alert-danger'
 								),
 
 								// Classes - Custom by field type
@@ -6747,6 +6814,13 @@
 									'information'	=>	'btn-info',
 									'warning'		=>	'btn-warning',
 									'danger'		=>	'btn-danger'
+								),
+								'class_field_message_type'	=> array(
+
+									'success'		=>	'alert-success',
+									'information'	=>	'alert-info',
+									'warning'		=>	'alert-warning',
+									'danger'		=>	'alert-danger'
 								),
 
 								// Classes - Custom by field type
@@ -6971,6 +7045,13 @@
 									'warning'		=>	'btn-warning',
 									'danger'		=>	'btn-danger'
 								),
+								'class_field_message_type'	=> array(
+
+									'success'		=>	'alert-success',
+									'information'	=>	'alert-info',
+									'warning'		=>	'alert-warning',
+									'danger'		=>	'alert-danger'
+								),
 
 								// Classes - Custom by field type
 								'field_types'		=> array(
@@ -7177,6 +7258,13 @@
 									'secondary'		=>	'secondary',
 									'success'		=>	'success',
 									'information'	=>	'info',
+									'danger'		=>	'alert'
+								),
+								'class_field_message_type'	=> array(
+
+									'success'		=>	'success',
+									'information'	=>	'info',
+									'warning'		=>	'warning',
 									'danger'		=>	'alert'
 								),
 
@@ -7393,6 +7481,13 @@
 									'warning'		=>	'warning',
 									'danger'		=>	'alert'
 								),
+								'class_field_message_type'	=> array(
+
+									'success'		=>	'success',
+									'information'	=>	'primary',
+									'warning'		=>	'warning',
+									'danger'		=>	'alert'
+								),
 
 								// Attributes
 								'attribute_field_match'		=> array('data-equalto' => '#field_match_id'),
@@ -7602,6 +7697,13 @@
 									'primary'		=>	'primary',
 									'secondary'		=>	'secondary',
 									'success'		=>	'success',
+									'warning'		=>	'warning',
+									'danger'		=>	'alert'
+								),
+								'class_field_message_type'	=> array(
+
+									'success'		=>	'success',
+									'information'	=>	'primary',
 									'warning'		=>	'warning',
 									'danger'		=>	'alert'
 								),
@@ -8047,6 +8149,7 @@
 
 								array('id' => 'tab_labels', 'required' => false, 'default' => WS_Form_Common::option_get('action_email_group_labels', 'auto'), 'valid' => array('true', 'false', 'auto')),
 								array('id' => 'section_labels', 'required' => false, 'default' => WS_Form_Common::option_get('action_email_section_labels', 'auto'), 'valid' => array('true', 'false', 'auto')),
+								array('id' => 'field_labels', 'required' => false, 'default' => WS_Form_Common::option_get('action_email_field_labels', 'true'), 'valid' => array('true', 'false', 'auto')),
 								array('id' => 'blank_fields', 'required' => false, 'default' => (WS_Form_Common::option_get('action_email_exclude_empty') ? 'false' : 'true'), 'valid' => array('true', 'false')),
 								array('id' => 'static_fields', 'required' => false, 'default' => (WS_Form_Common::option_get('action_email_static_fields') ? 'true' : 'false'), 'valid' => array('true', 'false')),
 							),
@@ -8306,9 +8409,12 @@
 
 				'variables'	=> array(
 
-					'post_url'			=>	array('label' => __('URL', 'ws-form'), 'value' => !is_null($post) ? get_permalink($post->ID) : ''),
+					'post_url_edit'		=>	array('label' => __('Admin URL', 'ws-form'), 'value' => !is_null($post) ? get_edit_post_link($post->ID) : ''),
+					'post_url'			=>	array('label' => __('Public URL', 'ws-form'), 'value' => !is_null($post) ? get_permalink($post->ID) : ''),
 					'post_type'			=>	array('label' => __('Type', 'ws-form'), 'value' => !is_null($post) ? $post->post_type : ''),
 					'post_title'		=>	array('label' => __('Title', 'ws-form'), 'value' => !is_null($post) ? $post->post_title : ''),
+					'post_content'		=>	array('label' => __('Content', 'ws-form'), 'value' => !is_null($post) ? $post->post_content : ''),
+					'post_excerpt'		=>	array('label' => __('Excerpt', 'ws-form'), 'value' => !is_null($post) ? $post->post_excerpt : ''),
 					'post_time'			=>	array('label' => __('Time', 'ws-form'), 'value' => !is_null($post) ? date(get_option('time_format'), strtotime($post->post_date)) : ''),
 					'post_id'			=>	array('label' => __('ID', 'ws-form'), 'value' => !is_null($post) ? $post->ID : ''),
 					'post_date'			=>	array('label' => __('Date', 'ws-form'), 'value' => !is_null($post) ? date(get_option('date_format'), strtotime($post->post_date)) : ''),
@@ -8398,23 +8504,8 @@
 			}
 
 			// User
-			$current_user = WS_Form_Action::get_user();
-			if($current_user === false) {
-
-				if(function_exists('wp_get_current_user')) {
-
-					$current_user = wp_get_current_user();
-					$current_user_id = $current_user->ID;
-
-				} else {
-
-					$current_user_id = 0;
-				}
-
-			} else {
-
-				$current_user_id = $current_user->ID;
-			}
+			$user = WS_Form_Common::get_user();
+			$user_id = (($user === false) ? 0 : $user->id);
 
 			$parse_variables['user'] = array(
 
@@ -8422,19 +8513,19 @@
 
 				'variables'	=> array(
 
-					'user_id' 			=>	array('label' => __('ID', 'ws-form'), 'value' => $current_user_id, 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_login' 		=>	array('label' => __('Login', 'ws-form'), 'value' => ($current_user_id > 0) ? $current_user->user_login : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_nicename' 	=>	array('label' => __('Nice Name', 'ws-form'), 'value' => ($current_user_id > 0) ? $current_user->user_nicename : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_email' 		=>	array('label' => __('Email', 'ws-form'), 'value' => ($current_user_id > 0) ? $current_user->user_email : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_display_name' =>	array('label' => __('Display Name', 'ws-form'), 'value' => ($current_user_id > 0) ? $current_user->display_name : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_url' 			=>	array('label' => __('URL', 'ws-form'), 'value' => ($current_user_id > 0) ? $current_user->user_url : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_registered' 	=>	array('label' => __('Registration Date', 'ws-form'), 'value' => ($current_user_id > 0) ? $current_user->user_registered : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_first_name'	=>	array('label' => __('First Name', 'ws-form'), 'value' => ($current_user_id > 0) ? get_user_meta($current_user_id, 'first_name', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_last_name'	=>	array('label' => __('Last Name', 'ws-form'), 'value' => ($current_user_id > 0) ? get_user_meta($current_user_id, 'last_name', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_bio'			=>	array('label' => __('Bio', 'ws-form'), 'value' => ($current_user_id > 0) ? get_user_meta($current_user_id, 'description', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_nickname' 	=>	array('label' => __('Nickname', 'ws-form'), 'value' => ($current_user_id > 0) ? get_user_meta($current_user_id, 'nickname', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_admin_color' 	=>	array('label' => __('Admin Color', 'ws-form'), 'value' => ($current_user_id > 0) ? get_user_meta($current_user_id, 'admin_color', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
-					'user_lost_password_key' => array('label' => __('Lost Password Key', 'ws-form'), 'value' => ($current_user_id > 0) ? $current_user->lost_password_key : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_id' 			=>	array('label' => __('ID', 'ws-form'), 'value' => $user_id, 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_login' 		=>	array('label' => __('Login', 'ws-form'), 'value' => ($user_id > 0) ? $user->user_login : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_nicename' 	=>	array('label' => __('Nice Name', 'ws-form'), 'value' => ($user_id > 0) ? $user->user_nicename : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_email' 		=>	array('label' => __('Email', 'ws-form'), 'value' => ($user_id > 0) ? $user->user_email : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_display_name' =>	array('label' => __('Display Name', 'ws-form'), 'value' => ($user_id > 0) ? $user->display_name : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_url' 			=>	array('label' => __('URL', 'ws-form'), 'value' => ($user_id > 0) ? $user->user_url : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_registered' 	=>	array('label' => __('Registration Date', 'ws-form'), 'value' => ($user_id > 0) ? $user->user_registered : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_first_name'	=>	array('label' => __('First Name', 'ws-form'), 'value' => ($user_id > 0) ? get_user_meta($user_id, 'first_name', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_last_name'	=>	array('label' => __('Last Name', 'ws-form'), 'value' => ($user_id > 0) ? get_user_meta($user_id, 'last_name', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_bio'			=>	array('label' => __('Bio', 'ws-form'), 'value' => ($user_id > 0) ? get_user_meta($user_id, 'description', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_nickname' 	=>	array('label' => __('Nickname', 'ws-form'), 'value' => ($user_id > 0) ? get_user_meta($user_id, 'nickname', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_admin_color' 	=>	array('label' => __('Admin Color', 'ws-form'), 'value' => ($user_id > 0) ? get_user_meta($user_id, 'admin_color', true) : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
+					'user_lost_password_key' => array('label' => __('Lost Password Key', 'ws-form'), 'value' => ($user_id > 0) ? $user->lost_password_key : '', 'limit' => __('if a user is currently signed in', 'ws-form')),
 					'user_lost_password_url' => array(
 
 						'label'			=> __('Lost Password URL', 'ws-form'),

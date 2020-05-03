@@ -5,6 +5,8 @@
 		public $id;
 		public $form_id;
 		public $new_lookup;
+		public $label;
+		public $meta;
 
 		public $table_name;
 
@@ -23,10 +25,12 @@
 			$this->new_lookup['group'] = array();
 			$this->new_lookup['section'] = array();
 			$this->new_lookup['field'] = array();
+			$this->label = WS_FORM_DEFAULT_GROUP_NAME;
+			$this->meta = array();
 		}
 
 		// Create group
-		public function db_create($next_sibling_id = 0) {
+		public function db_create($next_sibling_id = 0, $create_section = true) {
 
 			// User capability check
 			if(!WS_Form_Common::can_user('edit_form')) { return false; }
@@ -39,7 +43,7 @@
 			global $wpdb;
 
 			// Add group
-			$sql = sprintf("INSERT INTO %s (%s) VALUES ('%s', %u, '%s', '%s', %u, %u);", $this->table_name, self::DB_INSERT, esc_sql(WS_FORM_DEFAULT_GROUP_NAME), WS_Form_Common::get_user_id(), WS_Form_Common::get_mysql_date(), WS_Form_Common::get_mysql_date(), $sort_index, $this->form_id);
+			$sql = sprintf("INSERT INTO %s (%s) VALUES ('%s', %u, '%s', '%s', %u, %u);", $this->table_name, self::DB_INSERT, esc_sql($this->label), WS_Form_Common::get_user_id(), WS_Form_Common::get_mysql_date(), WS_Form_Common::get_mysql_date(), $sort_index, $this->form_id);
 			if($wpdb->query($sql) === false) { parent::db_throw_error(__('Error adding group', 'ws-form')); }
 
 			// Get inserted ID
@@ -50,6 +54,7 @@
 			$meta_data = $settings_form_admin['sidebars']['group']['meta'];
 			$meta_keys = WS_Form_Config::get_meta_keys();
 			$meta_data_array = self::build_meta_data($meta_data, $meta_keys);
+			$meta_data_array = array_merge($meta_data_array, $this->meta);
 
 			// Build meta data
 			$ws_form_meta = New WS_Form_Meta();
@@ -58,10 +63,13 @@
 			$ws_form_meta->db_update_from_array($meta_data_array);
 
 			// Build first section
-			$ws_form_section = New WS_Form_Section();
-			$ws_form_section->form_id = $this->form_id;
-			$ws_form_section->group_id = $this->id;
-			$ws_form_section->db_create();
+			if($create_section) {
+
+				$ws_form_section = New WS_Form_Section();
+				$ws_form_section->form_id = $this->form_id;
+				$ws_form_section->group_id = $this->id;
+				$ws_form_section->db_create();
+			}
 
 			return $this->id;
 		}
@@ -92,8 +100,7 @@
 				$section_meta->object = 'group';
 				$section_meta->parent_id = $this->id;
 				$metas = $section_meta->db_read_all();
-				$return_array['meta'] = $metas;
-				$this->meta = $metas;
+				$this->meta = $return_array['meta'] = $metas;
 			}
 
 			if($get_sections) {
@@ -102,7 +109,7 @@
 				$ws_form_section = New WS_Form_Section();
 				$ws_form_section->group_id = $this->id;
 				$sections = $ws_form_section->db_read_all($get_meta);
-				$return_array['sections'] = $sections;
+				$this->sections = $return_array['sections'] = $sections;
 			}
 
 			// Return array

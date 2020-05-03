@@ -95,7 +95,7 @@
 
 			if(typeof(wsf_form_json_populate[this.form_id]) !== 'undefined') {
 
-				this.submit_auto_populate = wsf_form_json_populate[this.form_id]['data'];
+				this.submit_auto_populate = wsf_form_json_populate[this.form_id];
 			}
 		}
 	}
@@ -1265,9 +1265,16 @@
 
 				// Set HTML
 				case 'html' :
+
+					$('[data-html]', obj_wrapper).html(value);
+					break;
+
+				// Set text editor
 				case 'text_editor' :
 
-					obj_wrapper.html(value);
+					// wautop
+					value = this.wautop(value);
+					$('[data-text-editor]', obj_wrapper).html(value);
 					break;
 
 				// Set button label

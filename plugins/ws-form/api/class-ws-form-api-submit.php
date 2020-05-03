@@ -268,7 +268,7 @@
 					'error_message' =>	'JSON encoding error: ' . json_last_error_msg() . ' (' . json_last_error() . ')'
 				);
 
-				echo json_encode($json_array);
+				echo wp_json_encode($json_array);
 				exit;
 			}
 
@@ -296,7 +296,7 @@
 				// Set error message
 				$json_array['error_message'] = $this->ws_form_submit->error_message;
 
-				echo json_encode($json_array);
+				echo wp_json_encode($json_array);
 				exit;
 			}
 
@@ -304,7 +304,7 @@
 			header('Content-Type: application/json');
 
 			// Output JSON response
-			echo $json_return;
+			echo $json_return; // phpcs:ignore
 
 			// Stop execution
 			exit;

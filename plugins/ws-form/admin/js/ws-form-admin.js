@@ -53,7 +53,7 @@
 	}
 
 	// Window - Resize - Init
-	$.WS_Form.prototype.window_resize_init = function(sidebar_obj) {
+	$.WS_Form.prototype.window_resize_init = function() {
 
 		$(window).on('resize', function() { 
 
@@ -70,7 +70,7 @@
 			// Sidebar expanded resizing
 			if($.WS_Form.this.sidebar_expanded_obj !== false) {
 
-				$.WS_Form.this.sidebar_resize(sidebar_obj);
+				$.WS_Form.this.sidebar_resize();
 			}
 		});
 	}
@@ -2507,7 +2507,7 @@
 					var meta_key = fieldset.meta_keys[key];
 
 					// Check to see if meta_key is defined
-					if(typeof $.WS_Form.meta_keys[meta_key] === 'undefined') {
+					if(typeof($.WS_Form.meta_keys[meta_key]) === 'undefined') {
 
 						this.error('error_meta_key', meta_key);
 						continue;
@@ -2517,10 +2517,10 @@
 					var meta_key_config = $.WS_Form.meta_keys[meta_key];
 
 					// meta_key override
-					if(typeof meta_key_config['key'] !== 'undefined') { meta_key = meta_key_config['key']; }
+					if(typeof(meta_key_config['key']) !== 'undefined') { meta_key = meta_key_config['key']; }
 
 					// Condition
-					if(typeof meta_key_config['condition'] !== 'undefined') {
+					if(typeof(meta_key_config['condition']) !== 'undefined') {
 
 						for(var condition_index in meta_key_config['condition']) {
 
@@ -2764,27 +2764,8 @@
 									break;
 								}
 
-								// Clear options
-								var meta_key_options = [];
-
 								// Build options
-								for(var field_index in this.field_data_cache) {
-
-									var field = this.field_data_cache[field_index];
-									var text = field.label;
-									var field_required = this.get_object_meta_value(field, 'required', false);
-									if(field_required) { text += ' *'; }
-
-									meta_key_options.push({'value': field.id, 'text': text + ' (' + this.language('id') + ': ' + field.id + ')', 'type': field.type});
-								}
-
-								// Sort options alphabetically
-								meta_key_options.sort(function(a, b) {
-
-									if(a.text < b.text) { return -1; }
-									if(a.text > b.text) { return 1; }
-									return 0;
-								});
+								var meta_key_options = this.options_fields();
 
 								// Store to cache
 								this.meta_key_options_cache['fields'] = $.extend(true, [], meta_key_options);
@@ -2805,7 +2786,7 @@
 						// Insert blank option
 						if(typeof(meta_key_config['options_blank']) !== 'undefined') {
 
-							meta_key_options.unshift({'value': '', 'text': meta_key_config['options_blank']});
+							meta_key_options.unshift({'value': '', 'text': meta_key_config['options_blank'], 'disabled_never': true});
 						}
 
 						// Filters
@@ -2873,8 +2854,16 @@
 							var meta_key_option_disabled = (typeof(meta_key_option.disabled) !== 'undefined') ? meta_key_option.disabled : false;
 							var option_disabled = meta_key_option_disabled ? ' disabled' : '';
 
+							// Determine if it should be disabled always (prevents unique functionality from not disabling fields)
+							var meta_key_option_disabled_always = (typeof(meta_key_option.disabled_always) !== 'undefined') ? meta_key_option.disabled_always : false;
+							var option_disabled_always = meta_key_option_disabled_always ? ' data-disabled-always' : '';
+
+							// Determine if it should never be disabled (prevents 'Select...' from being disabled)
+							var meta_key_option_disabled_never = (typeof(meta_key_option.disabled_never) !== 'undefined') ? meta_key_option.disabled_never : false;
+							var option_disabled_never = meta_key_option_disabled_never ? ' data-disabled-never' : '';
+
 							// Build option
-							sidebar_html_options += '<option value="' + this.html_encode(option_value) + '"' + option_selected + option_disabled + '>' + this.html_encode(option_text) + "</option>\n";
+							sidebar_html_options += '<option value="' + this.html_encode(option_value) + '"' + option_selected + option_disabled + option_disabled_always + option_disabled_never + '>' + this.html_encode(option_text) + "</option>\n";
 						}
 					}
 
@@ -3204,6 +3193,39 @@
 		return {'html_tabs': sidebar_html_tabs, 'html': sidebar_html, 'html_buttons': sidebar_html_buttons, 'inits': inits};
 	}
 
+	// Sidebar - Options - Groups
+	$.WS_Form.prototype.options_fields = function() {
+
+		var options = [];
+
+		for(var group_index in this.form.groups) {
+
+			var group = this.form.groups[group_index];
+
+			options.push({'value': group.id, 'text': group.label + ' (' + this.language('id') + ': ' + group.id + ')', 'type': 'group', 'disabled': true, 'disabled_always': true});
+
+			var sections = group.sections;
+
+			for(var section_index in sections) {
+
+				var section = sections[section_index];
+
+				options.push({'value': section.id, 'text': '- ' + section.label + ' (' + this.language('id') + ': ' + section.id + ')', 'type': 'section', 'disabled': true, 'disabled_always': true});
+
+				var fields = section.fields;
+
+				for(var field_index in fields) {
+
+					var field = fields[field_index];
+
+					options.push({'value': field.id, 'text': '-- ' + field.label + ' (' + this.language('id') + ': ' + field.id + ')', 'type': field.type});
+				}
+			}
+		}
+
+		return options;
+	}
+
 	// Sidebar - Clear caches (Done each time a sidebar is rendered)
 	$.WS_Form.prototype.sidebar_cache_clear = function() {
 
@@ -3372,6 +3394,12 @@
 				if(inits.indexOf('options-action-reload') != -1) {
 
 					$.WS_Form.this.sidebar_api_reload_init(obj_sidebar_inner);
+				}
+
+				// Initialize repeaters
+				if(inits.indexOf('repeater') != -1) {
+
+					$.WS_Form.this.sidebar_repeater_init(obj_sidebar_inner);
 				}
 
 				// Initialize sidebar conditions
@@ -4264,6 +4292,28 @@
 		// Init
 		this.sidebar_inits(sidebar_repeater_html_return.inits, obj);
 
+		// Check for uniques
+		if(repeater.meta_keys_unique !== false) {
+
+			for(var meta_keys_unique_index in repeater.meta_keys_unique) {
+
+				var meta_key_unique = repeater.meta_keys_unique[meta_keys_unique_index];
+
+				// Read meta key config
+				var meta_key_config = $.WS_Form.meta_keys[meta_key_unique];
+
+				// meta_key_unique override
+				if(typeof(meta_key_config['key']) !== 'undefined') { meta_key_unique = meta_key_config['key']; }
+
+				this.sidebar_repeater_options_unique(meta_key_unique, obj);
+
+				$('select[data-meta-key="' + meta_key_unique + '"]', obj).change(function() {
+
+					$.WS_Form.this.sidebar_repeater_options_unique(meta_key_unique, obj);
+				});
+			}
+		}
+
 		// Event - Add Row
 		$('[data-action="wsf-repeater-row-add"] div', obj).click(function() {
 
@@ -4331,6 +4381,37 @@
 		});
 	}
 
+	// Sidebar - Repeater - Options Fields - Unique (Disable options that are already selected)
+	$.WS_Form.prototype.sidebar_repeater_options_unique = function(meta_key_unique, obj) {
+
+		var selected_values_all = [];
+
+		$('select[data-meta-key="' + meta_key_unique + '"]', obj).each(function() {
+
+			// Add selected value
+			selected_values_all.push($(this).val());
+
+			// Reset options
+			$('option:not([data-disabled-always])', $(this)).attr('disabled', false);
+		});
+
+		$('select[data-meta-key="' + meta_key_unique + '"]', obj).each(function() {
+
+			// Get selected values
+			var selected_values = $.extend(true, [], selected_values_all);
+
+			// Remove the currently selected value
+			var selected_value_index = selected_values.indexOf($(this).val());
+			if(selected_value_index > -1) { selected_values.splice(selected_value_index, 1); }
+
+			// Disable the selected values
+			for(var selected_values_index in selected_values) {
+
+				$('option[value="' + selected_values[selected_values_index] + '"]:not([data-disabled-never])', $(this)).attr('disabled', '');
+			}
+		});
+	}
+
 	// Sidebar - Repeater - Row - New
 	$.WS_Form.prototype.sidebar_repeater_row_new = function(meta_keys) {
 
@@ -4367,6 +4448,9 @@
 		if(typeof(meta_key_config['meta_keys']) !== 'object') { return false; }
 		var meta_keys = meta_key_config['meta_keys'];
 
+		// Read meta keys unique
+		var meta_keys_unique = (typeof(meta_key_config['meta_keys_unique']) !== 'undefined') ? meta_key_config['meta_keys_unique'] : false;
+
 		// Get object
 		var object = obj.attr('data-object');
 
@@ -4380,7 +4464,7 @@
 		var data = $.WS_Form.this.get_object_meta_value(object_data, meta_key, [], true);
 		if(typeof(data) !== 'object') { data = []; }
 
-		return {'object': object, 'object_id': object_id, 'meta_key': meta_key, 'meta_keys': meta_keys, 'object_data': object_data, 'data': data};
+		return {'object': object, 'object_id': object_id, 'meta_key': meta_key, 'meta_keys': meta_keys, 'meta_keys_unique': meta_keys_unique, 'object_data': object_data, 'data': data};
 	}
 
 	// Sidebar - Repeater - HTML
@@ -5799,7 +5883,7 @@
 				var group_index = $(this).closest('.wsf-data-grid-group').attr('data-group-index');
 
 				// Get meta data (Deep clone)
-				var group = ($.extend(true, {}, meta_value.groups[group_index]));
+				var group = $.extend(true, {}, meta_value.groups[group_index]);
 
 				// Get rows
 				var rows = group.rows;
@@ -7564,7 +7648,7 @@
 		// Type of action
 		action_header_html += '<div class="wsf-field-wrapper"><label class="wsf-label">' + this.language('data_grid_action_action') + '</label>';
 		action_header_html += '<select data-meta-key="action_id" class="wsf-field">';
-		action_header_html += '<option value="">Select...</option>';
+		action_header_html += '<option value="">' + this.language('options_select') + '</option>';
 
 		// Get actions that can only be fired once and are already included
 		var action_single_use_exhausted_array = [];
@@ -8286,7 +8370,7 @@
 	}
 
 	// Sidebar - Resize
-	$.WS_Form.prototype.sidebar_resize = function(sidebar_obj) {
+	$.WS_Form.prototype.sidebar_resize = function() {
 
 		if($.WS_Form.this.sidebar_expanded_obj !== false) {
 
@@ -10281,7 +10365,16 @@
 		});
 
 		// Admin resize - Sidebar
-		$.WS_Form.this.admin_size_sidebar();
+		this.admin_size_sidebar();
+
+		// Sidebar expanded resizing
+		$(window).on('resize', function() { 
+
+			if($.WS_Form.this.sidebar_expanded_obj !== false) {
+
+				$.WS_Form.this.sidebar_resize();
+			}
+		});
 	}
 
 	// Remove hidden form elements we don't need
@@ -10400,8 +10493,12 @@
 		// Section repeatable
 		var section_repeatable = (typeof(submit['section_repeatable']) !== 'undefined') ? submit['section_repeatable'] : false;
 
+		// Expand / Contract
+		var expand_contract = '<div data-action="wsf-sidebar-expand" title="' + this.language('sidebar_expand') + '">' + this.svg('expand') + '</div>';
+		expand_contract += '<div data-action="wsf-sidebar-contract" title="' + this.language('sidebar_contract') + '">' + this.svg('contract') + '</div>';
+
 		// Title
-		var sidebar_html_title = '<div class="wsf-sidebar-header"><h2>' + this.svg('table') + this.language('submission') + encrypted_html + '<span></span></h2></div>';
+		var sidebar_html_title = '<div class="wsf-sidebar-header"><h2>' + this.svg('table') + this.language('submission') + encrypted_html + '<span></span></h2>' + expand_contract + '</div>';
 
 		// Info
 		var sidebar_html_info = '<table id="wsf-sidebar-info">';
@@ -10507,7 +10604,7 @@
 						var value = (typeof(submit['meta'][field_name]) !== 'undefined') ? submit['meta'][field_name]['value'] : '';
 
 
-						sidebar_html += '<div class="wsf-field-wrapper" data-id="' + field.id + '" data-type="' + field.type + '">';
+						sidebar_html += '<div class="wsf-field-wrapper" data-id="' + field.id + '" data-type="' + field.type + '"' + (section_repeatable_index ? (' data-repeatable-index="' + section_repeatable_index + '"') : '') + '>';
 
 						// Get field type
 						if(typeof($.WS_Form.field_type_cache[field.type]) === 'undefined') { continue; }
@@ -10812,6 +10909,9 @@
 			$('html').css({'overflow':'hidden'});
 			$('body').css({'overflow':'auto','-webkit-overflow-scrolling':'touch'});
 		}
+
+		// Expand / contract
+		this.sidebar_expand_contract_init();
 	}
 
 	// Submit - Save

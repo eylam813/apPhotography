@@ -28,7 +28,9 @@ h6 {
     --white: #FFFFFF;
     --black: #000000;
 }
-
+/* body {
+    overflow-x:  hidden;
+} */
 /* ******************** Colour Settings ******************** */
 .has-darkblue-color {
     color: var(--dark-blue);
@@ -77,8 +79,6 @@ h6 {
 .has-white-background-color {
     background-color: var(--white);
 }
-
-
 
 /* ******************** HEADER ******************** */
 
@@ -287,9 +287,9 @@ h6 {
 
 
 /* ******************** ALBUM POST TYPE SINGLE PAGE ******************** */
-.single-album-page-main{
+/* .single-album-page-main{
     padding: 1rem 4rem;
-}
+} */
 .albumToShopBtn {
     width: 85px;
     height: 85px;

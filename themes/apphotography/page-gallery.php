@@ -25,10 +25,6 @@ get_header();
                     );
                     // the query
                     $events = new WP_Query($args);
-                    // if (has_post_thumbnail() ) {
-                    //     $image_src = wp_get_attachment_image_src( get_post_thumbnail_id(),’thumbnail’ );
-                    //      echo '<img width="100%" src="' . $image_src[0] . '">';
-                    // }
                     if($events->have_posts()) :
                         // the loop
                         while ($events->have_posts()) :
@@ -36,11 +32,9 @@ get_header();
                     ?>
                         <a class="single-album-wrapper large-4 medium-4 small-12" href="<?php echo get_permalink() ?>">
                             <div class="single-album-inner-wrapper cell">
-                            <!-- <div class="single-album-inner-wrapper cell" style="background-image: url('<?php //echo get_the_post_thumbnail_url(); ?>')"> -->
-                            <img src="<?php echo get_the_post_thumbnail_url(); ?>">
-
+                                <?php the_post_thumbnail(); ?>
                             </div>
-                            <h2 class="large-12 album-title"><?php the_title(); ?></h2>
+                            <h2 class="large-12 album-title"> <?php the_title(); ?></h2>
                         </a>
                         
                         <?php endwhile; ?>

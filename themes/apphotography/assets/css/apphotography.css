@@ -752,7 +752,7 @@ footer .menu{
 }
 
 @media print,
-screen and (max-width:48em) {
+screen and (max-width:64em) {
     .menu-mobile{
         display: flex;
         background-color: var(--ash-grey);

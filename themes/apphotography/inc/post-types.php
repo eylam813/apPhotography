@@ -59,7 +59,7 @@ function apphotography_init_post_types() {
         // to allow use of gutenburg blocks
         'show_in_rest' => true,
         // want it to have support for all these elements, usually would remove comments
-        'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ),
+        'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt'),
     );
 //  call our arguments, add text domain to post type, so wont be overriden by others
     // register_post_type( 'apphotography_photo', $args );

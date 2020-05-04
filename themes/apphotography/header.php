@@ -60,7 +60,7 @@
 				</div>
 				
 </nav>
-		<div id="logo">
+		<div id="logo" data-hide-for="small">
 			<?php
 			the_custom_logo();
 			?>

@@ -519,9 +519,19 @@ footer a:hover {
 footer .menu{
     flex-direction: row;
 }
+.menu-mobile{
+    display: none;
+}
 
 @media print,
 screen and (max-width:40em) {
+    .menu-mobile{
+        display: flex;
+    }
+    header{
+        display: flex;
+        flex-direction: column;
+    }
     .site-footer {
         flex-direction: column;
         padding: 1rem 0.5rem;
@@ -534,6 +544,13 @@ screen and (max-width:40em) {
         margin-top: 1rem;
         align-self: center;
         color: var(--grey);
+    }
+    /* making mobile nav vertical */
+    .menu, .menu.horizontal{
+        flex-direction: column;
+    }
+    #primary-menu{
+        width: 100vw;
     }
 }
 
@@ -548,3 +565,5 @@ screen and (max-width:40em) {
     width: 100%;
     height: auto;
 }
+
+

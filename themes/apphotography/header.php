@@ -49,9 +49,17 @@
 						endif;
 						?>
 					</div>
-					<!-- menu button -->
-					<button class="menu-icon" type="button" data-toggle="site-navigation"></button>
+					
 				</div>
+				
+				<!-- responsive header nav -->
+				<div class="title-bar" data-responsive-toggle="site-navigation" data-hide-for="large">
+					<!-- menu button -->
+					<button class="menu-mobile" type="button" data-toggle="site-navigation"> menu</button>
+					
+				</div>
+				
+</nav>
 		<div id="logo">
 			<?php
 			the_custom_logo();

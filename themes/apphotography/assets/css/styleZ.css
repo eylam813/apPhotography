@@ -537,3 +537,14 @@ screen and (max-width:40em) {
         color: var(--grey);
     }
 }
+
+
+.album-image{
+    width: 100%;
+    height: 216px;
+    overflow: hidden;
+}
+.album-image img{
+    width: 100%;
+    height: auto;
+}

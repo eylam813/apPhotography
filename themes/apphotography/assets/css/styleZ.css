@@ -485,7 +485,10 @@ textarea {
     border: 2px solid;
     border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
 }
-
+input[type=checkbox].wsf-field + label.wsf-label:before {
+    border: 1px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+}
 /* ******************** Footer Styling ******************** */
 .site-footer {
     display: flex;

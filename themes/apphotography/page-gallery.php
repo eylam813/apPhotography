@@ -35,7 +35,7 @@ get_header();
                             $events->the_post();
                     ?>
                         <a class="single-album-wrapper large-4 medium-4 small-12" href="<?php echo get_permalink() ?>">
-                            <div class="single-album-inner-wrapper cell">
+                            <div class="single-album-inner-wrapper cell album-image">
                             <!-- <div class="single-album-inner-wrapper cell" style="background-image: url('<?php //echo get_the_post_thumbnail_url(); ?>')"> -->
                             <img src="<?php echo get_the_post_thumbnail_url(); ?>">
 

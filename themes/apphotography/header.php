@@ -110,6 +110,5 @@
 </div> <!--#ap-wrapper-inner -->
 
 <section id="ap-content-wrapper" class="cell">
-
 	<div id="ap-content" class="grid-x">
 

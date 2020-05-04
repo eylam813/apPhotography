@@ -20,6 +20,9 @@
 		// NONCE verified
 		public static $nonce_verified = false;
 
+		// Fields cache
+		public static $fields = false;
+
 		// Admin messages - Push
 		public static function admin_message_push($message, $type = 'notice-success', $dismissible = true, $nag_notice = true) {
 
@@ -190,7 +193,7 @@
 			}
 
 			// Get from standard _GET _POST arrays
-			$request_method = WS_Form_Common::get_request_method();
+			$request_method = self::get_request_method();
 			if(!$request_method) { return $default; }
 
 			// Regular GET, POST, PUT handling
@@ -255,7 +258,7 @@
 			}
 
 			// Get from standard _GET _POST arrays
-			$request_method = WS_Form_Common::get_request_method();
+			$request_method = self::get_request_method();
 			if(!$request_method) { return $default; }
 			if(
 				($request_method_required !== false) &&
@@ -489,7 +492,7 @@
 		public static function comment_css($comment) {
 
 			// Should CSS be commented?
-			$comments_css = WS_Form_Common::option_get('comments_css', true);
+			$comments_css = self::option_get('comments_css', true);
 
 			if($comments_css) {
 
@@ -583,7 +586,7 @@
 
 			$debug_enabled = false;
 
-			switch(WS_Form_Common::option_get('helper_debug', 'off')) {
+			switch(self::option_get('helper_debug', 'off')) {
 
 				case 'administrator' : 	
 
@@ -612,9 +615,16 @@
 		}
 
 		// Get all fields from form
-		public static function get_fields_from_form($form_array) {
+		public static function get_fields_from_form($form_object) {
 
-			$fields = self::get_fields_from_form_group($form_array->groups);
+			// Retrieve from cache
+			if(isset(self::$fields[$form_object->id])) { return self::$fields[$form_object->id]; }
+
+			// Get fields
+			$fields = self::get_fields_from_form_group($form_object->groups);
+
+			// Add to cache
+			self::$fields[$form_object->id] = $fields;
 
 			return $fields;
 		}
@@ -1275,6 +1285,9 @@
 			// Get post
 			$post = self::get_post_root();
 
+			// Get user
+			$user = self::get_user();
+
 			// Initialize variables
 			$variables = [];
 			$variables_single_parse = [];
@@ -1288,16 +1301,6 @@
 
 			// Check for too many iterations
 			if($depth > 100) { return ''; }
-
-			// User
-			$current_user = WS_Form_Action::get_user();
-			if(
-				($current_user === false) &&
-				(function_exists('wp_get_current_user'))
-			) {
-
-				$current_user = wp_get_current_user();
-			}
 
 			$parse_variables_config = WS_Form_Config::get_parse_variables();
 
@@ -1455,10 +1458,11 @@
 
 											$render_group_labels = $variable_attribute_array[0];
 											$render_section_labels = $variable_attribute_array[1];
-											$render_blank_fields = ($variable_attribute_array[2] == 'true');
-											$render_static_fields = ($variable_attribute_array[3] == 'true');
+											$render_field_labels = $variable_attribute_array[2];
+											$render_blank_fields = ($variable_attribute_array[3] == 'true');
+											$render_static_fields = ($variable_attribute_array[4] == 'true');
 
-											$value = self::parse_variables_fields_all((object) $form, $submit, $content_type, $render_group_labels, $render_section_labels, $render_blank_fields, $render_static_fields);
+											$value = self::parse_variables_fields_all((object) $form, $submit, $content_type, $render_group_labels, $render_section_labels, $render_field_labels, $render_blank_fields, $render_static_fields);
 
 											$parsed_variable = self::parse_variables_process($value, $form, $submit, $content_type, $depth + 1);
 
@@ -1501,11 +1505,11 @@
 										case 'user_meta' :
 
 											// Check we have user data
-											if(($current_user === false) || !$current_user->ID) { break; }
+											if(($user === false) || !$user->ID) { break; }
 
 											$meta_key = $variable_attribute_array[0];
 
-											$parsed_variable = get_user_meta($current_user->ID, $meta_key, true);
+											$parsed_variable = get_user_meta($user->ID, $meta_key, true);
 											if(is_array($parsed_variable)) { $parsed_variable = serialize($parsed_variable); }
 
 											break;
@@ -1564,15 +1568,15 @@
 										case 'user_lost_password_url' :
 
 											// Check we have user data
-											if(($current_user === false) || !$current_user->ID) { break; }
+											if(($user === false) || !$user->ID) { break; }
 
 											// Check we can produce a lost password URL
 											if(!(
 
-												isset($current_user->lost_password_key) && 
-												($current_user->lost_password_key != '') && 
-												isset($current_user->user_login) && 
-												($current_user->user_login != '')
+												isset($user->lost_password_key) && 
+												($user->lost_password_key != '') && 
+												isset($user->user_login) && 
+												($user->user_login != '')
 
 											)) { break; }
 
@@ -1581,11 +1585,11 @@
 
 											if($path !== '') {
 
-												$parsed_variable = network_site_url(sprintf('%s?key=%s&login=%s', $path, rawurlencode($current_user->lost_password_key),rawurlencode($current_user->user_login)));
+												$parsed_variable = network_site_url(sprintf('%s?key=%s&login=%s', $path, rawurlencode($user->lost_password_key),rawurlencode($user->user_login)));
 
 											} else {
 
-												$parsed_variable = network_site_url(sprintf('wp-login.php?action=rp&key=%s&login=%s', rawurlencode($current_user->lost_password_key), rawurlencode($current_user->user_login)), 'login');
+												$parsed_variable = network_site_url(sprintf('wp-login.php?action=rp&key=%s&login=%s', rawurlencode($user->lost_password_key), rawurlencode($user->user_login)), 'login');
 											}
 
 											break;
@@ -1617,6 +1621,40 @@
 				$variables['form_obj_id'] = '';
 				$variables['form_framework'] = '';
 				$variables['form_instance_id'] = 0;
+			}
+
+			// Post
+			if(strpos($parse_string, 'post')) {
+
+				$variables['post_id'] = (!is_null($post) ? $post->ID : '');
+				$variables['post_type'] = (!is_null($post) ? $post->post_type : '');
+				$variables['post_title'] = (!is_null($post) ? $post->post_title : '');
+				$variables['post_content'] = (!is_null($post) ? $post->post_content : '');
+				$variables['post_excerpt'] = (!is_null($post) ? $post->post_excerpt : '');
+				$variables['post_url'] = (!is_null($post) ? get_permalink($post->ID) : '');
+				$variables['post_url_edit'] = (!is_null($post) ? get_edit_post_link($post->ID) : '');
+				$variables['post_date'] = (!is_null($post) ? date(get_option('date_format'), strtotime($post->post_date)) : '');
+				$variables['post_time'] = (!is_null($post) ? date(get_option('time_format'), strtotime($post->post_date)) : '');
+			}
+
+			// User
+			if(strpos($parse_string, 'user')) {
+
+				$user_id = (($user === false) ? 0 : $user->id);
+
+				$variables['user_id'] = $user_id;
+				$variables['user_login'] = (($user_id > 0) ? $user->user_login : '');
+				$variables['user_nicename'] = (($user_id > 0) ? $user->user_nicename : '');
+				$variables['user_email'] = (($user_id > 0) ? $user->user_email : '');
+				$variables['user_display_name'] = (($user_id > 0) ? $user->display_name : '');
+				$variables['user_url'] = (($user_id > 0) ? $user->user_url : '');
+				$variables['user_registered'] = (($user_id > 0) ? $user->user_registered : '');
+				$variables['user_first_name'] = (($user_id > 0) ? get_user_meta($user_id, 'first_name', true) : '');
+				$variables['user_last_name'] = (($user_id > 0) ? get_user_meta($user_id, 'last_name', true) : '');
+				$variables['user_bio'] = (($user_id > 0) ? get_user_meta($user_id, 'description', true) : '');
+				$variables['user_nickname'] = (($user_id > 0) ? get_user_meta($user_id, 'nickname', true) : '');
+				$variables['user_admin_color'] = (($user_id > 0) ? get_user_meta($user_id, 'admin_color', true) : '');
+				$variables['user_lost_password_key'] = (($user_id > 0) ? $user->lost_password_key : '');
 			}
 
 			// Submit
@@ -1738,7 +1776,7 @@
 					case 'ip' :
 
 						// Get lookup URL mask
-						$ip_lookup_url_mask = WS_Form_Common::option_get('ip_lookup_url_mask');
+						$ip_lookup_url_mask = self::option_get('ip_lookup_url_mask');
 						if(empty($ip_lookup_url_mask)) { $value = htmlentities($value); break; }
 
 						// Get #value for mask
@@ -1755,7 +1793,7 @@
 						if(preg_match('/^(\-?\d+(\.\d+)?),\s*(\-?\d+(\.\d+)?)$/', $value) == 1) {
 
 							// Get lookup URL mask
-							$latlon_lookup_url_mask = WS_Form_Common::option_get('latlon_lookup_url_mask');
+							$latlon_lookup_url_mask = self::option_get('latlon_lookup_url_mask');
 							if(empty($latlon_lookup_url_mask)) { $value = htmlentities($value); break; }
 
 							// Get #value for mask
@@ -1863,18 +1901,34 @@
 
 				case 'datetime' :
 
-					$fields = WS_Form_Common::get_fields_from_form($form);
+					$fields = self::get_fields_from_form($form);
 
 					if(!isset($fields[$meta['id']])) { break; }
 
 					$field = $fields[$meta['id']];
 
-					$input_type_datetime = WS_Form_Common::get_object_meta_value((object)$field, 'input_type_datetime', 'date');
+					$input_type_datetime = self::get_object_meta_value((object)$field, 'input_type_datetime', 'date');
 
 					// If submit is read from database, it is split into MySQL and presentable formats
 					if(is_array($value) && isset($value['mysql'])) { $value = $value['mysql']; }
 
-					$value = WS_Form_Common::get_date_by_type($value, $input_type_datetime);
+					$value = self::get_date_by_type($value, $input_type_datetime);
+
+					break;
+
+				case 'select' :
+				case 'checkbox' :
+				case 'radio' :
+
+					$fields = self::get_fields_from_form($form);
+
+					if(!isset($fields[$meta['id']])) { break; }
+
+					$field = $fields[$meta['id']];
+
+					$default_value = is_array($value) ? (($content_type == 'text/html') ? implode("<br />", $value) : implode("\n", $value)) : $value;
+
+					$value = self::get_datagrid_value($field, $value, $content_type, $default_value);
 
 					break;
 
@@ -1913,15 +1967,15 @@
 		}
 
 		// #email_submission
-		public static function parse_variables_fields_all($form, $submit, $content_type, $render_group_labels, $render_section_labels, $render_blank_fields, $render_static_fields) {
+		public static function parse_variables_fields_all($form, $submit, $content_type, $render_group_labels, $render_section_labels, $render_field_labels, $render_blank_fields, $render_static_fields) {
 
-			$fields_all = self::parse_variables_fields_all_group($form->groups, $form, $submit, $content_type, $render_group_labels, $render_section_labels, $render_blank_fields, $render_static_fields);
+			$fields_all = self::parse_variables_fields_all_group($form->groups, $form, $submit, $content_type, $render_group_labels, $render_section_labels, $render_field_labels, $render_blank_fields, $render_static_fields);
 
 			return $fields_all;
 		}
 
 		// Run through each group
-		public static function parse_variables_fields_all_group($groups, $form, $submit, $content_type, $render_group_labels, $render_section_labels, $render_blank_fields, $render_static_fields) {
+		public static function parse_variables_fields_all_group($groups, $form, $submit, $content_type, $render_group_labels, $render_section_labels, $render_field_labels, $render_blank_fields, $render_static_fields) {
 
 			$groups_html = '';
 
@@ -1932,7 +1986,7 @@
 
 				if(isset($groups[$key]->sections)) {
 
-					$sections_html = self::parse_variables_fields_all_section($group->sections, $form, $submit, $content_type, $render_section_labels, $render_blank_fields, $render_static_fields);
+					$sections_html = self::parse_variables_fields_all_section($group->sections, $form, $submit, $content_type, $render_section_labels, $render_field_labels, $render_blank_fields, $render_static_fields);
 
 					// Should label be rendered?
 					$render_label =	(
@@ -1972,7 +2026,7 @@
 		}
 
 		// Run through each section
-		public static function parse_variables_fields_all_section($sections, $form, $submit, $content_type, $render_section_labels, $render_blank_fields, $render_static_fields) {
+		public static function parse_variables_fields_all_section($sections, $form, $submit, $content_type, $render_section_labels, $render_field_labels, $render_blank_fields, $render_static_fields) {
 
 			$sections_html = '';
 
@@ -1989,7 +2043,7 @@
 
 				if(isset($sections[$key]->children)) {
 
-					$fields_html .= self::parse_variables_fields_html_section($section->children, $form, $submit, $content_type, $render_section_labels, $render_blank_fields, $render_static_fields);
+					$fields_html .= self::parse_variables_fields_html_section($section->children, $form, $submit, $content_type, $render_section_labels, $render_field_labels, $render_blank_fields, $render_static_fields);
 				}
 
 				// Build section ID string
@@ -2061,6 +2115,19 @@
 						// Get field label
 						$label = $field->label;
 
+						// Should label be rendered?
+						$render_label =	(
+
+							($render_field_labels == 'true')
+
+							||
+
+							(
+								($render_field_labels == 'auto') &&
+								self::get_object_meta_value($field, 'label_render')
+							)
+						);
+
 						// Build field name
 						$field_name = WS_FORM_FIELD_PREFIX . $field->id . $section_repeatable_suffix;
 
@@ -2095,12 +2162,12 @@
 
 							case 'text/html' :
 
-								$fields_html .= '<p><strong>' . htmlentities($label) . '</strong><br />' . $value . '</p>';
+								$fields_html .= '<p>' . ($render_label ? ('<strong>' . htmlentities($label) . '</strong><br />') : '') . $value . '</p>';
 								break;
 
 							default :
 
-								$fields_html .= $label . "\n" . $value . "\n\n";
+								$fields_html .= ($render_label ? ($label . "\n") : '') . $value . "\n\n";
 								break;
 						}
 					}
@@ -2145,6 +2212,75 @@
 			return $sections_html;
 		}
 
+		// Get value label lookup
+		public static function get_datagrid_value($field, $value_array, $content_type, $default_value) {
+
+			$value_label_lookup_array = array();
+
+			if(!is_array($value_array)) { return $default_value; }
+
+			$field_type = $field->type;
+
+			switch($field_type) {
+
+				case 'select' :
+
+					$datagrid = self::get_object_meta_value($field, 'data_grid_select', false);
+					$value_id = self::get_object_meta_value($field, 'select_field_value', 0);
+					$email_id = self::get_object_meta_value($field, 'select_field_parse_variable', 0);
+					break;
+
+				case 'checkbox' :
+
+					$datagrid = self::get_object_meta_value($field, 'data_grid_checkbox', false);
+					$value_id = self::get_object_meta_value($field, 'checkbox_field_value', 0);
+					$email_id = self::get_object_meta_value($field, 'checkbox_field_parse_variable', 0);
+					break;
+
+				case 'radio' :
+
+					$datagrid = self::get_object_meta_value($field, 'data_grid_radio', false);
+					$value_id = self::get_object_meta_value($field, 'radio_field_value', 0);
+					$email_id = self::get_object_meta_value($field, 'radio_field_parse_variable', 0);
+					break;
+			}
+
+			if($datagrid === false) { return $default_value; }
+			$value_id = intval($value_id);
+			$email_id = intval($email_id);
+
+			// Get data grid rows
+			if(!isset($datagrid->groups)) { return $default_value; }
+			if(!is_array($datagrid->groups)) { return $default_value; }
+			$groups = $datagrid->groups;
+
+			foreach($groups as $group) {
+
+				if(!isset($group->rows)) { continue; }
+				if(!is_array($group->rows)) { continue; }
+
+				$rows = $group->rows;
+
+				foreach($rows as $row) {
+
+					if(!isset($row->data)) { continue; }
+					if(!is_array($row->data)) { continue; }
+
+					$data = $row->data;
+
+					if(!isset($data[$value_id])) { continue; }
+					if(!isset($data[$email_id])) { continue; }
+
+					if(in_array($data[$value_id], $value_array)) {
+
+						$value_label_lookup_array[] = $data[$email_id];
+					}
+				}
+			}
+
+			return (($content_type == 'text/html') ? implode("<br />", $value_label_lookup_array) : implode("\n", $value_label_lookup_array));
+		}
+
 		// Check if user can do a WordPress capability (current_user_can not available on public side)
 		public static function can_user($capability) {
 
@@ -2164,11 +2300,11 @@
 		public static function review() {
 
 			// Review nag
-			$review_nag = WS_Form_Common::option_get('review_nag', false);
+			$review_nag = self::option_get('review_nag', false);
 			if($review_nag) { return; }
 
 			// Determine if review nag should be shown
-			$install_timestamp = intval(WS_Form_Common::option_get('install_timestamp', time(), true));
+			$install_timestamp = intval(self::option_get('install_timestamp', time(), true));
 			$review_nag_show = (time() > ($install_timestamp + (WS_FORM_REVIEW_NAG_DURATION * 86400)));
 			if(!$review_nag_show) { return; }
 
@@ -2187,7 +2323,7 @@
 			$('.wsf-review').hide();
 
 			// Call AJAX to prevent review nag appearing again
-			$.ajax({ method: 'POST', url: '<?php echo esc_html(WS_Form_Common::get_api_path('helper/review_nag/dismiss/')); ?>' });
+			$.ajax({ method: 'POST', url: '<?php echo esc_html(self::get_api_path('helper/review_nag/dismiss/')); ?>' });
 
 		})(jQuery);
 	}
@@ -2469,9 +2605,9 @@
 				'action_license_item_ids'	=> rawurlencode($action_license_item_ids)
 			);
 
-			$url = WS_Form_Common::mask_parse($url, $url_variables);
+			$url = self::mask_parse($url, $url_variables);
 
-			echo '<div id="wsf-settings-content"><script>(function($) {\'use strict\';$(\'#' . esc_html($id) . '\').load(\'' .  esc_html($url) . '\', function(response, status, xhr) { if(status == \'error\') { $(\'#' . esc_html($id) . '\').html(\'' . sprintf(__('<a href="%s" target="_blank">Click here</a> to learn more about WS Form PRO.', 'ws-form'), esc_html(WS_Form_Common::get_plugin_website_url('', 'settings'))) . '\'); }});})(jQuery);</script></div>';
+			echo '<div id="wsf-settings-content"><script>(function($) {\'use strict\';$(\'#' . esc_html($id) . '\').load(\'' .  esc_html($url) . '\', function(response, status, xhr) { if(status == \'error\') { $(\'#' . esc_html($id) . '\').html(\'' . sprintf(__('<a href="%s" target="_blank">Click here</a> to learn more about WS Form PRO.', 'ws-form'), esc_html(self::get_plugin_website_url('', 'settings'))) . '\'); }});})(jQuery);</script></div>';
 		}
 
 		// Get root post
@@ -2483,12 +2619,30 @@
 			// Load post by query string (Used by actions when a form is submitted)
 			if(is_null($post)) {
 
-				$post_id = intval(WS_Form_Common::get_query_var('wsf_post_id', 0));
-				if($post_id == 0) { $post_id = intval(WS_Form_Common::get_query_var('post_id', 0)); }
+				$post_id = intval(self::get_query_var('wsf_post_id', 0));
+				if($post_id == 0) { $post_id = intval(self::get_query_var('post_id', 0)); }
 				$post = ($post_id > 0) ? get_post($post_id) : null;
 				$GLOBALS['ws_form_post_root'] = $post;
 			}
 
 			return $post;
+		}
+
+		// Get user
+		public static function get_user() {
+
+			// Load user
+			$user = (isset($GLOBALS) && isset($GLOBALS['ws_form_user'])) ? $GLOBALS['ws_form_user'] : false;
+
+			// Load user by current_user
+			if(
+				($user === false) &&
+				function_exists('wp_get_current_user')
+			) {
+
+				$user = wp_get_current_user();
+			}
+
+			return $user;
 		}
 	}

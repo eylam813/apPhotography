@@ -19,8 +19,6 @@
 		public $starred;
 		public $viewed;
 
-		public $section_repeatable_index;
-
 		public $meta;
 		public $meta_protected;
 
@@ -131,7 +129,7 @@
 			global $wpdb;
 
 			// Add fields
-			$sql = sprintf("SELECT %s FROM %s WHERE id = %s LIMIT 1;", self::DB_SELECT, $this->table_name, $this->id);
+			$sql = sprintf("SELECT %s FROM %s WHERE id = %u LIMIT 1;", self::DB_SELECT, $this->table_name, $this->id);
 			$return_array = $wpdb->get_row($sql, 'ARRAY_A');
 
 			if($return_array === null) { parent::db_throw_error(__('Unable to read submission', 'ws-form')); }

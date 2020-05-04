@@ -22,6 +22,9 @@
 			// Get next sibling ID
 			$next_sibling_id = absint(WS_Form_Common::get_query_var_nonce('next_sibling_id', 0, $parameters));
 
+			// Set breakpoint meta
+			$ws_form_section->db_set_breakpoint_size_meta();
+
 			// Create section
 			$ws_form_section->db_create($next_sibling_id);
 

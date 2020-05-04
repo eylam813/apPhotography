@@ -1,5 +1,11 @@
 *** ShipStation for WooCommerce ***
 
+= 4.1.36 - 2020-04-29 =
+* Tweak - WC 4.1 compatibility.
+
+= 4.1.35 - 2020-04-21 =
+* Tweak - Obfuscate logging data.
+
 = 4.1.34 2020-03-09 =
 * Tweak - WP tested up to 5.4.
 * Tweak - WC tested up to 4.0.

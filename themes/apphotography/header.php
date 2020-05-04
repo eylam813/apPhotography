@@ -25,13 +25,13 @@
 
 <!-- <div id="menu-hamburger">Menu</div> -->
 
-<div id="ap-wrapper" class="grid-x large-2 medium-2 small-12">
+<div id="ap-wrapper" class="grid-x cell">
 	<div id="ap-wrapper-inner">
 	<!-- <div id="ap-wrapper-inner" class="large-2 medium-2 small-12"> -->
 
 
 	<header>
-	<section>
+	
 		<!-- responsive header nav -->
 		<div class="title-bar" data-responsive-toggle="site-navigation" data-hide-for="medium">
 					
@@ -49,15 +49,23 @@
 						endif;
 						?>
 					</div>
-					<!-- menu button -->
-					<button class="menu-icon" type="button" data-toggle="site-navigation"></button>
+					
 				</div>
+				
+				<!-- responsive header nav -->
+				<div class="title-bar" data-responsive-toggle="site-navigation" data-hide-for="large">
+					<!-- menu button -->
+					<button class="menu-mobile" type="button" data-toggle="site-navigation">Menu</button>
+					
+				</div>
+				
+</nav>
 		<div id="logo">
 			<?php
 			the_custom_logo();
 			?>
 		</div><!-- .logo -->
-
+		<section>
 				<nav id="site-navigation" class="main-navigation">
 					<?php
 					if ( has_nav_menu( 'menu-1' ) ) {
@@ -73,7 +81,7 @@
 					}
 					?>
 				</nav><!-- #site-navigation -->
-			</section>
+			
 			<!-- Social Media Links -->
 			<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
 				<div class="social-media">
@@ -94,14 +102,13 @@
 					<?php } ?>
 				</div> <!--social media-->
 			<?php } ?>
-		</section>
+			</section>
+		<!-- </section> -->
 	</header><!-- #masthead -->
 
 	</div> <!--#ap-wrapper -->
 </div> <!--#ap-wrapper-inner -->
 
-<section id="ap-content-wrapper" class="large-10 medium-10 small-12">
-
+<section id="ap-content-wrapper" class="cell">
 	<div id="ap-content" class="grid-x">
-	<!-- <div id="content" class="site-content"> -->
 

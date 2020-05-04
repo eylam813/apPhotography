@@ -200,12 +200,12 @@ screen and (max-width:40em) {
 
     #ap-wrapper {
         /* z-index: 9999999; */
-        height: 5rem;
+        height: 6rem;
         min-width: 100vw;
     }
 
     .custom-logo {
-        max-width: 160px;
+        margin-top: 10px;
     }
 
     .title-bar {

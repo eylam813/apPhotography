@@ -55,7 +55,7 @@
 				<!-- responsive header nav -->
 				<div class="title-bar" data-responsive-toggle="site-navigation" data-hide-for="large">
 					<!-- menu button -->
-					<button class="menu-mobile" type="button" data-toggle="site-navigation"> menu</button>
+					<button class="menu-mobile" type="button" data-toggle="site-navigation">Menu</button>
 					
 				</div>
 				

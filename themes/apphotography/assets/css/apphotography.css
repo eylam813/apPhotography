@@ -353,7 +353,7 @@ header section {
 }
 .album-image img{
     width: 100%;
-    height: auto;
+    min-height: 216px;
 }
 
 

@@ -152,7 +152,6 @@ final class WS_Form {
 		$plugin_admin = new WS_Form_Admin($this->get_plugin_name(), $this->get_version());
 
 		// Actions
-		$this->loader->add_action('plugins_loaded', $plugin_admin, 'plugins_loaded', 10);
 		$this->loader->add_action('init', $plugin_admin, 'init');
 		$this->loader->add_action('enqueue_block_editor_assets', $plugin_admin, 'enqueue_block_editor_assets');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'admin_menu');

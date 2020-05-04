@@ -21,8 +21,8 @@ h6 {
 	font-family: headerFont;
 }
 :root{
-    --dark-green: #003C44;
-    --slate-grey: #6C888D;
+    --dark-blue: #003C44;
+    --grey: #6C888D;
     --outer-space: #404C56;
     --ash-grey: #ACB4B6;
     --white: #FFFFFF;
@@ -30,20 +30,20 @@ h6 {
 }
 
 /* ******************** Colour Settings ******************** */
-.has-darkgreen-color {
-    color: var(--dark-green);
+.has-darkblue-color {
+    color: var(--dark-blue);
 }
 
-.has-darkgreen-background-color {
-    background-color: var(--dark-green);
+.has-darkblue-background-color {
+    background-color: var(--dark-blue);
 }
 
-.has-slategrey-color {
-    color: var(--slate-grey);
+.has-grey-color {
+    color: var(--grey);
 }
 
-.has-slategrey-background-color {
-    background-color: var(--slate-grey);
+.has-grey-background-color {
+    background-color: var(--grey);
 }
 
 .has-outerspace-color {
@@ -85,12 +85,13 @@ h6 {
 
 #ap-wrapper {
     /* background-color: orange; */
-    max-width: 200px;
+    /* max-width: 200px; */
     position: sticky;
     position: -webkit-sticky; /* Safari */
     top:0;
     left:0;
-    height: 100vh;
+    z-index: 99999999;
+    /* height: 100vh; */
 }
 
 #ap-wrapper-inner{
@@ -112,8 +113,8 @@ h6 {
 	position: relative;
 }
 #cssmenu > ul > li > a:hover {
-	background: var(--slate-grey);
-	color: var(--dark-green);
+	background: var(--grey);
+	color: var(--dark-blue);
 }
 /* submenu styles */
 #cssmenu > ul > li.has-sub {
@@ -126,7 +127,7 @@ h6 {
 	top: 18px;
 	right: 6px;
 	border: 5px solid transparent;
-	border-top: 5px solid var(--dark-green);
+	border-top: 5px solid var(--dark-blue);
 }
 /* arrow on menu */
 #cssmenu > ul > li.has-sub:hover > a:before {
@@ -172,11 +173,11 @@ h6 {
 	margin: 0;
     padding: 8px 20px;
     font-size: 18px;
-	color: var(--dark-green);
+	color: var(--dark-blue);
 	text-decoration: none;
 }
 #cssmenu ul li > ul li:hover{
-    background-color: var(--slate-grey);
+    background-color: var(--grey);
     z-index: 99999999;
 }
 
@@ -199,10 +200,10 @@ h6 {
 }
 .front-page .bg-holder main {
     background-color: #ffffff80;
-    width: 50vw;
-    max-width: 500px;
+    /* width: 50vw; */
+    /* max-width: 500px; */
     margin-left: auto;
-    margin-right: 4vw;
+    /* margin-right: 4vw; */
     padding: 20px;
     height: 100%;
     min-height: 85vh;
@@ -216,7 +217,7 @@ h6 {
 /* ******************** LEFT-FEATURE TEMPLATE ******************** */
 
 #left-feature-ap-primary {
-    min-height: 100vh;
+    /* min-height: 100vh; */
     display: flex;
     align-items: center;
     padding: 5rem;
@@ -238,7 +239,7 @@ h6 {
 
 /* ******************** GALLERY ALBUM PAGE ******************** */
 #gallery-ap-primary {
-    min-height: 100vh;
+    /* min-height: 100vh; */
     width: 100%;
 }
 .gallery-content {
@@ -251,40 +252,39 @@ h6 {
     justify-content: center;
     align-items: center;
 }
-.single-album-inner-wrapper{
-    border: 2px solid white;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-.album-title{
-    opacity: 0;
-    background-color: #ffffff80;
-    box-shadow: 0 0 10px 10px #ffffff80;
-    border-radius: 5px;
-}
-.single-album-inner-wrapper:hover .album-title{
-    opacity: 1;
-}
 
 #gallery-albums-wrapper{
+    margin: 0 auto;
+}
+#gallery-albums-inner-wrapper{
+    max-width: 1100px;
+    width: 90vw;
+    margin: 0 auto;
     display: flex;
-    min-height: 85vh;
-    overflow-x: scroll;
+    flex-wrap: wrap;
 }
 .single-album-wrapper{
-    height: 100%;
-    display: flex;
-    justify-content: stretch;
-    width: auto;
+    padding: 20px;
+    margin: 3% 0;
 }
 .single-album-inner-wrapper{
-    height: 100%;
-    min-width: 20rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
+.single-album-inner-wrapper img {
+    height: auto;
+}
+.album-title{
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+}
+
+
+
 
 /* ******************** ALBUM POST TYPE SINGLE PAGE ******************** */
 .single-album-page-main{
@@ -328,7 +328,7 @@ h6 {
 }
     /* ******************** LEFT-FEATURE PAGE ******************** */
     #left-feature-ap-primary {
-        min-height: 100vh;
+        /* min-height: 100vh; */
         display: flex;
         align-items: flex-start;
         padding: 0rem;
@@ -343,34 +343,12 @@ h6 {
 
 /* mobile only */
 @media screen and (max-width: 39.9375em) {
-    #gallery-albums-wrapper{
+
+    .single-album-wrapper{
         display: flex;
         flex-direction: column;
-        min-height: 85vh;
-        overflow-x: hidden;
-        overflow: auto;
-    }
-    .single-album-wrapper{
-        height: 250px;
-        display: flex;
-        justify-content: stretch;
-        width: auto;
-    }
-    .single-album-page-main{
-        padding: 1rem 0rem;
-    }
-    .single-album-inner-wrapper{
-        height: 100%;
-        min-width: 100vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .album-title{
-        opacity: 1;
-        background-color: #ffffff80;
-        box-shadow: 0 0 10px 10px #ffffff80;
-        border-radius: 5px;
+        justify-self: center;
+        padding: 50px;
     }
 }
 

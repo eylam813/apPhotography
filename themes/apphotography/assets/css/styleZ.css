@@ -2,7 +2,7 @@
     --dark-blue: #002349;
     --grey: #999999;
     --outer-space: #404C56;
-    --ash-grey: #ACB4B6;
+    --ash-grey: #CECECE;
     --white: #FFFFFF;
     --black: #000000;
 }
@@ -200,12 +200,12 @@ screen and (max-width:40em) {
 
     #ap-wrapper {
         /* z-index: 9999999; */
-        height: 5rem;
+        height: 6rem;
         min-width: 100vw;
     }
 
     .custom-logo {
-        max-width: 160px;
+        margin-top: 10px;
     }
 
     .title-bar {
@@ -280,10 +280,6 @@ screen and (max-width:40em) {
 }
 /* ******************** Informative Custom Template Styling ******************** */
 .infoPage {
-    background-image: url("../img/trees.png");
-    background-size: cover;
-    background-position: center center;
-    background-attachment: fixed;
     padding: 20px 20% 0 20%;
     min-height: 85vh;
     display: flex;
@@ -489,7 +485,10 @@ textarea {
     border: 2px solid;
     border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
 }
-
+input[type=checkbox].wsf-field + label.wsf-label:before {
+    border: 1px solid;
+    border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
+}
 /* ******************** Footer Styling ******************** */
 .site-footer {
     display: flex;
@@ -520,9 +519,23 @@ footer a:hover {
 footer .menu{
     flex-direction: row;
 }
+.menu-mobile{
+    display: none;
+}
 
 @media print,
 screen and (max-width:40em) {
+    .menu-mobile{
+        display: flex;
+        background-color: var(--ash-grey);
+        width: 80vw;
+        padding: 5px;
+        justify-content: center;
+    }
+    header{
+        display: flex;
+        flex-direction: column;
+    }
     .site-footer {
         flex-direction: column;
         padding: 1rem 0.5rem;
@@ -536,4 +549,28 @@ screen and (max-width:40em) {
         align-self: center;
         color: var(--grey);
     }
+    /* making mobile nav vertical */
+    .menu, .menu.horizontal{
+        flex-direction: column;
+    }
+    #primary-menu{
+        width: 100vw;
+    }
+    .infoPage{
+        padding: 10px;
+    }
 }
+
+/* ******************** Gallery Styling ******************** */
+/* make all album covers the same size */
+.album-image{
+    width: 100%;
+    height: 216px;
+    overflow: hidden;
+}
+.album-image img{
+    width: 100%;
+    height: auto;
+}
+
+

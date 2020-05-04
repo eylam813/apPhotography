@@ -27,9 +27,9 @@
 			}
 						?>
 		<div class="site-info">
-		Alejandro Pino Photography &copy; <script>
+		Copyright &copy; <script>
                 document.write(new Date().getFullYear());
-            </script>
+            </script> Alejandro Pino
 		</div>
 		<!-- .site-info -->
 	</footer><!-- #colophon -->

@@ -2,7 +2,7 @@
     --dark-blue: #002349;
     --grey: #999999;
     --outer-space: #404C56;
-    --ash-grey: #ACB4B6;
+    --ash-grey: #CECECE;
     --white: #FFFFFF;
     --black: #000000;
 }
@@ -527,6 +527,10 @@ footer .menu{
 screen and (max-width:40em) {
     .menu-mobile{
         display: flex;
+        background-color: var(--ash-grey);
+        width: 80vw;
+        padding: 5px;
+        justify-content: center;
     }
     header{
         display: flex;
@@ -551,6 +555,9 @@ screen and (max-width:40em) {
     }
     #primary-menu{
         width: 100vw;
+    }
+    .infoPage{
+        padding: 10px;
     }
 }
 

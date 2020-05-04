@@ -175,45 +175,7 @@ header section {
     width: 35px;
 }
 
-@media print,
-screen and (max-width:40em) {
-    #logo {
-        display: none;
-    }
 
-    .social-media {
-        display: none;
-    }
-
-    header {
-        padding: 5px;
-        width: 100%;
-        /* max-height: 20vh; */
-    }
-
-
-    header section {
-        background: white;
-        /* z-index: 99; */
-    }
-
-    #ap-wrapper {
-        /* z-index: 9999999; */
-        height: 6rem;
-        min-width: 100vw;
-    }
-
-    .custom-logo {
-        margin-top: 10px;
-    }
-
-    .title-bar {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 100%;
-    }
-}
 
 /* ******************** Blog Styling ******************** */
 .blogCard {
@@ -525,7 +487,7 @@ footer .menu{
 }
 
 @media print,
-screen and (max-width:40em) {
+screen and (max-width:48em) {
     .menu-mobile{
         display: flex;
         background-color: var(--ash-grey);
@@ -559,6 +521,46 @@ screen and (max-width:40em) {
     }
     .infoPage{
         padding: 10px;
+    }
+    .album-image{
+        height: 126px;
+    }
+    #logo {
+        display: none;
+    }
+
+    .social-media {
+        display: none;
+    }
+
+    header {
+        /* padding: 5px; */
+        width: 100%;
+        /* max-height: 20vh; */
+    }
+
+
+    header section {
+        background: white;
+        /* z-index: 99; */
+    }
+
+    #ap-wrapper {
+        /* z-index: 9999999; */
+        height: 6rem;
+        min-width: 100vw;
+    }
+
+    .custom-logo {
+        margin-top: 10px;
+        max-width: 80vw;
+    }
+
+    .title-bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
     }
 }
 

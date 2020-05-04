@@ -244,7 +244,9 @@ header section {
 }
 
 
-
+nav{
+    background-color: white;
+}
 /* ******************** FRONT PAGE TEMPLATE ******************** */
 .front-page {
     width: 100%;
@@ -801,10 +803,12 @@ screen and (max-width:64em) {
         padding: 0px;
         width: 100%;
     }
-    header section {
-        background: white;
+    header section{
+        position: absolute;
+        top: 10%;
+        left: 5;
+        max-width: 70%;
     }
-
     #ap-wrapper {
         height: 6rem;
         min-width: 100vw;

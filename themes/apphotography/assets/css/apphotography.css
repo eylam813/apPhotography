@@ -246,7 +246,7 @@ h6 {
     height: 100%;
     width: 100%;
 }
-#gallery-ap-primary #gallery-title-wrapper {
+#gallery-title-wrapper {
     height: 15vh;
     display: flex;
     justify-content: center;

@@ -284,6 +284,8 @@ function apphotography_scripts() {
 	// adding ap-photography script
 	wp_enqueue_script( 'apphotography-script', get_template_directory_uri() . '/assets/js/ap-photography.js', array());
 
+	
+
 }
 add_action( 'wp_enqueue_scripts', 'apphotography_scripts' );
 

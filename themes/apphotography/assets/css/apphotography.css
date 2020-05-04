@@ -90,7 +90,7 @@ h6 {
     position: -webkit-sticky; /* Safari */
     top:0;
     left:0;
-    z-index: 99999999;
+    z-index: 9999;
     /* height: 100vh; */
 }
 
@@ -315,6 +315,29 @@ h6 {
     font-size: 75%;
     color: var(--outer-space);
 }
+/* lightbox main container */
+.slb_container {
+    box-shadow: 0 0 0 0 #00000000 !important;
+    /* border-radius: 0; */
+}
+/* dark theme container */
+#slb_viewer_wrap .slb_theme_slb_black .slb_container{
+    background-color: #000 !important;
+}
+/* back container */
+#slb_viewer_wrap .slb_theme_slb_default .slb_container{
+    padding: 3px !important;
+}
+/* image data on bottom of container */
+.slb_data_content {
+    display: none !important;
+}
+
+
+
+
+
+
 /* 1024px and lower */
 @media screen and (max-width: 63.9375em) {
     #cssmenu ul li.has-sub:hover > ul,

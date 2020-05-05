@@ -3,7 +3,7 @@ Contributors: westguard
 Tags: contact form, form builder, contact form plugin, forms, accessible form, responsive form, gutenberg form, custom form, contact button, contact me, custom contact form, form manager, forms builder, forms creator, captcha, recaptcha, Akismet, email form, web form, feedback form, payment form, survey form, donation form, email submit form, message form, dotmailer, dotmailer form, mailchimp, mailchimp form, aweber, aweber form, paypal, paypal form, salesforce, stripe, stripe form, drip, drip form, slack, slack form, getresponse, getresponse form, constant contact, constant contact form, email subscription, contact form widget, user registration form, wordpress registration, wordpress login form, data encryption
 Requires at least: 4.4
 Tested up to: 5.4
-Stable tag: 1.5.25
+Stable tag: 1.5.31
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -116,6 +116,36 @@ For help installing WS Form, please see our [Installation](https://wsform.com/kn
 
 == Changelog ==
 
+= 1.5.31 =
+* Added: Pathname and query string tracking variables
+* Added: Expanded sidebar for submissions
+* Added: Ability to expose added post and user to subsequent actions
+* Added: Download published JSON form data
+* Changed: Style of messages
+
+= 1.5.30 =
+* Added: Change name of Alert field to Message
+
+= 1.5.29 =
+* Added: Alert field type
+* Added: Customize added to WS Form admin menu (Uses form being edited as preview)
+* Added: Font size customize option for section and fieldset labels
+* Added: Improved fallback form selection for preview 
+* Bug Fix: Customize preview
+
+= 1.5.28 =
+* Added: wautop on "Set Content" conditional logic action for text editor fields
+
+= 1.5.27 =
+* Added: Variables option for Select, Checkboxes and Radios datagrids
+
+= 1.5.26 =
+* Added: Support for actions requiring repeatable submit data
+* Added: Support for Populate Using Action requiring repeatable submit data
+* Changed: Repeatable options now disable already mapped options
+* Bug Fix: Repeatable range slider in submission edit mode
+* Bug Fix: Prices with identical decimal and thousand separators
+
 = 1.5.25 =
 * Bug Fix: JSON encoding on submit
 
@@ -128,7 +158,7 @@ For help installing WS Form, please see our [Installation](https://wsform.com/kn
 = 1.5.22 =
 * Added: #checkbox_label variable
 * Added: #radio_label variable
-# Changed: #select_option_text to support multiple selects
+* Changed: #select_option_text to support multiple selects
 
 = 1.5.21 =
 * Added: File upload progress bar

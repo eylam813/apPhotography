@@ -1,5 +1,35 @@
 == Changelog ==
 
+= 1.5.31 =
+* Added: Pathname and query string tracking variables
+* Added: Expanded sidebar for submissions
+* Added: Ability to expose added post and user to subsequent actions
+* Added: Download published JSON form data
+* Changed: Style of messages
+
+= 1.5.30 =
+* Added: Change name of Alert field to Message
+
+= 1.5.29 =
+* Added: Alert field type
+* Added: Customize added to WS Form admin menu (Uses form being edited as preview)
+* Added: Font size customize option for section and fieldset labels
+* Added: Improved fallback form selection for preview 
+* Bug Fix: Customize preview
+
+= 1.5.28 =
+* Added: wautop on "Set Content" conditional logic action for text editor fields
+
+= 1.5.27 =
+* Added: Variables option for Select, Checkboxes and Radios datagrids
+
+= 1.5.26 =
+* Added: Support for actions requiring repeatable submit data
+* Added: Support for Populate Using Action requiring repeatable submit data
+* Changed: Repeatable options now disable already mapped options
+* Bug Fix: Repeatable range slider in submission edit mode
+* Bug Fix: Prices with identical decimal and thousand separators
+
 = 1.5.25 =
 * Bug Fix: JSON encoding on submit
 
@@ -12,7 +42,7 @@
 = 1.5.22 =
 * Added: #checkbox_label variable
 * Added: #radio_label variable
-# Changed: #select_option_text to support multiple selects
+* Changed: #select_option_text to support multiple selects
 
 = 1.5.21 =
 * Added: File upload progress bar

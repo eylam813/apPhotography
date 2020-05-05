@@ -73,11 +73,11 @@
 }
 
 .wsf-modal-title svg {
-    height: 36px;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 36px;
+	height: 36px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 36px;
 }
 
 .wsf-modal-close {
@@ -114,6 +114,10 @@
 .wsf-modal-content form label {
 	display: block;
 	margin-bottom: 6px;
+}
+
+#wsf-post-add-form-id {
+	max-width: 100%;
 }
 
 #wsf-feedback-reason-found-better-plugin-select {

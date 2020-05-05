@@ -1,10 +1,14 @@
-.custom-file-label {
+.wsf-form .alert > *:last-child {
+	margin-bottom: 0;
+}
+
+.wsf-form .custom-file-label {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
-.minicolors-theme-bootstrap .minicolors-swatch {
+.wsf-form .minicolors-theme-bootstrap .minicolors-swatch {
 	cursor: pointer;
 	height: 32px;
 	width: 32px;

@@ -674,6 +674,17 @@
 
 				section_repeatable = this.submit['section_repeatable'];
 			}
+
+		} else {
+
+			// Check to see if auto populate data exists
+			if(this.submit_auto_populate !== false) {
+
+				if(typeof(this.submit_auto_populate['section_repeatable']) !== 'undefined') {
+
+					section_repeatable = this.submit_auto_populate['section_repeatable'];
+				}
+			}
 		}
 
 		// Sections
@@ -881,6 +892,31 @@
 		return fields_html_parsed;
 	}
 
+	// Process values for auto population
+	$.WS_Form.prototype.value_populate_process = function(value, field) {
+
+		switch(field.type) {
+
+			case 'datetime' :
+
+				return (typeof(value.presentation_full) !== 'undefined') ? value.presentation_full : value;
+
+			case 'select' :
+			case 'checkbox' :
+			case 'radio' :
+			case 'price_select' :
+			case 'price_checkbox' :
+			case 'price_radio' :
+
+				// indexOf does a === check so convert object values to strings
+				return (typeof(value) === 'object') ? value.map(value => value.toString()) : value;
+
+			default :
+
+				return value;
+		}
+	}
+
 	// Get field html
 	$.WS_Form.prototype.get_field_html = function(field, section_repeatable_index) {
 
@@ -936,21 +972,14 @@
 		}
 
 		// Check to see if this field is available in the submit data
+		var repeatable_suffix = ((section_repeatable_index !== false) ? '_' + section_repeatable_index : '');
 		if(typeof(this.submit) === 'object') {
 
-			var repeatable_suffix = ((section_repeatable_index !== false) ? '_' + section_repeatable_index : '');
 			if((typeof(this.submit['meta']) !== 'undefined') && (typeof(this.submit['meta'][ws_form_settings.field_prefix + field.id + repeatable_suffix]) !== 'undefined') && (typeof(this.submit['meta'][ws_form_settings.field_prefix + field.id + repeatable_suffix]['value']) !== 'undefined')) {
 
 				var value = this.submit['meta'][ws_form_settings.field_prefix + field.id + repeatable_suffix]['value'];
 
-				// Special processing
-				switch(field.type) {
-
-					case 'datetime' :
-
-						value = (typeof(value.presentation_full) !== 'undefined') ? value.presentation_full : value;
-						break;
-				}
+				value = this.value_populate_process(value, field);
 			}
 
 		} else {
@@ -958,9 +987,14 @@
 			// Check to see if auto populate data exists
 			if(this.submit_auto_populate !== false) {
 
-				if(typeof(this.submit_auto_populate[ws_form_settings.field_prefix + field.id]) !== 'undefined') {
+				if(
+					(typeof(this.submit_auto_populate['data']) !== 'undefined') &&
+					(typeof(this.submit_auto_populate['data'][ws_form_settings.field_prefix + field.id + repeatable_suffix]) !== 'undefined')
+				) {
 
-					value = this.submit_auto_populate[ws_form_settings.field_prefix + field.id];
+					var value = this.submit_auto_populate['data'][ws_form_settings.field_prefix + field.id + repeatable_suffix];
+
+					value = this.value_populate_process(value, field);
 				}
 			}
 		}
@@ -2732,7 +2766,6 @@
 
 			// Value should be an array
 			if(has_value && (typeof(value) !== 'object')) { value = [value]; }
-
 			// Build mask lookup cache
 			var mask_row_lookup_array = [];
 
@@ -2878,7 +2911,8 @@
 							if(!mask_row_lookup_array.hasOwnProperty(mask_row_lookup)) { continue; }
 
 							var data_column_index = mask_row_lookup_array[mask_row_lookup];
-							var mask_row_lookup_value = this.parse_variables_process(data_row['data'][data_column_index]);
+							var mask_row_lookup_value = data_row['data'][data_column_index];
+							var mask_row_lookup_value = this.parse_variables_process(mask_row_lookup_value.toString());
 
 							// HTML version of lookup (This is used for encoding labels in values, e.g. price_select option values)
 							mask_values_row[mask_row_lookup + '_html'] = this.html_encode(mask_row_lookup_value);
@@ -3556,16 +3590,37 @@
 
 		// Filter characters required for parseFloat
 		var decimal_separator = $.WS_Form.settings_plugin.price_decimal_separator;
+		var thousand_separator = $.WS_Form.settings_plugin.price_thousand_separator;
 
 		// Ensure the decimal separator setting is included in the regex (Add ,. too in case default value includes alternatives)
 		var number_input_regex = new RegExp('[^0-9-' + decimal_separator + ']', 'g');
 		number_input = number_input.replace(number_input_regex, '');
 
-		// Convert decimal separators to periods so parseFloat works
-		number_input = number_input.replace(decimal_separator, '.');
+		if(decimal_separator === thousand_separator) {
+
+			// Convert decimal separators to periods so parseFloat works
+			if(number_input.substr(-3, 1) === decimal_separator) {
+
+				var decimal_index = (number_input.length - 3);
+				number_input = number_input.substr(0, decimal_index) + '[dec]' + number_input.substr(decimal_index + 1);
+			}
+
+			// Remove thousand separators
+			number_input = number_input.replace(thousand_separator, '');
+
+			// Replace [dec] back to decimal separator for parseFloat
+			number_input = number_input.replace('[dec]', '.');
+
+		} else {
+
+			// Replace [dec] back to decimal separator for parseFloat
+			number_input = number_input.replace(decimal_separator, '.');
+		}
 
 		// parseFloat converts decimal separator to period to ensure that function works
-		return ($.trim(number_input) == '') ? default_value : (isNaN(number_input)) ? default_value : parseFloat(number_input);
+		var number_output = ($.trim(number_input) == '') ? default_value : (isNaN(number_input)) ? default_value : parseFloat(number_input);
+
+		return number_output;
 	}
 
 	$.WS_Form.prototype.get_currency = function() {
@@ -3608,12 +3663,12 @@
 		return return_obj;
 	}
 
-	$.WS_Form.prototype.get_price = function(price, currency, currency_symbol_render) {
+	$.WS_Form.prototype.get_price = function(price_float, currency, currency_symbol_render) {
 
 		if(typeof(currency) === 'undefined') { var currency = this.get_currency(); }
 		if(typeof(currency_symbol_render) === 'undefined') { var currency_symbol_render = true; }
 
-		var price_float = this.get_number(price);
+		if(typeof(price_float) !== 'number') { price_float = parseFloat(price_float); }
 
 		var price = (currency_symbol_render ? currency.prefix : '') + price_float.toFixed(currency.decimals).replace(/\B(?=(\d{3})+(?!\d))/g, currency.thousand_separator).replace('.', currency.decimal_separator) + (currency_symbol_render ? currency.suffix : '');
 

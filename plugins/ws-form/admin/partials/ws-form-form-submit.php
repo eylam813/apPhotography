@@ -6,9 +6,11 @@
 	// Loader
 	WS_Form_Common::loader();
 ?>
+<div id="poststuff">
 <div id="wsf-wrapper" class="<?php WS_Form_Common::wrapper_classes(); ?> wsf-sidebar-closed">
 
 <!-- Header -->
+
 <div class="wsf-heading">
 <h1 class="wp-heading-inline"><?php esc_html_e('Submissions', 'ws-form'); ?></h1>
 <?php
@@ -141,4 +143,5 @@
 
 </script>
 
+</div>
 </div>

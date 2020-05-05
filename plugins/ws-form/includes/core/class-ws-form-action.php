@@ -7,7 +7,6 @@
 		private static $return_array = array();
 		private static $form_tab_populate_added = false;
 		public static $spam_level = null;
-		public static $user = false;
 
 		// Run actions
 		public function actions_post($form, $submit, $complete_action = false, $action_id = 0) {
@@ -40,6 +39,12 @@
 				$action_database_required |= (isset($action->database_required) ? $action->database_required : false);
 
 				if($id == 'database') { $action_database_found = true; }
+			}
+
+			// If saving, database is required
+			if($submit->post_mode == 'save') {
+
+				$action_database_required = true;
 			}
 
 			if(!$action_database_found && $action_database_required) {
@@ -536,7 +541,7 @@
 					'events' => $action->events
 				);
 
-				$action_json = json_encode($action_data);
+				$action_json = wp_json_encode($action_data);
 
 				// Build new row
 				$row = array(
@@ -656,6 +661,10 @@
 					'meta_keys'					=>	array(
 
 						'form_populate_list_fields',
+						'ws_form_field_edit'
+					),
+					'meta_keys_unique'			=>	array(
+
 						'ws_form_field_edit'
 					),
 					'reload'					=>	array(
@@ -914,6 +923,15 @@
 			$tag_mapping_action = array();
 			$tag_mapping_populate = array();
 			
+			// Get framework info and calculate breakpoint meta key and value for widths
+			$framework_id = WS_Form_Common::option_get('framework');
+			$framework_column_count = WS_Form_Common::option_get('framework_column_count');
+			$frameworks = WS_Form_Config::get_frameworks();
+			$framework_breakpoints = $frameworks['types'][$framework_id]['breakpoints'];
+			reset($framework_breakpoints);
+			$breakpoint_first = key($framework_breakpoints);
+			$breakpoint_meta_key = 'breakpoint_size_' . $breakpoint_first;
+
 			// Encode same way we would get it from an API request (i.e. full array)
 			$form = json_decode(json_encode($form), true);
 
@@ -932,17 +950,8 @@
 			// Get list (And force API request)
 			$list = $action->get_list(true);
 
-			// Get list fields (And force API request)
-			$list_fields = $action->get_list_fields(true);
-
 			// Set label
 			$form['label'] = $action->label . ': ' . $list['label'];
-
-			// Group label
-			$form['groups'][0]['label'] = $list['label'];
-
-			// Section label
-			$form['groups'][0]['sections'][0]['label'] = $list['label'];
 
 			// Action specific meta data
 			if(isset($list['meta']) && ($list['meta'] !== false)) {
@@ -954,114 +963,272 @@
 				}
 			}
 
-			// Get section ID
-			$section_id = $form['groups'][0]['sections'][0]['id'];
-
-			// Clear existing fields
-			$form['groups'][0]['sections'][0]['fields'] = array();
-
 			// Update form
 			$ws_form_form->db_update_from_object($form, true, false);
 
 			$form_field_id_lookup = array();
+			$form_field_id_lookup_all = array();
+			$form_field_type_lookup = array();
 
-			$sort_index = 0;
+			// Get form ID
+			$form_id = $form['id'];
 
-			// Ensure sort indexes are correct
-			usort($list_fields, function ($a, $b) { return $a['sort_index'] > $b['sort_index']; });
-			$sort_index = 0;
-			foreach($list_fields as $key => $list_field) {
+			// Get list fields (And force API request)
+			$list_fields = $action->get_list_fields(true);
 
-				$list_fields[$key]['sort_index'] = $sort_index++;
+			// Get list fields meta data
+			$group_meta_data = array();
+			$section_meta_data = array();
+
+			if(method_exists($action, 'get_list_fields_meta_data')) {
+
+				$list_fields_meta_data = $action->get_list_fields_meta_data();
+				$group_meta_data = $list_fields_meta_data['group_meta_data'];
+				$section_meta_data = $list_fields_meta_data['section_meta_data'];
 			}
 
+//			echo "<pre>";
+//			print_r($list_fields);
+//			print_r($group_meta_data);
+//			print_r($section_meta_data);
+//			echo "</pre>";
+//			exit;
+
+			// Separate list fields = sections
+			$form_structure = array();
 			foreach($list_fields as $list_field) {
 
-				// Add to form?
-				$no_add = isset($list_field['no_add']) && $list_field['no_add'];
-				if($no_add) { continue; }
+				// Group index
+				$form_structure_group_index = isset($list_field['group_index']) ? $list_field['group_index'] : 0;
+				if(!isset($form_structure[$form_structure_group_index])) {
 
-				// Create field
-				$ws_form_field = new WS_Form_Field();
-				$ws_form_field->form_id = $form['id'];
-				$ws_form_field->section_id = $section_id;
-				$ws_form_field->type = $list_field['type'];
-				$ws_form_field->db_create();
-
-				// Skip errors
-				if($ws_form_field->id == 0) { continue; }
-
-				// Read field
-				$field = $ws_form_field->db_read();
-				$field = json_decode(json_encode($field), true);
-
-				// Add to field mapping arrays
-				$no_map = isset($list_field['no_map']) && $list_field['no_map'];
-				if(!$no_map) {
-
-					$field_mapping_action[] = array('ws_form_field' => $ws_form_field->id, 'action_' . $action_id . '_list_fields' => $list_field['id']);
-					$field_mapping_populate[] = array('ws_form_field' => $ws_form_field->id, 'form_populate_list_fields' => $list_field['id']);
+					$form_structure[$form_structure_group_index] = array();
 				}
 
-				// Set label (Use sub if defined)
-				$field['label'] = $list_field['label_field'];
+				// Section index
+				$form_structure_section_index = isset($list_field['section_index']) ? $list_field['section_index'] : 0;
+				if(!isset($form_structure[$form_structure_group_index][$form_structure_section_index])) {
 
-				// Set sort_index
-				$field['sort_index'] = $list_field['sort_index'];
-
-				// Set meta - Required
-				if(isset($list_field['required'])) {
-
-					$field['meta']['required'] = ($list_field['required'] ? 'on' : '');
+					$form_structure[$form_structure_group_index][$form_structure_section_index] = array();
 				}
 
-				// Set meta - Default value
-				if(isset($list_field['default_value'])) {
+				// Add field
+				$form_structure[$form_structure_group_index][$form_structure_section_index][] = $list_field;
+			}
 
-					$field['meta']['default_value'] = $list_field['default_value'];
-				}
+			// Run through each group and section
+			$section_count = 0;
 
-				// Set meta - Input Mask
-				if(isset($list_field['input_mask']) && ($list_field['input_mask'] !== false)) {
+			foreach($form_structure as $form_structure_group_index => $form_structure_sections) {
 
-					$field['meta']['input_mask'] = $list_field['input_mask'];
-				}
+				// Create new group
+				$ws_form_group = new WS_Form_Group();
+				$ws_form_group->form_id = $form_id;
 
-				// Set meta - Placeholder
-				if(isset($list_field['placeholder']) && ($list_field['placeholder'] !== false)) {
+				// Build group meta
+				$group_meta_data_array = isset($group_meta_data['group_' . $form_structure_group_index]) ? $group_meta_data['group_' . $form_structure_group_index] : false;
+				if(is_array($group_meta_data_array)) {
 
-					$field['meta']['placeholder'] = $list_field['placeholder'];
-				}
+					foreach($group_meta_data_array as $group_meta_data_key => $group_meta_data_value) {
 
-				// Set meta - Pattern
-				if(isset($list_field['pattern']) && ($list_field['pattern'] !== false)) {
+						switch($group_meta_data_key) {
 
-					$field['meta']['pattern'] = $list_field['pattern'];
-				}
+							case 'label' :
 
-				// Set meta - Help
-				if(isset($list_field['help'])) {
-	
-					$field['meta']['help'] = $list_field['help'];
-				}
+								$ws_form_group->label = $group_meta_data_value;
+								break;
 
-				// Action specific meta data
-				if(isset($list_field['meta']) && ($list_field['meta'] !== false)) {
+							default :
 
-					foreach($list_field['meta'] as $meta_key => $meta_value) {
-
-						// Set meta data
-						$field['meta'][$meta_key] = $meta_value;
+								$ws_form_group->meta[$group_meta_data_key] = $group_meta_data_value;
+						}
 					}
 				}
 
-				// Update
-				$ws_form_field->db_update_from_object($field, false);
+				// Create group
+				$group_id = $ws_form_group->db_create(0, false);
 
-				// Save to lookup
-				$form_field_id_lookup[$list_field['id']] = $field['id'];
+				foreach($form_structure_sections as $form_structure_section_index => $list_fields) {
 
-				$sort_index++;
+					// Create new section
+					$ws_form_section = new WS_Form_Section();
+					$ws_form_section->form_id = $form_id;
+					$ws_form_section->group_id = $group_id;
+
+					// Build section meta
+					$section_meta_data_array = (
+
+						isset($section_meta_data['group_' . $form_structure_group_index]) &&
+						isset($section_meta_data['group_' . $form_structure_group_index]['section_' . $form_structure_section_index])
+
+					) ? $section_meta_data['group_' . $form_structure_group_index]['section_' . $form_structure_section_index] : false;
+					if(is_array($section_meta_data_array)) {
+
+						foreach($section_meta_data_array as $section_meta_data_key => $section_meta_data_value) {
+
+							switch($section_meta_data_key) {
+
+								case 'label' :
+
+									$ws_form_section->label = $section_meta_data_value;
+									break;
+
+								default :
+
+									$ws_form_section->meta[$section_meta_data_key] = $section_meta_data_value;
+							}
+						}
+					}
+
+					// Create section
+					$section_id = $ws_form_section->db_create();
+					$section_count++;
+
+					// Ensure sort indexes are tidy
+					$sort_index = 0;
+					usort($list_fields, function ($a, $b) { return $a['sort_index'] > $b['sort_index']; });
+					$sort_index = 0;
+					foreach($list_fields as $key => $list_field) {
+
+						$list_fields[$key]['sort_index'] = $sort_index++;
+					}
+
+					// Process each list field
+					foreach($list_fields as $list_field) {
+
+						// Add to form?
+						$no_add = isset($list_field['no_add']) && $list_field['no_add'];
+						if($no_add) { continue; }
+
+						// Create field
+						$ws_form_field = new WS_Form_Field();
+						$ws_form_field->form_id = $form_id;
+						$ws_form_field->section_id = $section_id;
+						$ws_form_field->type = $list_field['type'];
+						$ws_form_field->db_create();
+
+						// Skip errors
+						if($ws_form_field->id == 0) { continue; }
+
+						// Remember field type
+						$form_field_type_lookup[$ws_form_field->id] = $list_field['type'];
+
+						// Read field
+						$field = $ws_form_field->db_read();
+						$field = json_decode(json_encode($field), true);
+
+						// Add to field mapping arrays
+						$no_map = isset($list_field['no_map']) && $list_field['no_map'];
+						if(!$no_map) {
+
+							$field_mapping_action[] = array('ws_form_field' => $ws_form_field->id, 'action_' . $action_id . '_list_fields' => $list_field['id']);
+							$field_mapping_populate[] = array('ws_form_field' => $ws_form_field->id, 'form_populate_list_fields' => $list_field['id']);
+						}
+
+						// Set label (Use sub if defined)
+						$field['label'] = $list_field['label_field'];
+
+						// Set sort_index
+						$field['sort_index'] = $list_field['sort_index'];
+
+						// Set meta - Required
+						if(isset($list_field['required'])) {
+
+							$field['meta']['required'] = ($list_field['required'] ? 'on' : '');
+						}
+
+						// Set meta - Default value
+						if(isset($list_field['default_value'])) {
+
+							$field['meta']['default_value'] = $list_field['default_value'];
+						}
+
+						// Set meta - Input Mask
+						if(isset($list_field['input_mask']) && ($list_field['input_mask'] !== false)) {
+
+							$field['meta']['input_mask'] = $list_field['input_mask'];
+						}
+
+						// Set meta - Placeholder
+						if(isset($list_field['placeholder']) && ($list_field['placeholder'] !== false)) {
+
+							$field['meta']['placeholder'] = $list_field['placeholder'];
+						}
+
+						// Set meta - Pattern
+						if(isset($list_field['pattern']) && ($list_field['pattern'] !== false)) {
+
+							$field['meta']['pattern'] = $list_field['pattern'];
+						}
+
+						// Set meta - Help
+						if(isset($list_field['help'])) {
+			
+							$field['meta']['help'] = $list_field['help'];
+						}
+
+						// Set width
+						if(isset($list_field['width_factor'])) {
+
+							$width_factor = floatval($list_field['width_factor']);
+
+							if(
+								($width_factor > 0) &&
+								($width_factor <= 1)
+							) {
+
+								$breakpoint_meta_value = round($framework_column_count * $width_factor);
+
+								// Set column width
+								$field['meta'][$breakpoint_meta_key] = $breakpoint_meta_value;
+							}
+						}
+
+						// Action specific meta data
+						if(isset($list_field['meta']) && ($list_field['meta'] !== false)) {
+
+							foreach($list_field['meta'] as $meta_key => $meta_value) {
+
+								// Set meta data
+								$field['meta'][$meta_key] = $meta_value;
+							}
+						}
+
+						// Update
+						$ws_form_field->db_update_from_object($field, false);
+
+						// Save to lookup
+						$no_map = isset($list_field['no_map']) && $list_field['no_map'];
+						if(!$no_map) { $form_field_id_lookup[$list_field['id']] = $field['id']; }
+						$form_field_id_lookup_all[$list_field['id']] = $field['id'];
+					}
+
+					// Add repeatable icons?
+					$section_repeatable = isset($ws_form_section->meta['section_repeatable']) ? $ws_form_section->meta['section_repeatable'] : false;
+					if(!empty($section_repeatable)) {
+
+						// Create field
+						$ws_form_field = new WS_Form_Field();
+						$ws_form_field->form_id = $form_id;
+						$ws_form_field->section_id = $section_id;
+						$ws_form_field->type = 'section_icons';
+						$ws_form_field->meta['section_repeatable_section_id'] = $section_id;
+						$ws_form_field->db_create();
+					}
+				}
+			}
+
+			// If we created more than one field in the previous step, add another for the final part of the form
+			if(
+				($section_count == 0) ||
+				($section_count > 1)
+			) {
+
+				// Create new section
+				$ws_form_section = new WS_Form_Section();
+				$ws_form_section->form_id = $form_id;
+				$ws_form_section->group_id = $group_id;
+				$section_id = $ws_form_section->db_create();
 			}
 
 			// Create tag categories
@@ -1113,6 +1280,9 @@
 					// Update [type]_field_label meta_key
 					$field['meta'][$tag_category_type . '_field_label'] = 1;	// Column index 1 = $tag['label']
 
+					// Update [type]_field_parse_variable meta_key
+					$field['meta'][$tag_category_type . '_field_parse_variable'] = 1;	// Column index 1 = $tag['label']
+
 					// Update label render
 					$field['meta']['label_render'] = 'on';
 
@@ -1123,7 +1293,7 @@
 
 					// Remember for tag mapping
 					$tag_mapping_action[] = array('ws_form_field' => $ws_form_field->id, 'action_' . $action->id . '_tag_category_id' => $tag_category['id']);
-					$tag_mapping_populate[] = array('ws_form_field' => $ws_form_field->id, 'action_' . $action->id . '_tag_category_id' => $tag_category['id']);
+					$tag_mapping_populate[] = array('ws_form_field' => $ws_form_field->id);	// , 'action_' . $action->id . '_tag_category_id' => $tag_category['id']
 				}
 			}
 
@@ -1145,6 +1315,8 @@
 
 					// Save to lookup
 					$form_field_id_lookup[$form_field_id] = $update_form_field_return['id'];
+					$form_field_id_lookup_all[$form_field_id] = $update_form_field_return['id'];
+					$form_field_type_lookup[$form_field_id] = $form_field_config['type'];
 				}
 			}
 
@@ -1156,7 +1328,7 @@
 
 			if(method_exists($action, 'get_actions')) {
 
-				$form_actions = $action->get_actions();
+				$form_actions = $action->get_actions($form_field_id_lookup_all, $form_field_type_lookup);
 				$form_action_index = 1;
 
 				foreach($form_actions as $form_action_id => $form_action_config) {
@@ -1171,6 +1343,8 @@
 					$form_action_meta = isset($form_action_config['meta']) ? $form_action_config['meta'] : array();
 
 					foreach($form_action_meta as $form_action_meta_key => $form_action_meta_value) {
+
+						if(!is_string($form_action_meta_value)) { continue; }
 
 						switch($form_action_meta_value) {
 
@@ -1187,17 +1361,17 @@
 							default :
 
 								// Direct replacements
-								if(isset($form_field_id_lookup[$form_action_meta_value])) {
+								if(isset($form_field_id_lookup_all[$form_action_meta_value])) {
 
 									$form_action_meta[$form_action_meta_key] = $form_field_id_lookup[$form_action_meta_value];
 								}
 
 								// #action_field_id replacements e.g. for #field(#action_field_id)
-								foreach($form_field_id_lookup as $meta_key => $meta_value) {
+								foreach($form_field_id_lookup_all as $meta_key => $meta_value) {
 
 									if(strpos($form_action_meta_value, '#' . $meta_key) !== false) {
 
-										$form_action_meta_value = $form_action_meta[$form_action_meta_key] = str_replace('#' . $meta_key, $form_field_id_lookup[$meta_key], $form_action_meta_value);
+										$form_action_meta_value = $form_action_meta[$form_action_meta_key] = str_replace('#' . $meta_key, $form_field_id_lookup_all[$meta_key], $form_action_meta_value);
 									}
 								}
 						}
@@ -1234,7 +1408,7 @@
 			// Get add form actions
 			if(method_exists($action, 'get_meta')) {
 
-				$form_meta = $action->get_meta($form_field_id_lookup);
+				$form_meta = $action->get_meta($form_field_id_lookup_all, $form_field_type_lookup);
 				$meta = array_merge($meta, $form_meta);
 			}
 
@@ -1476,7 +1650,7 @@
 		public static function get_submit_value($submit, $submit_field, $default_value, $protected = false) {
 
 			if(!isset($submit->meta)) { return $default_value; }
-			if(!isset($submit->meta[$submit_field]) && !isset($submit->meta_protected[$submit_field])) return $default_value;
+			if(!isset($submit->meta[$submit_field]) && !isset($submit->meta_protected[$submit_field])) { return $default_value; }
 
 			if(isset($submit->meta[$submit_field])) {
 
@@ -1504,6 +1678,92 @@
 
 				return $default_value;
 			}
+		}
+
+		public static function get_submit_value_repeatable($submit, $submit_field, $default_value, $protected = false) {
+
+			// Default return array
+			$return_array_repeatable = false;
+			$return_array_repeatable_index = array();
+			$return_array_value = $default_value;
+			$return_array_value_set = false;
+			$return_array = array(
+
+				'repeatable' => $return_array_repeatable,
+				'repeatable_index' => $return_array_repeatable_index,
+				'value' => array($return_array_value)
+			);
+
+			// Check meta data exists
+			if(
+				!isset($submit->meta) ||
+				(!isset($submit->meta[$submit_field]) && !isset($submit->meta_protected[$submit_field]))
+
+			) { return $return_array; }
+
+			// Get section_id on meta data (This is only set if a field is in a repeatable section)
+			if(
+				(isset($submit->meta[$submit_field]['section_id']) && (intval($submit->meta[$submit_field]['section_id']) > 0)) ||
+				(isset($submit->meta_protected[$submit_field]['section_id']) && (intval($submit->meta_protected[$submit_field]['section_id']) > 0))
+			) {
+
+				// Get repeatable section ID
+				$section_id = isset($submit->meta[$submit_field]['section_id']) ? intval($submit->meta[$submit_field]['section_id']) : intval($submit->meta_protected[$submit_field]['section_id']);
+
+				// Check for section repeatable array
+				$section_repeatable = false;
+				if(isset($submit->section_repeatable)) {
+
+					if(
+						!is_array($submit->section_repeatable) &&
+						($submit->section_repeatable != '')
+					) {
+						$section_repeatable = (@unserialize($submit->section_repeatable) !== false) ? unserialize($submit->section_repeatable) : false;
+					} else {
+
+						$section_repeatable = $submit->section_repeatable;
+					}
+				}
+
+				// If repeatable data found, read values in as an array
+				if(
+					isset($section_repeatable['section_' . $section_id]) &&
+					isset($section_repeatable['section_' . $section_id]['index']) &&
+					is_array($section_repeatable['section_' . $section_id]['index'])
+				) {
+
+					$section_repeatable_index = $section_repeatable['section_' . $section_id]['index'];
+
+					// Set return array as repeatable
+					$return_array_repeatable = true;
+					$return_array_repeatable_index = $section_repeatable_index;
+					$return_array_value = array();
+
+					foreach($section_repeatable_index as $index) {
+
+						$submit_field_indexed = $submit_field . '_' . $index;
+
+						$return_array_value[] = self::get_submit_value($submit, $submit_field_indexed, $default_value, $protected);
+
+						$return_array_value_set = true;
+					}
+				}
+			}
+
+			// If this is not a repeatable field, process as normal
+			if(!$return_array_value_set) {
+
+				$return_array_value = array(self::get_submit_value($submit, $submit_field, $default_value, $protected));
+			}
+
+			$return_array = array(
+
+				'repeatable' => $return_array_repeatable,
+				'repeatable_index' => $return_array_repeatable_index,
+				'value' => $return_array_value
+			);
+
+			return $return_array;
 		}
 
 		public static function get_submit_type($submit, $submit_field, $default_type, $protected = false) {
@@ -1555,18 +1815,6 @@
 		public static function api_get_submit_action_index() {
 
 			return absint(WS_Form_Common::get_query_var_nonce('submit_action_index', 0));
-		}
-
-		// Set lost password data
-		public static function set_user($user) {
-
-			self::$user = $user;
-		}
-
-		// Get lost password data
-		public static function get_user() {
-
-			return self::$user;
 		}
 
 		// Get config

@@ -183,7 +183,7 @@
 			// Check for preview mode
 			if($preview) {
 
-				// Reset form instance (This is required to ensure wp_head calls resulting in do_shortocde('ws-form') don't stack up on each other)
+				// Reset form instance (This is required to ensure wp_head calls resulting in do_shortcode('ws-form') don't stack up on each other)
 				if(isset($this->wsf_form_json[$form_id])) { unset($this->wsf_form_json[$form_id]); }
 				$this->form_instance = 1;
 			}
@@ -239,7 +239,7 @@
 			echo "\n<script id=\"wsf-wp-footer\">\n\n";
 
 			// Embed config data (Avoids an API call)
-			$json_config = json_encode(WS_Form_Config::get_config(false, $this->field_types));
+			$json_config = wp_json_encode(WS_Form_Config::get_config(false, $this->field_types));
 			echo sprintf("\tvar wsf_form_json_config = %s;\n", $json_config);	// phpcs:ignore
 
 			// Init form data
@@ -504,7 +504,7 @@
 			$return_value = apply_filters('wsf_shortcode', $return_value);
 
 			// Build JSON
-			$form_json = json_encode($form_array);
+			$form_json = wp_json_encode($form_array);
 
 			// Form data (Only render once per form ID)
 			if(!isset($this->wsf_form_json[$form_id])) {
@@ -517,7 +517,7 @@
 				$populate_array = apply_filters('wsf_populate', $populate_array);
 				if(($populate_array !== false) && count($populate_array) > 0) {
 
-					$this->footer_js .= sprintf("\twindow.wsf_form_json_populate[%u] = %s;", $form_id, json_encode($populate_array)) . "\n";
+					$this->footer_js .= sprintf("\twindow.wsf_form_json_populate[%u] = %s;", $form_id, wp_json_encode($populate_array)) . "\n";
 				}
 
 				$this->wsf_form_json[$form_id] = true;
@@ -639,7 +639,7 @@
 
 			if($get_array === false) { return false; }
 
-			$return_array = array();
+			$data = array();
 
 			// Process field mapping data
 			$field_mapping_lookup = array();
@@ -658,19 +658,43 @@
 			}
 
 			// Map fields
-			if(isset($get_array['fields'])) {
+			if(isset($get_array['fields']) && is_array($get_array['fields'])) {
 
 				foreach($get_array['fields'] as $id => $value) {
 
 					if(is_numeric($id)) {
 
-						$return_array[WS_FORM_FIELD_PREFIX . $id] = $value;
+						$data[WS_FORM_FIELD_PREFIX . $id] = $value;
 
 					} else {
 
 						if(isset($field_mapping_lookup[$id])) {
 
-							$return_array[WS_FORM_FIELD_PREFIX . $field_mapping_lookup[$id]] = $value;
+							$data[WS_FORM_FIELD_PREFIX . $field_mapping_lookup[$id]] = $value;
+						}
+					}
+				}
+			}
+
+			// Map fields (Repeatable)
+			if(isset($get_array['fields_repeatable']) && is_array($get_array['fields_repeatable'])) {
+
+				foreach($get_array['fields_repeatable'] as $id => $values) {
+
+					if(!is_array($values)) { continue; }
+
+					foreach($values as $repeatable_index => $value) {
+
+						if(is_numeric($id)) {
+
+							$data[WS_FORM_FIELD_PREFIX . $id . '_' . ($repeatable_index + 1)] = $value;
+
+						} else {
+
+							if(isset($field_mapping_lookup[$id])) {
+
+								$data[WS_FORM_FIELD_PREFIX . $field_mapping_lookup[$id] . '_' . ($repeatable_index + 1)] = $value;
+							}
 						}
 					}
 				}
@@ -693,10 +717,16 @@
 
 					$ws_form_field = $tag_mapping->ws_form_field;
 
-					$return_array[WS_FORM_FIELD_PREFIX . $ws_form_field] = $tag_mapping_array;
+					$data[WS_FORM_FIELD_PREFIX . $ws_form_field] = $tag_mapping_array;
 				}
 			}
 
-			return array('action_label' => $action->label, 'data' => $return_array);
+			// Section repeatable
+			if(isset($get_array['section_repeatable']) && is_array($get_array['section_repeatable'])) {
+
+				$section_repeatable = $get_array['section_repeatable'];
+			}
+
+			return array('action_label' => $action->label, 'data' => $data, 'section_repeatable' => $section_repeatable);
 		}
 	}

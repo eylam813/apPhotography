@@ -12,9 +12,8 @@
 get_header(); 
 
 	?>
-	<div class="ap-content-area page front-page">
-        <!-- <div class="bg-holder" style="background-image: url(<?php //the_post_thumbnail_url(); ?>)"> -->
-            <main>
+	<div class="ap-content-area page front-page content-area">
+        <main>
             <?php 
                 if ( have_posts() ) : 
                     while ( have_posts() ) : the_post();
@@ -23,7 +22,7 @@ get_header();
                 endif; 
                 wp_reset_query()
             ?>
-            </main><!-- #main -->
+        </main><!-- #main -->
             <div class="gallery-content grid-x large-12 meduim-12 small-12">
                 <div id="gallery-title-wrapper" class="cell"><h3>Gallery</h3></div>
                 <div id="gallery-albums-wrapper" class="cell">
@@ -59,8 +58,7 @@ get_header();
                     <div> <!-- #gallery-albums-inner-wrapper -->
                 </div> <!--#gallery-albums-wrapper -->
             </div> <!--.gallery-content-->
-            
-        <!-- </div> -->
+
         <?php get_footer(); ?>
 	</div><!-- #primary -->
 	</div>

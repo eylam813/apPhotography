@@ -400,6 +400,7 @@ header section {
 /* back container */
 #slb_viewer_wrap .slb_theme_slb_default .slb_container{
     padding: 3px !important;
+    border-radius: 0px !important;
 }
 /* image data on bottom of container */
 .slb_data_content {

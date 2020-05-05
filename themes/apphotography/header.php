@@ -66,7 +66,7 @@
 			?>
 		</div><!-- .logo -->
 		<section>
-				<nav id="site-navigation" class="main-navigation" data-animate="slide-in-left slide-out-left" >
+				<nav id="site-navigation" class="main-navigation" data-animate="fade-in fade-out" >
 					<?php
 					if ( has_nav_menu( 'menu-1' ) ) {
 						$args = array(

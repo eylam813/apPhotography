@@ -9,3 +9,6 @@ screen and (max-width:39.9375em) {
         padding: 0;
     }
 }
+.social-media-footer img{
+    float: right;
+}

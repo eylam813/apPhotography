@@ -803,11 +803,9 @@ screen and (max-width:64em) {
         padding: 0px;
         width: 100%;
     }
-    header section{
-        position: absolute;
-        top: 10%;
-        left: 5;
-        max-width: 70%;
+    nav{
+        position: relative;
+        max-width: 45%;
     }
     #ap-wrapper {
         height: 6rem;

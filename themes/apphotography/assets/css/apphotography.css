@@ -790,7 +790,7 @@ screen and (max-width:64em) {
         padding: 10px;
     }
     .album-image{
-        height: 200px;
+        min-height: 200px;
     }
     #logo {
         display: none;

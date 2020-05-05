@@ -1,6 +1,6 @@
 @font-face {
 	font-family: headerFont;
-	src: url("../fonts/palatino-linotype.ttf");
+	src: url("../fonts/Roboto/Roboto-Regular.ttf");
 }
 
 @font-face {
@@ -130,7 +130,7 @@ header section {
     margin-left: 30px;
 }
 
-.social-media img {
+.social-media img, .social-media-footer img {
     max-width: 25px;
     margin-right: 10px;
     height: 100%;
@@ -244,7 +244,9 @@ header section {
 }
 
 
-
+nav{
+    background-color: white;
+}
 /* ******************** FRONT PAGE TEMPLATE ******************** */
 .front-page {
     width: 100%;
@@ -782,13 +784,13 @@ screen and (max-width:64em) {
         flex-direction: column;
     }
     #primary-menu{
-        width: 100vw;
+        width: 80vw;
     }
     .infoPage{
         padding: 10px;
     }
     .album-image{
-        height: 126px;
+        min-height: 200px;
     }
     #logo {
         display: none;
@@ -801,10 +803,14 @@ screen and (max-width:64em) {
         padding: 0px;
         width: 100%;
     }
-    header section {
+    header section{
+        width: 100%;
         background: white;
+        justify-content: center;
     }
-
+    nav{
+        max-width: 100%;
+    }
     #ap-wrapper {
         height: 6rem;
         min-width: 100vw;

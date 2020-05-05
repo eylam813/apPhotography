@@ -784,7 +784,7 @@ screen and (max-width:64em) {
         flex-direction: column;
     }
     #primary-menu{
-        width: 100%;
+        width: 80vw;
     }
     .infoPage{
         padding: 10px;

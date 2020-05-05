@@ -30,7 +30,7 @@ get_header();
                         while ($events->have_posts()) :
                             $events->the_post();
                     ?>
-                        <a class="single-album-wrapper large-4 medium-4 small-12" href="<?php echo get_permalink() ?>">
+                        <a class="single-album-wrapper large-4 medium-6 small-12" href="<?php echo get_permalink() ?>">
                             <div class="single-album-inner-wrapper cell album-image">
                                 <?php 
                                     if ( has_post_thumbnail() ) {

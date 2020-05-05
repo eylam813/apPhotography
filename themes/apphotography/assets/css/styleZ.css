@@ -1,0 +1,11 @@
+
+@media print,
+screen and (max-width:39.9375em) {
+    #gallery-title-wrapper{
+        height: auto;
+        padding: 0;
+    }
+    .single-album-wrapper{
+        padding: 0;
+    }
+}

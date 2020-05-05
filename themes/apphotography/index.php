@@ -43,7 +43,7 @@ get_header();
 						?>
 
 							<!-- container for blog card -->
-							<div class="card large-7 medium-5 small-10 blogCard">
+							<div class="card large-7 medium-10 small-10 blogCard">
 
 								<?php
 								// loading post thumbnail image

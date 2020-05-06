@@ -745,6 +745,13 @@ footer .menu{
         justify-self: center;
         padding: 50px;
     }
+    /* making mobile nav vertical */
+    .menu, .menu.horizontal{
+        flex-direction: column;
+    }
+    #primary-menu{
+        width: 80vw;
+    }
 }
 
 @media print,
@@ -774,12 +781,12 @@ screen and (max-width:64em) {
         color: var(--grey);
     }
     /* making mobile nav vertical */
-    .menu, .menu.horizontal{
+    /* .menu, .menu.horizontal{
         flex-direction: column;
     }
     #primary-menu{
         width: 80vw;
-    }
+    } */
     .infoPage{
         padding: 10px;
     }

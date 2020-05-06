@@ -462,7 +462,9 @@ nav{
     margin-right: calc(50% - 50vw);
     max-width: 100vw;
 }
-
+.form{
+    margin-top: 4.5rem;
+}
 /* ******************** SLIDER ******************** */
 .wp-block-nextend-smartslider3{
     margin-bottom: 30px;

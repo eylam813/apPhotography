@@ -66,7 +66,7 @@
 			?>
 		</div><!-- .logo -->
 		<section>
-				<nav id="site-navigation" class="main-navigation">
+				<nav id="site-navigation" class="main-navigation" data-animate="fade-in fade-out" >
 					<?php
 					if ( has_nav_menu( 'menu-1' ) ) {
 						$args = array(
@@ -81,7 +81,6 @@
 					}
 					?>
 				</nav><!-- #site-navigation -->
-			
 			<!-- Social Media Links -->
 			<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
 				<div class="social-media">

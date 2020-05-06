@@ -12,7 +12,7 @@
 get_header(); 
 
 	?>
-	<div class="ap-content-area page front-page content-area">
+	<div class="ap-content-area page front-page">
         <main>
             <?php 
                 if ( have_posts() ) : 

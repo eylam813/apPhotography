@@ -156,8 +156,8 @@ header section {
     top:0;
     left:0;
     z-index: 9999;
-    box-shadow: 4px 4px 8px #f5f5f5,
-        -4px -4px 8px #ffffff;
+    /* box-shadow: 4px 4px 8px #f5f5f5,
+        -4px -4px 8px #ffffff; */
 }
 
 #ap-wrapper-inner{

@@ -704,6 +704,7 @@ footer a:hover {
 
 .site-info {
     align-self: flex-end;
+    font-family: mainTextFont;
 }
 footer .menu{
     flex-direction: row;
@@ -773,6 +774,7 @@ screen and (max-width:64em) {
         flex-direction: column;
         padding: 1rem 0.5rem;
         max-height: fit-content;
+        align-items: center;
     }
     footer .menu a{
         font-size: 0.9rem;
@@ -781,6 +783,9 @@ screen and (max-width:64em) {
         margin-top: 1rem;
         align-self: center;
         color: var(--grey);
+        display: flex;
+        align-items: center;
+        flex-direction: column;
     }
     /* making mobile nav vertical */
     /* .menu, .menu.horizontal{
@@ -805,6 +810,7 @@ screen and (max-width:64em) {
     header {
         padding: 0px;
         width: 100%;
+        min-height: -webkit-fit-content;
     }
     header section{
         width: 100%;

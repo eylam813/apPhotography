@@ -8,7 +8,18 @@ screen and (max-width:39.9375em) {
     .single-album-wrapper{
         padding: 0;
     }
+    #footer-menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    #footer-menu li {
+        width: 50%;
+    }
 }
+
 .social-media-footer img{
     float: right;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }

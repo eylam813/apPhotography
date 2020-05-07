@@ -156,8 +156,8 @@ header section {
     top:0;
     left:0;
     z-index: 9999;
-    box-shadow: 4px 4px 8px #f5f5f5,
-        -4px -4px 8px #ffffff;
+    /* box-shadow: 4px 4px 8px #f5f5f5,
+        -4px -4px 8px #ffffff; */
 }
 
 #ap-wrapper-inner{
@@ -462,7 +462,9 @@ nav{
     margin-right: calc(50% - 50vw);
     max-width: 100vw;
 }
-
+.wsf-form{
+    margin-top: 4.5rem;
+}
 /* ******************** SLIDER ******************** */
 .wp-block-nextend-smartslider3{
     margin-bottom: 30px;
@@ -745,6 +747,13 @@ footer .menu{
         justify-self: center;
         padding: 50px;
     }
+    /* making mobile nav vertical */
+    .menu, .menu.horizontal{
+        flex-direction: column;
+    }
+    #primary-menu{
+        width: 80vw;
+    }
 }
 
 @media print,
@@ -774,12 +783,12 @@ screen and (max-width:64em) {
         color: var(--grey);
     }
     /* making mobile nav vertical */
-    .menu, .menu.horizontal{
+    /* .menu, .menu.horizontal{
         flex-direction: column;
     }
     #primary-menu{
         width: 80vw;
-    }
+    } */
     .infoPage{
         padding: 10px;
     }

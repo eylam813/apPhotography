@@ -74,7 +74,7 @@
 			// Add form fields as columns (Only those that are saved on submit)
 			foreach($this->submit_fields as $key => $label) {
 
-				$columns[WS_FORM_FIELD_PREFIX . $key] = $label;
+				$columns[WS_FORM_FIELD_PREFIX . $key] = strip_tags($label);
 			}
 
 			// Add date added
@@ -716,7 +716,7 @@
 
 ?><option value="<?php echo esc_attr($form['id']); ?>"<?php if($form['id'] == $this->form_id) { ?> selected="selected"<?php } ?>><?php echo esc_html($form['label']); ?> (<?php
 
-					esc_html_e('ID', 'ws-form') . ': ' . $form['id'];
+					echo esc_html(sprintf(__('ID: %u', 'ws-form'), $form['id']));
 
 					$count_submit = $form['count_submit'];
 					if($count_submit > 0) {

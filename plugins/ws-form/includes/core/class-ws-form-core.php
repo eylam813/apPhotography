@@ -197,7 +197,7 @@
 			} else {
 
 				// Adopt sort_index of next sibling
-				$sql = sprintf("SELECT sort_index FROM %s WHERE id = %s LIMIT 1;", $table_name, $next_sibling_id);
+				$sql = sprintf("SELECT sort_index FROM %s WHERE id = %u LIMIT 1;", $table_name, $next_sibling_id);
 				$sort_index = $wpdb->get_var($sql);
 				if(is_null($sort_index)) { self::db_throw_error('Unable to determine sort index'); }
 

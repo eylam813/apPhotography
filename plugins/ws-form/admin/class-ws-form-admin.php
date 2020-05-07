@@ -42,6 +42,7 @@
 			$this->version = $version;
 			$this->user_meta_hidden_columns = 'managews-form_page_ws-form-submitcolumnshidden';	// AJAX function is in helper API
 			$this->intro = WS_Form_Common::option_get('intro', false);
+			$this->customize_enabled = (WS_Form_Common::option_get('framework', 'ws-form') === 'ws-form');
 
 			$edition = WS_Form_Common::option_get('edition');
 			$test = WS_Form_Common::option_get('test');
@@ -402,8 +403,8 @@
 					url: '<?php echo esc_html(WS_Form_Common::get_api_path('helper/deactivate_feedback_submit/')); ?>',
 					data: {
 
-						'wsf_nonce_field_name' : '<?php echo WS_FORM_POST_NONCE_FIELD_NAME; ?>',
-						'wsf_nonce': '<?php echo wp_create_nonce(WS_FORM_POST_NONCE_ACTION_NAME); ?>',
+						'wsf_nonce_field_name' : '<?php echo esc_attr(WS_FORM_POST_NONCE_FIELD_NAME); ?>',
+						'wsf_nonce': '<?php echo esc_attr(wp_create_nonce(WS_FORM_POST_NONCE_ACTION_NAME)); ?>',
 						'feedback_reason': $('[name="wsf_feedback_reason"]:checked').val(),
 						'feedback_reason_error': $('[name="wsf_feedback_reason_error"]').val(),
 						'feedback_reason_found_better_plugin': $('[name="wsf_feedback_reason_found_better_plugin"]').val(),
@@ -456,14 +457,22 @@
 
 <p><?php esc_html_e(sprintf(__('We would greatly appreciate your feedback about why you are deactivating %s. Thank you for your help!', 'ws-form'), WS_FORM_NAME_PRESENTABLE)); ?></p>
 
-<label><input type="radio" name="wsf_feedback_reason" value="Upgraded" /> <?php esc_html_e('I\'m upgrading to ', 'ws-form'); ?><?php echo sprintf(' <a href="%s" target="_blank">%s</a>', WS_Form_Common::get_plugin_website_url('', 'plugins_deactivate'), esc_html__('WS Form PRO', 'ws-form')); ?></label>
+<label><input type="radio" name="wsf_feedback_reason" value="Upgraded" /> <?php esc_html_e('I\'m upgrading to ', 'ws-form'); ?><?php
+	
+	echo sprintf(' <a href="%s" target="_blank">%s</a>', WS_Form_Common::get_plugin_website_url('', 'plugins_deactivate'), esc_html__('WS Form PRO', 'ws-form')); // phpcs:ignore
+
+?></label>
 <label><input type="radio" name="wsf_feedback_reason" value="Temporary" /> <?php esc_html_e('Temporarily deactivating', 'ws-form'); ?></label>
 
 <label><input type="radio" id="wsf-feedback-reason-error" name="wsf_feedback_reason" value="Error" /> <?php esc_html_e('The plugin did not work', 'ws-form'); ?></label>
 
 <div id="wsf-feedback-reason-error-wrapper">
 <textarea id="wsf-feedback-reason-error-text" name="wsf_feedback_reason_error" placeholder="<?php esc_attr_e('Please describe the error...', 'ws-form'); ?>" rows="3"></textarea>
-<p><em><?php esc_html_e('Need help? ', 'ws-form'); ?><?php echo sprintf('<a href="%s" target="_blank">%s</a>', WS_Form_Common::get_plugin_website_url('/support/', 'plugins_deactivate'), esc_html__('Get Support', 'ws-form')); ?></em></p>
+<p><em><?php esc_html_e('Need help? ', 'ws-form'); ?><?php
+
+	echo sprintf('<a href="%s" target="_blank">%s</a>', WS_Form_Common::get_plugin_website_url('/support/', 'plugins_deactivate'), esc_html__('Get Support', 'ws-form')); // phpcs:ignore
+
+?></em></p>
 </div>
 
 <label><input type="radio" name="wsf_feedback_reason" value="No Longer Need" /> <?php esc_html_e('I no longer need the plugin', 'ws-form'); ?></label>
@@ -518,7 +527,7 @@
 		// Customize register
 		public function customize_register($wp_customize) {
 
-			if(WS_Form_Common::can_user('customize')) {
+			if($this->customize_enabled && WS_Form_Common::can_user('customize')) {
 
 				new WS_Form_Customize($wp_customize);
 			}
@@ -789,7 +798,26 @@
 				array($this, 'admin_page_form_edit')
 			);
 
-			// Settings - General
+			// Customize
+			$customize_url = sprintf('customize.php?return=%s&wsf_panel_open=true', urlencode(remove_query_arg(wp_removable_query_args(), wp_unslash($_SERVER['REQUEST_URI']))));
+			$page = WS_Form_Common::get_query_var('page');
+			$id = intval(WS_Form_Common::get_query_var('id'));
+			if(($page === 'ws-form-edit') && ($id > 0)) {
+				$customize_url .= sprintf('&wsf_preview_form_id=%u', $id);
+			}
+			if($this->customize_enabled) {
+
+				$this->hook_suffix_customize = add_submenu_page(
+
+					$this->plugin_name,
+					__('Customize', 'ws-form'),
+					__('Customize', 'ws-form'),
+					'customize',
+					$customize_url
+				);
+			}
+
+			// Settings
 			$this->hook_suffix_form_settings = add_submenu_page(
 
 				$this->plugin_name,

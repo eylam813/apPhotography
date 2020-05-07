@@ -28,8 +28,10 @@ get_header();
 		endwhile; // End of the loop.
 		?>
 		<!-- go to shop button-->
-		<a href="<?php echo get_permalink( wc_get_page_id( 'shop' ) ); ?>" class="albumToShopBtn">
+		<a href="<?php echo get_permalink( get_page_by_path( 'shop-2' ) ); ?>" class="albumToShopBtn">
 		Shop  &#8594; </a>
+		<!-- below goes to woocommmerce shop  -->
+		<!-- <a href="<?php //echo get_permalink( wc_get_page_id( 'shop' ) ); ?>" class="albumToShopBtn">Shop  &#8594; </a> -->
 		</main><!-- #main -->
 	</div><!-- #primary -->
 

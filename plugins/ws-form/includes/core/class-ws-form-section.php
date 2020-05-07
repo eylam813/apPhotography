@@ -8,6 +8,8 @@
 		public $group_id;
 		public $child_count;
 		public $new_lookup;
+		public $label;
+		public $meta;
 	
 		public $table_name;
 
@@ -28,6 +30,8 @@
 			$this->new_lookup = array();
 			$this->new_lookup['section'] = array();
 			$this->new_lookup['field'] = array();
+			$this->label = WS_FORM_DEFAULT_SECTION_NAME;
+			$this->meta = array();
 		}
 
 		// Create section
@@ -44,36 +48,8 @@
 			// Process sort index
 			$sort_index = self::db_object_sort_index_get($this->table_name, 'group_id', $this->group_id, $next_sibling_id);
 
-			// Get column count of last section added
-			$sql = sprintf("SELECT id FROM %s WHERE group_id = %s AND parent_section_id = 0 ORDER BY sort_index DESC LIMIT 1", $this->table_name, $this->group_id);
-			$section_id = $wpdb->get_var($sql);
-			if($section_id === false) { parent::db_throw_error(__('Unable to determine last section added', 'ws-form')); }
-			$inherit_last_meta = !is_null($section_id);
-
-			if($inherit_last_meta) {
-
-				// Get framework
-				$framework = WS_Form_Common::option_get('framework');
-
-				// Get framework breakpoints
-				$frameworks = WS_Form_Config::get_frameworks();
-				$breakpoints = $frameworks['types'][$framework]['breakpoints'];
-
-				// Get breakpoints column counts
-				$ws_form_meta = New WS_Form_Meta();
-				$ws_form_meta->object = 'section';
-				$ws_form_meta->parent_id = $section_id;
-
-				// Add framework sizes to section meta to be inherited
-				$section_metas = array();
-				foreach($breakpoints as $key => $value) {
-
-					$section_metas['breakpoint_size_' . $key] = $ws_form_meta->db_get_object_meta('breakpoint_size_' . $key, '');
-				}
-			}
-
 			// Add section
-			$sql = sprintf("INSERT INTO %s (%s) VALUES ('%s', 0, %u, '%s', '%s', %u, %u, 0);", $this->table_name, self::DB_INSERT, esc_sql(WS_FORM_DEFAULT_SECTION_NAME), WS_Form_Common::get_user_id(), WS_Form_Common::get_mysql_date(), WS_Form_Common::get_mysql_date(), $sort_index, $this->group_id);
+			$sql = sprintf("INSERT INTO %s (%s) VALUES ('%s', 0, %u, '%s', '%s', %u, %u, 0);", $this->table_name, self::DB_INSERT, esc_sql($this->label), WS_Form_Common::get_user_id(), WS_Form_Common::get_mysql_date(), WS_Form_Common::get_mysql_date(), $sort_index, $this->group_id);
 			if($wpdb->query($sql) === false) { parent::db_throw_error(__('Error adding section', 'ws-form')); }
 
 			// Get inserted ID
@@ -84,12 +60,7 @@
 			$meta_data = $settings_form_admin['sidebars']['section']['meta'];
 			$meta_keys = WS_Form_Config::get_meta_keys();
 			$meta_data_array = self::build_meta_data($meta_data, $meta_keys);
-
-			// If we are inheriting last section meta, then merge the arrays
-			if($inherit_last_meta) {
-
-				$meta_data_array = array_merge($meta_data_array, $section_metas);
-			}
+			$meta_data_array = array_merge($meta_data_array, $this->meta);
 
 			// Build meta data
 			$ws_form_meta = New WS_Form_Meta();
@@ -538,6 +509,44 @@
 			if($parent_section_id === false) { parent::db_throw_error(__('Error getting section parent ID', 'ws-form')); }
 
 			return $parent_section_id;
+		}
+
+		// Get breakpoint size meta of last section added
+		public function db_set_breakpoint_size_meta() {
+
+			global $wpdb;
+
+			self::db_check_group_id();
+
+			// Get column count of last section added
+			$sql = sprintf("SELECT id FROM %s WHERE group_id = %u AND parent_section_id = 0 ORDER BY sort_index DESC LIMIT 1", $this->table_name, $this->group_id);
+			$last_section_id = $wpdb->get_var($sql);
+			if($last_section_id === false) { parent::db_throw_error(__('Unable to determine last section added', 'ws-form')); }
+			$inherit_last_meta = !is_null($last_section_id);
+
+			if($inherit_last_meta) {
+
+				// Get framework
+				$framework = WS_Form_Common::option_get('framework');
+
+				// Get framework breakpoints
+				$frameworks = WS_Form_Config::get_frameworks();
+				$breakpoints = $frameworks['types'][$framework]['breakpoints'];
+
+				// Get breakpoints column counts
+				$ws_form_meta = New WS_Form_Meta();
+				$ws_form_meta->object = 'section';
+				$ws_form_meta->parent_id = $last_section_id;
+
+				// Add framework sizes to section meta to be inherited
+				$section_metas = array();
+				foreach($breakpoints as $key => $value) {
+
+					$this->meta['breakpoint_size_' . $key] = $ws_form_meta->db_get_object_meta('breakpoint_size_' . $key, '');
+				}
+			}
+
+			return $this->meta;
 		}
 
 		// Check form_id

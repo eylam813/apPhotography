@@ -68,8 +68,14 @@ class WC_Shipstation_API extends WC_Shipstation_API_Request {
 		self::$authenticated = true;
 
 		if ( in_array( $this->request['action'], array( 'export', 'shipnotify' ) ) ) {
+			$mask = array(
+				'auth_key' => '***',
+			);
+
+			$obfuscated_request = $mask + $this->request;
+
 			/* translators: 1: query string */
-			$this->log( sprintf( __( 'Input params: %s', 'woocommerce-shipstation' ), http_build_query( $this->request ) ) );
+			$this->log( sprintf( __( 'Input params: %s', 'woocommerce-shipstation' ), http_build_query( $obfuscated_request ) ) );
 			$request_class = include( 'api-requests/class-wc-shipstation-api-' . $this->request['action'] . '.php' );
 			$request_class->request();
 		} else {

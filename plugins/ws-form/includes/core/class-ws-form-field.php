@@ -8,6 +8,8 @@
 		public $section_id_from;
 		public $new_lookup;
 		public $type;
+		public $label;
+		public $meta;
 
 		public $table_name;
 
@@ -25,6 +27,8 @@
 			$this->new_lookup = array();
 			$this->new_lookup['field'] = array();
 			$this->type = '';
+			$this->label = '';
+			$this->meta = array();
 
 			$this->table_name = $wpdb->prefix . WS_FORM_DB_TABLE_PREFIX . 'field';
 		}
@@ -45,16 +49,19 @@
 			$sort_index = self::db_object_sort_index_get($this->table_name, 'section_id', $this->section_id, $next_sibling_id);
 
 			// Build field label
-			$meta_data = self::db_field_type_config();
-			if(isset($meta_data['label_default'])) {
+			if(empty($this->label)) {
 
-				// Use label configured in config
-				$field_label = $meta_data['label_default'];
+				$meta_data = self::db_field_type_config();
+				if(isset($meta_data['label_default'])) {
 
-			} else {
+					// Use label configured in config
+					$field_label = $meta_data['label_default'];
 
-				// Use fallback label (in case label_default is not specified in the config data)
-				$field_label = WS_FORM_DEFAULT_FIELD_NAME;
+				} else {
+
+					// Use fallback label (in case label_default is not specified in the config data)
+					$field_label = WS_FORM_DEFAULT_FIELD_NAME;
+				}
 			}
 
 			global $wpdb;
@@ -68,11 +75,13 @@
 
 			// Build meta data array
 			$meta_keys = WS_Form_Config::get_meta_keys();
+			$meta_keys = apply_filters('wsf_form_create_meta_keys', $meta_keys);
 			$meta_values = array(
 
 				'section_id' => $this->section_id
 			);
 			$meta_data_array = self::build_meta_data($meta_data, $meta_keys, $meta_values);
+			$meta_data_array = array_merge($meta_data_array, $this->meta);
 
 			// Check for section_repeatable_section_id
 			if(array_key_exists('section_repeatable_section_id', $meta_data_array)) {

@@ -27,10 +27,31 @@
 			}
 						?>
 		<div class="site-info">
-		Alejandro Pino Photography &copy; <script>
+		Copyright &copy; <script>
                 document.write(new Date().getFullYear());
-            </script>
-		</div>
+            </script> Alejandro Pino
+		
+		<!-- Social Media Links -->
+		<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
+				<div class="social-media-footer">
+					<?php if (get_theme_mod('apphotography_facebook_url')) { ?>
+
+						<!-- dynamic social media links -->
+						<!-- dynamic facebook link -->
+						<a href="<?php echo get_theme_mod('apphotography_facebook_url'); ?>"><?php echo esc_html__('', 'apphotography'); ?> <img src="<?php echo get_template_directory_uri() . '/assets/img/facebook.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>" height="50" width="50"> </a>
+						<?php } ?>
+						<?php if (get_theme_mod('apphotography_twitter_url')) { ?>
+						<!-- dynamic twitter link -->
+						<a href="<?php echo get_theme_mod('apphotography_twitter_url'); ?>"><?php echo esc_html__('', 'apphotography'); ?> <img src="<?php echo get_template_directory_uri() . '/assets/img/twitter.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>" height="50" width="50"> </a>
+						<?php } ?>
+						<?php if (get_theme_mod('apphotography_instagram_url')) { ?>
+						<!-- dynamic instagram link -->
+						<a href="<?php echo get_theme_mod('apphotography_instagram_url'); ?>"><?php echo esc_html__('', 'apphotography'); ?> <img src="<?php echo get_template_directory_uri() . '/assets/img/instagram.svg'; ?>" title="<?php echo esc_html__('', 'apphotography'); ?>" height="50" width="50"> </a>
+
+					<?php } ?>
+				</div> <!--social media-->
+			<?php } ?>
+			</div>
 		<!-- .site-info -->
 	</footer><!-- #colophon -->
 

@@ -47,6 +47,12 @@ h1 {
         display: none;
     }
 }
+/* tablet and down */
+@media screen and (max-width: 63.9275em) {
+    .tablet-and-down {
+        display: block;
+    }
+}
 /* tablet and up */
 @media screen and (min-width: 40em) {
     .tablet-and-up {
@@ -75,6 +81,9 @@ h1 {
     }
     .only-desktop{
         display: block;
+    }
+    .tablet-and-down {
+        display: none;
     }
 }
 

@@ -25,13 +25,69 @@ h1 {
     margin-top: 30px;
     text-align: center;
 }
-
+/* Additional Classes */
 .side-padding {
     padding: 0 6vw !important;
 }
 .side-margin {
     margin: 0 6vw !important;
 }
+/* mobile only */
+@media screen and (max-width: 39.9375em) {
+    .only-mobile {
+        display: block;
+    }
+    .only-tablet{
+        display: none;
+    }
+    .only-desktop{
+        display: none;
+    }
+    .tablet-and-up {
+        display: none;
+    }
+}
+/* tablet and down */
+@media screen and (max-width: 63.9275em) {
+    .tablet-and-down {
+        display: block;
+    }
+}
+/* tablet and up */
+@media screen and (min-width: 40em) {
+    .tablet-and-up {
+        display: block;
+    }
+}
+/* tablet only */
+@media screen and (min-width: 40em) and (max-width: 63.9375em) {
+    .only-mobile {
+        display: none;
+    }
+    .only-tablet{
+        display: block;
+    }
+    .only-desktop{
+        display: none;
+    }
+}
+/* large and up */
+@media screen and (min-width: 64em) {
+    .only-mobile {
+        display: none;
+    }
+    .only-tablet{
+        display: none;
+    }
+    .only-desktop{
+        display: block;
+    }
+    .tablet-and-down {
+        display: none;
+    }
+}
+
+
 :root{
     --dark-blue: #002349;
     --grey: #999999;

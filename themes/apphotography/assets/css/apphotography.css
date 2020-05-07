@@ -805,6 +805,7 @@ screen and (max-width:64em) {
     header {
         padding: 0px;
         width: 100%;
+        min-height: -webkit-fit-content;
     }
     header section{
         width: 100%;

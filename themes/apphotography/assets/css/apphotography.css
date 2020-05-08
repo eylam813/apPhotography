@@ -412,12 +412,16 @@ nav{
 
 /* ******************** ALBUM POST TYPE SINGLE PAGE ******************** */
 
-.albumToShopBtn {
-    width: 85px;
-    height: 50px;
-    background-color: var(--white);
-    color: var(--outer-space);
-    box-shadow: 0 0 5px 5px #CECECE80;
+.sideBtn {
+    width: fit-content;
+    width: -moz-fit-content;
+    min-width: 85px;
+    min-height: 50px;
+    height: fit-content;
+    height: -moz-fit-content;
+    background-color: var(--white) !important;
+    color: var(--outer-space) !important;
+    box-shadow: 0 0 5px 5px #CECECE60;
     position: fixed;
     bottom: 7vh;
     right: 0;
@@ -426,6 +430,21 @@ nav{
     align-items: center;
     justify-content: center;
 }
+.sideBtn .wp-block-button__link {
+    color: var(--outer-space);
+}
+.sideBtn .wp-block-button__link:hover {
+    font-weight: 450;
+    transition: ease-in-out;
+}
+.wp-block-button.sideBtn {
+    margin-right: 0;
+    margin-bottom: 0;
+    border: 0 0 #00000000;
+    outline: none;
+}
+
+
 
 /* mobile only */
 @media screen and (max-width: 39.9375em) {

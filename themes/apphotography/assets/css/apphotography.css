@@ -25,13 +25,69 @@ h1 {
     margin-top: 30px;
     text-align: center;
 }
-
+/* Additional Classes */
 .side-padding {
     padding: 0 6vw !important;
 }
 .side-margin {
     margin: 0 6vw !important;
 }
+/* mobile only */
+@media screen and (max-width: 39.9375em) {
+    .only-mobile {
+        display: block;
+    }
+    .only-tablet{
+        display: none;
+    }
+    .only-desktop{
+        display: none;
+    }
+    .tablet-and-up {
+        display: none;
+    }
+}
+/* tablet and down */
+@media screen and (max-width: 63.9275em) {
+    .tablet-and-down {
+        display: block;
+    }
+}
+/* tablet and up */
+@media screen and (min-width: 40em) {
+    .tablet-and-up {
+        display: block;
+    }
+}
+/* tablet only */
+@media screen and (min-width: 40em) and (max-width: 63.9375em) {
+    .only-mobile {
+        display: none;
+    }
+    .only-tablet{
+        display: block;
+    }
+    .only-desktop{
+        display: none;
+    }
+}
+/* large and up */
+@media screen and (min-width: 64em) {
+    .only-mobile {
+        display: none;
+    }
+    .only-tablet{
+        display: none;
+    }
+    .only-desktop{
+        display: block;
+    }
+    .tablet-and-down {
+        display: none;
+    }
+}
+
+
 :root{
     --dark-blue: #002349;
     --grey: #999999;
@@ -271,6 +327,7 @@ nav{
 
 #gallery-title-wrapper h3{
     text-align: center;
+    margin-top: 2rem;
 }
 /* ******************** LEFT-FEATURE TEMPLATE ******************** */
 
@@ -305,7 +362,7 @@ nav{
     width: 100%;
 }
 #gallery-title-wrapper {
-    height: 15vh;
+    /* height: 15vh; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -354,27 +411,46 @@ nav{
 
 
 /* ******************** ALBUM POST TYPE SINGLE PAGE ******************** */
-/* .single-album-page-main{
-    padding: 1rem 4rem;
-} */
-.albumToShopBtn {
-    width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    background-color: var(--ash-grey);
-    color: var(--white);
+
+.sideBtn {
+    width: fit-content;
+    width: -moz-fit-content;
+    min-width: 85px;
+    min-height: 50px;
+    height: fit-content;
+    height: -moz-fit-content;
+    background-color: var(--white) !important;
+    color: var(--outer-space) !important;
+    box-shadow: 0 0 5px 5px #CECECE60;
     position: fixed;
-    bottom: 5vh;
-    right: 5vw;
+    bottom: 7vh;
+    right: 0;
     display:flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
+.sideBtn .wp-block-button__link {
+    color: var(--outer-space);
+}
+.sideBtn .wp-block-button__link:hover {
+    font-weight: 450;
+    transition: ease-in-out;
+}
+.wp-block-button.sideBtn {
+    margin-right: 0;
+    margin-bottom: 0;
+    border: 0 0 #00000000;
+    outline: none;
+}
 
-.albumToShopBtn img {
-    width: 50px;
-    height: 50px;
+
+
+/* mobile only */
+@media screen and (max-width: 39.9375em) {
+    .single-album-page-main .entry-content{
+        margin: auto 2.4rem;
+    }
 }
 /* ******************** SIMPLE LIGHTBOX PLUGIN ******************** */
 /* file name caption */
@@ -666,14 +742,14 @@ textarea {
     color: var(--dark-blue);
 }
 /* ******************** CONTACT FORM ******************** */
-#wsf-1-field-2,
+/* #wsf-1-field-2,
 #wsf-1-field-1,
 #wsf-1-field-3,
 #wsf-1-field-4,
 #wsf-1-field-5 {
     border: 2px solid;
     border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
-}
+} */
 input[type=checkbox].wsf-field + label.wsf-label:before {
     border: 1px solid;
     border-color: var(--ash-grey) var(--ash-grey) var(--outer-space);
@@ -798,7 +874,7 @@ screen and (max-width:64em) {
         padding: 10px;
     }
     .album-image{
-        min-height: 200px;
+        min-height: 250px;
     }
     #logo {
         display: none;

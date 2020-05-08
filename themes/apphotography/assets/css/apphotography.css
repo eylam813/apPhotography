@@ -361,7 +361,7 @@ nav{
     width: 100%;
 }
 #gallery-title-wrapper {
-    height: 15vh;
+    /* height: 15vh; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -410,27 +410,27 @@ nav{
 
 
 /* ******************** ALBUM POST TYPE SINGLE PAGE ******************** */
-/* .single-album-page-main{
-    padding: 1rem 4rem;
-} */
+
 .albumToShopBtn {
     width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    background-color: var(--ash-grey);
-    color: var(--white);
+    height: 50px;
+    background-color: var(--white);
+    color: var(--outer-space);
+    box-shadow: 0 0 5px 5px #CECECE80;
     position: fixed;
-    bottom: 5vh;
-    right: 5vw;
+    bottom: 7vh;
+    right: 0;
     display:flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.albumToShopBtn img {
-    width: 50px;
-    height: 50px;
+/* mobile only */
+@media screen and (max-width: 39.9375em) {
+    .single-album-page-main .entry-content{
+        margin: auto 2.4rem;
+    }
 }
 /* ******************** SIMPLE LIGHTBOX PLUGIN ******************** */
 /* file name caption */

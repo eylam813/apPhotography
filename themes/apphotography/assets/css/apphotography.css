@@ -467,6 +467,7 @@ nav{
 #slb_viewer_wrap .slb_theme_slb_black .slb_container{
     background-color: #000 !important;
 }
+
 /* back container */
 #slb_viewer_wrap .slb_theme_slb_default .slb_container{
     padding: 3px !important;
@@ -477,6 +478,19 @@ nav{
     display: none !important;
 }
 
+@media screen and (max-width: 39.9375em) {
+    /* default theme container */
+    #slb_viewer_wrap .slb_theme_slb_baseline .slb_container {
+        background-color: #00000000 !important;
+        top:50vh !important;
+        left:0 !important;
+        transform: translate(0, -50%) !important;
+    }
+    /* dark theme container */
+    #slb_viewer_wrap .slb_theme_slb_black .slb_container{
+        background-color: #00000000 !important;
+    }
+}
 
 
 

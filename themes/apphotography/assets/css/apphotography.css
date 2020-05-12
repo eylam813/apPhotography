@@ -795,6 +795,7 @@ footer a:hover {
 .site-info {
     align-self: flex-end;
     font-family: mainTextFont;
+    text-align: center;
 }
 footer .menu{
     flex-direction: row;

@@ -928,3 +928,8 @@ screen and (max-width:64em) {
     }
 }
 
+@media (min-width: 600px){
+    .blocks-gallery-grid.columns-3 .blocks-gallery-image, .blocks-gallery-grid.columns-3 .blocks-gallery-item, .wp-block-gallery.columns-3 .blocks-gallery-image, .wp-block-gallery.columns-3 .blocks-gallery-item {
+        max-width: 31.5%;
+    }
+}

@@ -796,6 +796,11 @@ footer a:hover {
     align-self: flex-end;
     font-family: mainTextFont;
     text-align: center;
+    padding-top: 0.2rem;
+    color: var(--grey);
+}
+.site-info a {
+    display: contents;
 }
 footer .menu{
     flex-direction: row;

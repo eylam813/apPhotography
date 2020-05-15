@@ -467,6 +467,7 @@ nav{
 #slb_viewer_wrap .slb_theme_slb_black .slb_container{
     background-color: #000 !important;
 }
+
 /* back container */
 #slb_viewer_wrap .slb_theme_slb_default .slb_container{
     padding: 3px !important;
@@ -477,6 +478,19 @@ nav{
     display: none !important;
 }
 
+@media screen and (max-width: 39.9375em) {
+    /* default theme container */
+    #slb_viewer_wrap .slb_theme_slb_baseline .slb_container {
+        background-color: #00000000 !important;
+        top:50vh !important;
+        left:0 !important;
+        transform: translate(0, -50%) !important;
+    }
+    /* dark theme container */
+    #slb_viewer_wrap .slb_theme_slb_black .slb_container{
+        background-color: #00000000 !important;
+    }
+}
 
 
 
@@ -781,6 +795,12 @@ footer a:hover {
 .site-info {
     align-self: flex-end;
     font-family: mainTextFont;
+    text-align: center;
+    padding-top: 0.2rem;
+    color: var(--grey);
+}
+.site-info a {
+    display: contents;
 }
 footer .menu{
     flex-direction: row;
@@ -914,3 +934,8 @@ screen and (max-width:64em) {
     }
 }
 
+@media (min-width: 600px){
+    .blocks-gallery-grid.columns-3 .blocks-gallery-image, .blocks-gallery-grid.columns-3 .blocks-gallery-item, .wp-block-gallery.columns-3 .blocks-gallery-image, .wp-block-gallery.columns-3 .blocks-gallery-item {
+        max-width: 31.5%;
+    }
+}

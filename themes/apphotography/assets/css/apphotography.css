@@ -467,6 +467,7 @@ nav{
 #slb_viewer_wrap .slb_theme_slb_black .slb_container{
     background-color: #000 !important;
 }
+
 /* back container */
 #slb_viewer_wrap .slb_theme_slb_default .slb_container{
     padding: 3px !important;
@@ -477,6 +478,19 @@ nav{
     display: none !important;
 }
 
+@media screen and (max-width: 39.9375em) {
+    /* default theme container */
+    #slb_viewer_wrap .slb_theme_slb_baseline .slb_container {
+        background-color: #00000000 !important;
+        top:50vh !important;
+        left:0 !important;
+        transform: translate(0, -50%) !important;
+    }
+    /* dark theme container */
+    #slb_viewer_wrap .slb_theme_slb_black .slb_container{
+        background-color: #00000000 !important;
+    }
+}
 
 
 
@@ -725,8 +739,30 @@ textarea {
     display: none;
 }
 /* product info */
-.woocommerce #content div.product div.summary, .woocommerce div.product div.summary, .woocommerce-page #content div.product div.summary, .woocommerce-page div.product div.summary{
-    width: 25%;
+@media screen and (min-width: 64em) {
+    .woocommerce #content div.product div.summary, .woocommerce div.product div.summary, .woocommerce-page #content div.product div.summary, .woocommerce-page div.product div.summary{
+        width: 25%;
+    }
+}
+
+
+/* product variations table */
+.woocommerce div.product form.cart .variations tbody {
+    border: none;
+}
+.woocommerce div.product form.cart .variations td.label{
+    padding-right: 0;
+    padding: 0.5rem;
+}
+.woocommerce div.product form.cart .variations label{
+    padding: 0 0.5rem;
+}
+.woocommerce div.product form.cart .variations tbody td{
+    padding:0;
+}
+.woocommerce div.product form.cart .variations select{
+    width: fit-content;
+    width: -moz-fit-content;
 }
 /* cart button */
 .woocommerce #respond input#submit.alt:hover, .woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover, .woocommerce input.button.alt:hover
@@ -781,6 +817,12 @@ footer a:hover {
 .site-info {
     align-self: flex-end;
     font-family: mainTextFont;
+    text-align: center;
+    padding-top: 0.2rem;
+    color: var(--grey);
+}
+.site-info a {
+    display: contents;
 }
 footer .menu{
     flex-direction: row;
@@ -914,3 +956,8 @@ screen and (max-width:64em) {
     }
 }
 
+@media (min-width: 600px){
+    .blocks-gallery-grid.columns-3 .blocks-gallery-image, .blocks-gallery-grid.columns-3 .blocks-gallery-item, .wp-block-gallery.columns-3 .blocks-gallery-image, .wp-block-gallery.columns-3 .blocks-gallery-item {
+        max-width: 31.5%;
+    }
+}

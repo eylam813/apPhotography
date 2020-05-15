@@ -29,7 +29,7 @@
 		<div class="site-info">
 		Copyright &copy; <script>
                 document.write(new Date().getFullYear());
-            </script> Alejandro Pino
+            </script> Alejandro Pino  - Design Implemented by <a href="http://zferguson.ca/" target="_blank">Zoe</a> and <a href="http://emilylam.ca/" target="_blank">Emily</a>
 		
 		<!-- Social Media Links -->
 		<?php if (get_theme_mod('apphotography_facebook_url') || get_theme_mod('apphotography_twitter_url')) { ?>
